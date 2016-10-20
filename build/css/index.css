@@ -1,0 +1,25 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+img{
+    border: none;
+}
+a{
+    outline: none;
+    text-decoration: none;
+}
+a:focus{
+    outline: none;
+}
+ul ,li {
+    list-style: none;
+}
+body{
+    position: relative;
+}.drag{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 1px red solid;
+}

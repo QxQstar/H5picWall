@@ -1,0 +1,22 @@
+{
+  "name": "h5picwall",
+  "version": "1.0.0",
+  "description": "'h5照片墙'",
+  "main": "index.js",
+  "scripts": {
+    "test": "webpack --config webpack.test.config.js",
+    "drag": "webpack --config webpack.drag.config.js",
+    "server-drag": "webpack-dev-server --hot --inline --config webpack.drag.config.js --content-base ./build/"
+  },
+  "author": "qin",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^0.25.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-plugin": "^2.22.0",
+    "jquery": "^3.1.1",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  }
+}

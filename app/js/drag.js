@@ -34,6 +34,8 @@ var drag = {
         X:undefined,
         Y:undefined
     },
+    //是否重叠
+    isCover:undefined,
     //获取拖拽元素父元素id和控制台的ID的值
     setID:function(dragList,control){
         this.dragParent = dragList;
@@ -91,6 +93,8 @@ var drag = {
                 top: drag.touchPos.Y - drag.touchOffsetPos.Y,
                 left: drag.touchPos.X - drag.touchOffsetPos.X
             });
+            var control = $('#' + drag.control);
+            drag.isCover = position.compare(control.children(),$target);
         }
 
     },
@@ -109,6 +113,9 @@ var drag = {
             if (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 2 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 2) {
                 //移动块，而非切换图案
                 if($target.parent().attr('class').indexOf('swiper-wrapper') < 0) {
+
+                    var elem = undefined;
+
                     //得到控制台和拖动元素列表的父元素
                     var control = $("#" + drag.control);
                     var dragListPar = $('#' + drag.dragParent);
@@ -118,8 +125,8 @@ var drag = {
 
                     //拖动结束后，如果拖拽元素的父元素是拖拽列表
                     if (parent.attr('id') === drag.dragParent) {
-                        //如果元素位于控制台
-                        if (sitControl) {
+                        //如果元素位于控制台并且没有覆盖
+                        if (sitControl && !drag.isCover) {
                             var dragChild = transition.createSwiperElem($target);
 
                             //为克隆出的元素绑定touchstart事件
@@ -128,23 +135,46 @@ var drag = {
                             //将克隆出的元素插入到控制台
                             position.addTo(dragChild, control, $target);
 
-                            //碰撞检测
-                            position.reSort(control.children(),dragChild);
+                            //将拖拽后生成的元素赋给elem
+                            elem = dragChild;
+
                         }
 
                         //将原来的触摸元素恢复到初始位置
                         position.restore($target);
+                        //隐藏提示
+                        control.find('#notice').hide();
                     }
-                    // 拖拽结束后，如果拖拽元素的父元素是控制台并且元素不位于控制台
-                    if (parent.attr('id') === drag.control) {
-                        if(sitControl){
-                            //碰撞检测
-                            position.reSort(control.children(),$target);
-                        }else{
+                    // 拖拽结束后，如果拖拽元素的父元素是控制台
+                    if (parent.attr('id') === drag.control ) {
+                        //将拖拽的元素赋给elem
+                        elem = $target;
+
+                        //没有位于控制台
+                        if(!sitControl) {
                             $target.remove();
                         }
 
+                        //存在覆盖
+                        if(drag.isCover){
+                            //隐藏提示
+                            $(control.find('#notice')).hide();
+
+                            //返回原来的位置
+                            $target.css({
+                                top:$target.attr('coordY') + 'px',
+                                left:$target.attr('coordX') + 'px'
+                            });
+
+                        }
+
                     }
+
+                    //将坐标保存在属性中
+                    elem.attr({
+                        'coordX':elem.offset().left,
+                        'coordY':elem.offset().top
+                    });
 
 
                 }else{

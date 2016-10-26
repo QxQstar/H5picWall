@@ -124,132 +124,68 @@ var position = {
         }
         return isSituate;
     },
-    //碰撞
-    reSort:function(list,curElem){
+    //相交检测
+    compare:function(list,curElem){
         var gap = 30;
-        //检测相交
-        var compare = function(curElem,comPE){
-
-            //元素的位置
-            var curElemPos = curElem.offset();
-            var comPEPos = comPE.offset();
-
-            //curElem的投影
-            var curElemShadow_x = [curElemPos.left,curElemPos.left + curElem.width()];
-            var curElemShadow_y = [curElemPos.top,curElemPos.top + curElem.height()];
-
-            //comPE的投影
-            var comPEShadow_x = [comPEPos.left - gap,comPEPos.left + comPE.width() + gap];
-            var comPEShadow_y = [comPEPos.top - gap,comPEPos.top + comPE.height() + gap];
-
-            //检测是否X轴上相交
-            var intersect_x = (curElemShadow_x[0] > comPEShadow_x[0] && curElemShadow_x[0] < comPEShadow_x[1])
-                              || (curElemShadow_x[1] > comPEShadow_x[0] && curElemShadow_x[1] < comPEShadow_x[1]);
-            //检测是否Y轴上相交
-            var intersect_y = (curElemShadow_y[0] > comPEShadow_y[0] && curElemShadow_y[0] < comPEShadow_y[1])
-                || (curElemShadow_y[1] > comPEShadow_y[0] && curElemShadow_y[1] < comPEShadow_y[1]);
-
-            return intersect_x && intersect_y;
-
-        };
-
-        //错开重排
-        var reset = function(curElem,compare){
-            //元素的位置
-            var curElemPos = curElem.offset();
-            //参考元素的位置
-            var comPEPos = compare.offset();
-
-            var maxW = Math.max(curElem.width(),compare.width());
-            var maxH = Math.max(curElem.height,compare.height());
-
-            //两个元素上边，左边，的间距，这些值决定了该往哪个方向偏移
-            var offsetTop = Math.abs(curElemPos.top - comPEPos.top);
-            var offsetLeft = Math.abs(curElemPos.left - comPEPos.left);
-            //需要移动的元素位于参考元素的下方
-            if(curElemPos.top > comPEPos.top){
-                console.log('下方');
-                //需要移动的元素位于参考元素的右方
-                  if(curElemPos.left > comPEPos.left){
-                      console.log('右边');
-                      if(offsetLeft > offsetTop){
-                          //向右移动
-                          curElem.css({
-                              'left':comPEPos.left + compare.width() + gap
-                          });
-                      }else{
-                            //向下移动
-                          curElem.css({
-                                'top':comPEPos.top + compare.height + gap
-                          });
-                      }
-                  }else{
-                      console.log('左边');
-                      if(offsetLeft > offsetTop){
-//                          //向左移动
-                          curElem.css({
-                              'left':comPEPos.left - curElem.width() - gap
-                          });
-                      }else{
-//                          //向下移动
-                          curElem.css({
-                              'top':comPEPos.top + compare.height() + gap
-                          });
-                      }
-
-
-                  }
-            }else{
-                console.log('上方');
-                //需要移动的元素位于参考元素的右方
-                if(curElemPos.left > comPEPos.left){
-                    console.log('右边');
-                    if(offsetLeft > offsetTop){
-                        //向右移动
-                        curElem.css({
-                            'left':comPEPos.left + compare.width() + gap
-                        });
-                    }else{
-                        //向上移动
-                        curElem.css({
-                            'top':comPEPos.top - curElem.height() - gap
-                        });
-                    }
-                }else{
-                    console.log('左边');
-                    if(offsetLeft > offsetTop){
-//                        //向左移动
-                        curElem.css({
-                            'left':comPEPos.left - curElem.width() - gap
-                        });
-                    }else{
-                        //向上移动
-                        curElem.css({
-                            'top':comPEPos.top - curElem.height() - gap
-                        });
-                    }
-
-
-                }
-            }
-        };
-        //将要作为参考的元素
-        var referElem = [];
+        var isCover = undefined,Booleans = undefined;
+        var control = $(list[0]).parent();
+        var info =  control.find('#notice');
         $.each(list,function(index,elem){
+
+            var comPE = $(elem);
+
             //不能和自己进行比较
-            if(curElem.attr('id') !== $(elem).attr('id')){
-                if(compare(curElem,$(elem))){
-                    referElem.push(elem);
+            if(comPE.attr('id') !== curElem.attr('id') && comPE.attr('id') !== 'notice') {
+                //元素的位置
+                var curElemPos = curElem.offset();
+                var comPEPos = comPE.offset();
+
+                //curElem的投影
+                var curElemShadow_x = [curElemPos.left, curElemPos.left + curElem.width()];
+                var curElemShadow_y = [curElemPos.top, curElemPos.top + curElem.height()];
+
+                //comPE的投影
+                var comPEShadow_x = [comPEPos.left - gap, comPEPos.left + comPE.width() + gap];
+                var comPEShadow_y = [comPEPos.top - gap, comPEPos.top + comPE.height() + gap];
+
+                //检测是否X轴上相交
+                var intersect_x = (curElemShadow_x[0] > comPEShadow_x[0] && curElemShadow_x[0] < comPEShadow_x[1])
+                    || (curElemShadow_x[1] > comPEShadow_x[0] && curElemShadow_x[1] < comPEShadow_x[1]);
+
+                //检测是否Y轴上相交
+                var intersect_y = (curElemShadow_y[0] > comPEShadow_y[0] && curElemShadow_y[0] < comPEShadow_y[1])
+                    || (curElemShadow_y[1] > comPEShadow_y[0] && curElemShadow_y[1] < comPEShadow_y[1]);
+
+                Booleans = intersect_x && intersect_y;
+
+
+                if (index == 0) {
+                    isCover = Booleans;
+                } else {
+                    isCover = isCover || Booleans;
+                }
+
+                if (isCover) {
+
+                    info.height(comPE.height() + 2*gap)
+                        .width(comPE.width() + 2*gap)
+                        .css({
+                            'top':comPEPos.top - gap,
+                            'left':comPEPos.left - gap,
+                            'display':'block'
+                        });
+                    return false;
+
+                }else{
+                    info.css({
+                        'display':'none'
+                    });
                 }
             }
+
         });
-        $.each(referElem,function(index,elem){
-            reset(curElem,$(elem));
-        });
-        if(referElem.length > 0) {
-            //重新检测
-            this.reSort(referElem, curElem);
-        }
+       return isCover
+
     }
 
 };

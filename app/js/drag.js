@@ -205,7 +205,8 @@ var drag = {
 
                 }
 
-            } else {
+            } else {//点击控制台上的元素
+
                 if($target.parent().attr('id') === drag.control){
                     //放大
                     transition.magnify($target);

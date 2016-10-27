@@ -87,7 +87,16 @@ var drag = {
         //获得触摸点的位置
         drag.touchPos.X = e.targetTouches[0].clientX;
         drag.touchPos.Y = e.targetTouches[0].clientY;
-        if($target.parent().attr('class').indexOf('swiper-wrapper') < 0 ) {
+        var strClass = $target.parent().attr('class');
+        var flag = false;
+        if(strClass.indexOf('swiper-wrapper') < 0 ) {
+            flag = true;
+        }
+        if(strClass.indexOf('swiper-wrapper') >= 0 && $target.siblings().length <= 0){
+            flag = true;
+            $target = $target.parents('.swiper-container');
+        }
+        if(flag){
             //修改移动块的位置
             $target.offset({
                 top: drag.touchPos.Y - drag.touchOffsetPos.Y,
@@ -110,108 +119,116 @@ var drag = {
 
         var $target = $(target);
         var parent = $target.parent();
-            if (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 2 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 2) {
+        var strClass = parent.attr('class');
+        //这种情况是已经选择了相框中的图案了
+        var other = strClass.indexOf('swiper-wrapper') >= 0 && $target.siblings().length <=0;
+        if(other){
+            $target = $target.parents('.swiper-container');
+        }
+        if (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 2 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 2) {
+            if(strClass.indexOf('swiper-wrapper') < 0  || other) { //移动块，而非切换图案
 
-                if($target.parent().attr('class').indexOf('swiper-wrapper') < 0) { //移动块，而非切换图案
+                var elem = undefined;
 
-                    var elem = undefined;
+                //得到控制台和拖动元素列表的父元素
+                var control = $("#" + drag.control);
+                var dragListPar = $('#' + drag.dragParent);
 
-                    //得到控制台和拖动元素列表的父元素
-                    var control = $("#" + drag.control);
-                    var dragListPar = $('#' + drag.dragParent);
 
-                    //拖动元素是否位于控制台
-                    var sitControl = position.isRang(control, dragListPar, $target);
 
-                    //拖动结束后，如果拖拽元素的父元素是拖拽列表
-                    if (parent.attr('id') === drag.dragParent) {
-                        //如果元素位于控制台并且没有覆盖
-                        if (sitControl && !drag.isCover) {
-                            var dragChild = transition.createSwiperElem($target);
+                //拖动元素是否位于控制台
+                var sitControl = position.isRang(control, dragListPar, $target);
 
-                            //为克隆出的元素绑定touchstart事件
-                            untilEvent.addEvent(dragChild[0], 'touchstart', drag.touchStart);
+                //拖动结束后，如果拖拽元素的父元素是拖拽列表
+                if (parent.attr('id') === drag.dragParent) {
+                    //如果元素位于控制台并且没有覆盖
+                    if (sitControl && !drag.isCover) {
+                        var dragChild = transition.createSwiperElem($target);
 
-                            //将克隆出的元素插入到控制台
-                            position.addTo(dragChild, control, $target);
+                        //为克隆出的元素绑定touchstart事件
+                        untilEvent.addEvent(dragChild[0], 'touchstart', drag.touchStart);
 
-                            //将拖拽后生成的元素赋给elem
-                            elem = dragChild;
+                        //将克隆出的元素插入到控制台
+                        position.addTo(dragChild, control, $target);
 
-                        }
+                        //将拖拽后生成的元素赋给elem
+                        elem = dragChild;
 
-                        //将原来的触摸元素恢复到初始位置
-                        position.restore($target);
+                    }
+
+                    //将原来的触摸元素恢复到初始位置
+                    position.restore($target);
+                    //隐藏提示
+                    control.find('#notice').hide();
+                }
+                // 拖拽结束后，如果拖拽元素的父元素是控制台
+                if (parent.attr('id') === drag.control || other ) {
+                    //将拖拽的元素赋给elem
+                    elem = $target;
+
+                    //没有位于控制台
+                    if(!sitControl) {
+                        $target.remove();
+                    }
+
+                    //存在覆盖
+                    if(drag.isCover){
                         //隐藏提示
-                        control.find('#notice').hide();
-                    }
-                    // 拖拽结束后，如果拖拽元素的父元素是控制台
-                    if (parent.attr('id') === drag.control ) {
-                        //将拖拽的元素赋给elem
-                        elem = $target;
+                        $(control.find('#notice')).hide();
 
-                        //没有位于控制台
-                        if(!sitControl) {
-                            $target.remove();
-                        }
+                        //返回原来的位置
+                        $target.css({
+                            top:$target.attr('coordY') + 'px',
+                            left:$target.attr('coordX') + 'px'
+                        });
 
-                        //存在覆盖
-                        if(drag.isCover){
-                            //隐藏提示
-                            $(control.find('#notice')).hide();
-
-                            //返回原来的位置
-                            $target.css({
-                                top:$target.attr('coordY') + 'px',
-                                left:$target.attr('coordX') + 'px'
-                            });
-
-                        }
-
-                    }
-
-                    //将坐标保存在属性中
-                    elem.attr({
-                        'coordX':elem.offset().left,
-                        'coordY':elem.offset().top
-                    });
-
-
-                }else{ //切换图案
-
-                    var marginLeft = undefined;
-                    var transitionParent = $target.parent();
-
-                    //if语句判断滑动方向
-                    if(drag.startTouchPos.X > drag.touchPos.X){
-                         marginLeft = parseInt(transitionParent.css('marginLeft'));
-                        if(marginLeft > -transition.swiperElemW * (transitionParent.children().length -1) ) {
-
-                            transitionParent.stop(false,true).animate({
-                                'marginLeft': (marginLeft - transition.swiperElemW)
-
-                            },200);
-                        }
-                    }
-                    if(drag.startTouchPos.X < drag.touchPos.X){
-                        marginLeft = parseInt(transitionParent.css('margin-left'));
-
-                        if(marginLeft < 0) {
-                            transitionParent.stop(false,true).animate({
-                                'marginLeft': (marginLeft + transition.swiperElemW)
-                            },200);
-                        }
                     }
 
                 }
 
-            } else {//点击控制台上的元素
+                //将坐标保存在属性中
+                elem.attr({
+                    'coordX':elem.offset().left,
+                    'coordY':elem.offset().top
+                });
 
-                if($target.parent().attr('id') === drag.control){
-                    //放大
-                    transition.magnify($target);
+
+            }else{//切换图案
+
+                        var marginLeft = undefined;
+                        var transitionParent = $target.parent();
+
+                        //if语句判断滑动方向
+                        if (drag.startTouchPos.X > drag.touchPos.X) {
+                            marginLeft = parseInt(transitionParent.css('marginLeft'));
+                            if (marginLeft > -transition.swiperElemW * (transitionParent.children().length - 1)) {
+
+                                transitionParent.stop(false, true).animate({
+                                    'marginLeft': (marginLeft - transition.swiperElemW)
+
+                                }, 200);
+                            }
+                        }
+                        if (drag.startTouchPos.X < drag.touchPos.X) {
+                            marginLeft = parseInt(transitionParent.css('margin-left'));
+
+                            if (marginLeft < 0) {
+                                transitionParent.stop(false, true).animate({
+                                    'marginLeft': (marginLeft + transition.swiperElemW)
+                                }, 200);
+                            }
+                        }
+
                 }
+
+        } else {//点击控制台上的元素
+
+            if($target.parent().attr('id') === drag.control || other){
+
+                //放大
+                transition.magnify($target);
             }
+        }
     }
 };
 module.exports = drag;

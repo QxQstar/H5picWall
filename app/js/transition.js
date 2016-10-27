@@ -57,6 +57,7 @@ var transition = {
 
 
     magnify:function(swiperElem){
+         swiperElem.find('ul').html("");
         //添加一个蒙层
         this.addMask($('body'));
 
@@ -130,8 +131,9 @@ var transition = {
             //取消默认行为
             event.preventDefault();
             var $this = $(this);
-            if(!$this.data('touchX')){//如果没有滑动节不会触发touchmove事件，所有$(this).data('touchX')为understand
-
+            $this.data('touchX') ? offsetX = Math.abs($this.data('startX') - $this.data('touchX')):undefined;
+            $this.data('touchY') ? offsetY = Math.abs($this.data('startY') - $this.data('touchY')):undefined;
+            if(!$this.data('touchX') || offsetX>2&&offsetY>2){//如果没有滑动不会触发touchmove事件，所有$(this).data('touchX')为understand
 
 
                 var parent = $this.parent();

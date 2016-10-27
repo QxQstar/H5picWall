@@ -30,8 +30,8 @@ var ajax = {
     //请求相框里的图案
     getPic:function(elem,swiperElem){
 
-        var swiperElemW = parseInt(swiperElem.width());
-        var swiperElemH = parseInt(swiperElem.height());
+        var swiperElemW = swiperElem.width();
+        var swiperElemH = swiperElem.height();
 
         $.ajax({
            type:'GET',
@@ -43,22 +43,26 @@ var ajax = {
             success:function(result){
                 if(result.status == 1){
                     $.each(result.data,function(index,item){
+                        var W = item.width;
+                        var H = item.height;
                         var li = $('<li class="item swiper-slide" style=""></li>')
                                     .css({
                                         'background':"url(" + item.ma_src + ") no-repeat center center",
-                                         "height": swiperElemH,
-                                          "width": swiperElemW,
+                                         "height": parseInt(swiperElemH),
+                                          "width": parseInt(swiperElemW),
                                           "float":'left'
                                     });
-                        if(parseInt(item.height) >= parseInt(item.width)){
-                            li.css({
-                                'background-size':'auto 100%'
-                            });
-                        }else{
-                            li.css({
-                                'background-size':'100% auto'
-                            });
-                        }
+//
+                          if( swiperElemH / swiperElemW > H / W){
+                              li.css({
+                                  'background-size':'80% ' + 0.8*swiperElemW/W * H +'px'
+
+                              })
+                          }else{
+                              li.css({
+                                  'background-size': 0.8*swiperElemH/H * W+'px 80%'
+                              })
+                          }
 
 
                         //每添加一个图案就增加图案父元素的宽度

@@ -111,8 +111,8 @@ var drag = {
         var $target = $(target);
         var parent = $target.parent();
             if (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 2 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 2) {
-                //移动块，而非切换图案
-                if($target.parent().attr('class').indexOf('swiper-wrapper') < 0) {
+
+                if($target.parent().attr('class').indexOf('swiper-wrapper') < 0) { //移动块，而非切换图案
 
                     var elem = undefined;
 
@@ -177,8 +177,8 @@ var drag = {
                     });
 
 
-                }else{
-                    //切换图案
+                }else{ //切换图案
+
                     var marginLeft = undefined;
                     var transitionParent = $target.parent();
 

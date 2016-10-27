@@ -32,7 +32,7 @@ var ajax = {
 
         var swiperElemW = swiperElem.width();
         var swiperElemH = swiperElem.height();
-
+        var num = 50;
         $.ajax({
            type:'GET',
             async:false,
@@ -51,6 +51,10 @@ var ajax = {
                                          "height": parseInt(swiperElemH),
                                           "width": parseInt(swiperElemW),
                                           "float":'left'
+                                    })
+                                    .attr({
+                                        'data-w':parseInt(50/H * W),
+                                         'data-H':50
                                     });
 //
                           if( swiperElemH / swiperElemW > H / W){

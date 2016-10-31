@@ -33,6 +33,12 @@ var ajax = {
         var swiperElemW = swiperElem.width();
         var swiperElemH = swiperElem.height();
         var num = 50;
+        //显示之前却换到的图案
+        if(elem.data('marginLeft')){
+            elem.css({
+                'marginLeft':elem.data('marginLeft')
+            })
+        }
         $.ajax({
            type:'GET',
             async:false,
@@ -53,8 +59,8 @@ var ajax = {
                                           "float":'left'
                                     })
                                     .attr({
-                                        'data-w':parseInt(50/H * W),
-                                         'data-H':50
+                                        'data-w':parseInt(num/H * W),
+                                         'data-H':num
                                     });
 //
                           if( swiperElemH / swiperElemW > H / W){

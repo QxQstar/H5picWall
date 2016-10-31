@@ -86,115 +86,38 @@ var transition = {
         });
 
         //添加一个确认按钮
-        var btn = $('<button class="btn" id="btn">确认</button>')
-                    .css({
-                        'position':'absolute',
-                        'bottom':'10px',
-                        'right':'10px',
-                        'color':'#ffffff',
-                        'background-color':'red',
-                        'box-shadow':'3px',
-                        'padding':'5px 15px'
-                    });
-        swiperElem.append(btn);
+        var btnOk = createBtn({
+            'position':'absolute',
+            'bottom':'10px',
+            'right':'10px',
+            'color':'#ffffff',
+            'background-color':'red',
+            'box-shadow':'3px',
+            'padding':'5px 15px',
+            'border':'none'
+        },'btnOK btn','btnOk', '确定');
 
-        //通过触摸事件给btn模拟一个点击事件
-        btn.unbind('touchstart').on('touchstart',function(event){
-           //阻止事件冒泡或事件捕获
-            event.stopPropagation();
-            //取消默认行为
-            event.preventDefault();
-            var $this = $(this);
-            //将触摸点的坐标缓存起来
-            $this.data({
-                'startX':event.targetTouches[0].clientX,
-                'startY':event.targetTouches[0].clientY
-            })
-        });
-
-        btn.unbind('touchmove').on('touchmove',function(event){
-            //阻止事件冒泡或事件捕获
-            event.stopPropagation();
-            //取消默认行为
-            event.preventDefault();
-            var $this = $(this);
-            //将触摸点的坐标缓存起来
-            $this.data({
-                'touchX':event.targetTouches[0].clientX,
-                'touchY':event.targetTouches[0].clientY
-            })
-        });
-
-        btn.unbind('touchend').on('touchend',function(event){
-            //阻止事件冒泡或事件捕获
-            event.stopPropagation();
-            //取消默认行为
-            event.preventDefault();
-            var $this = $(this);
-            $this.data('touchX') ? offsetX = Math.abs($this.data('startX') - $this.data('touchX')):undefined;
-            $this.data('touchY') ? offsetY = Math.abs($this.data('startY') - $this.data('touchY')):undefined;
-            if(!$this.data('touchX') || offsetX>2&&offsetY>2){//如果没有滑动不会触发touchmove事件，所有$(this).data('touchX')为understand
+        swiperElem.append(btnOk);
+        //通过触摸事件给确认按钮模拟一个点击事件
+        this.clickHander(btnOk);
 
 
-                var parent = $this.parent();
-                //将控制台上的所有相框显示出来
-                parent.siblings().each(function(index,elem){
-                    if($(elem).attr('id') !== 'notice') {
-                        $(elem).css('display', 'block');
-                    }
-                });
-                //让该元素恢复到放大前的位置
-                parent.css({
-                    'top':parent.attr('coordy') + 'px',
-                    'left':parent.attr('coordx') + 'px',
-                    'width':parent.data('width') + 'px',
-                    'height':parent.data('height') + 'px'
-                });
-                //获取相框中的图案列表
-                var list = parent.find('.swiper-wrapper');
-                //获得当前的marginLeft值
-                var marginLeft = -parseInt(list.css('marginLeft'));
-                //将margLeft恢复到0
-                list.css({
-                    'margin-left':'0',
-                    'width':"100%"
-                });
-                //获得当前显示的是第几张印图
-                var i = parseInt(marginLeft / transition.swiperElemW);
-                list.children().each(function(index,elem){
-                    if(index !== i){
-                        $(elem).remove();
-                    }else{
+        //添加一个取消按钮
+        var btnNO = createBtn({
+            'position':'absolute',
+            'bottom':'10px',
+            'left':'10px',
+            'color':'#ffffff',
+            'background-color':'red',
+            'box-shadow':'3px',
+            'padding':'5px 15px',
+            'border':'none'
+        },'btnNO btn','btnNO', '清除');
 
-                        $(elem).css({
-                            'width':parent.width() + 'px',
-                            'height':parent.height() + 'px'
-                        });
-                            var PW = parent.width();
-                            var PH = parent.height();
-                            var W = parseInt($(elem).attr('data-W'));
-                            var H = parseInt($(elem).attr('data-H'));
-                        if(  PH / PW > H / W){
-                            $(elem).css({
-                                'background-size':'80% ' + 0.8*PW/W * H +'px'
+        swiperElem.append(btnNO);
+        //通过触摸事件给确认按钮模拟一个点击事件
+        this.clickHander(btnNO);
 
-                            })
-                        }else{
-                            $(elem).css({
-                                'background-size': 0.8*PH/H * W+'px 80%'
-                            })
-                        }
-
-                    }
-
-
-                });
-                //移除蒙层
-                $('#mask').remove();
-                //将btn移除
-                $this.remove();
-            }
-        });
 
         //放大被点击的元素
         //使得所有比例的图案都能够在控制台中完全并且按照他的比例显示
@@ -242,6 +165,124 @@ var transition = {
                 'z-index':'11'
             });
         elem.append(mask);
+    },
+
+    //用触摸事件模拟点击事件
+    clickHander:function(btn){
+        btn.unbind('touchstart').on('touchstart',function(event){
+            //阻止事件冒泡或事件捕获
+            event.stopPropagation();
+            //取消默认行为
+            event.preventDefault();
+            var $this = $(this);
+            //将触摸点的坐标缓存起来
+            $this.data({
+                'startX':event.targetTouches[0].clientX,
+                'startY':event.targetTouches[0].clientY
+            })
+        });
+
+        btn.unbind('touchmove').on('touchmove',function(event){
+            //阻止事件冒泡或事件捕获
+            event.stopPropagation();
+            //取消默认行为
+            event.preventDefault();
+            var $this = $(this);
+            //将触摸点的坐标缓存起来
+            $this.data({
+                'touchX':event.targetTouches[0].clientX,
+                'touchY':event.targetTouches[0].clientY
+            })
+        });
+
+        btn.unbind('touchend').on('touchend',function(event){
+            //阻止事件冒泡或事件捕获
+            event.stopPropagation();
+            //取消默认行为
+            event.preventDefault();
+            var $this = $(this);
+            $this.data('touchX') ? offsetX = Math.abs($this.data('startX') - $this.data('touchX')):undefined;
+            $this.data('touchY') ? offsetY = Math.abs($this.data('startY') - $this.data('touchY')):undefined;
+            if(!$this.data('touchX') || offsetX<2&&offsetY<2){//如果没有滑动不会触发touchmove事件，所有$(this).data('touchX')为understand
+
+
+                var parent = $this.parent();
+                //将控制台上的所有相框显示出来
+                parent.siblings().each(function(index,elem){
+                    if($(elem).attr('id') !== 'notice') {
+                        $(elem).css('display', 'block');
+                    }
+                });
+                //让该元素恢复到放大前的位置和大小
+                parent.css({
+                    'top':parent.attr('coordy') + 'px',
+                    'left':parent.attr('coordx') + 'px',
+                    'width':parent.data('width') + 'px',
+                    'height':parent.data('height') + 'px'
+                });
+                //获取相框中的图案列表
+                var list = parent.find('.swiper-wrapper');
+                //获得当前的marginLeft值
+                var marginLeft = -parseInt(list.css('marginLeft'));
+                //将marginLeft保存起来
+                list.data({
+                    'marginLeft':-marginLeft
+                });
+                //将margLeft恢复到0
+                list.css({
+                    'margin-left':'0',
+                    'width':"100%"
+                });
+                //显示当前选择的图案
+                var showCurPic = function(elem,parent){
+                    $(elem).css({
+                        'width':parent.width() + 'px',
+                        'height':parent.height() + 'px'
+                    });
+                    var PW = parent.width();
+                    var PH = parent.height();
+                    var W = parseInt($(elem).attr('data-W'));
+                    var H = parseInt($(elem).attr('data-H'));
+                    if(  PH / PW > H / W){
+                        $(elem).css({
+                            'background-size':'80% ' + 0.8*PW/W * H +'px'
+
+                        })
+                    }else{
+                        $(elem).css({
+                            'background-size': 0.8*PH/H * W+'px 80%'
+                        })
+                    }
+                };
+                //获得当前显示的是第几张印图
+                var i = parseInt(marginLeft / transition.swiperElemW);
+                list.children().each(function(index,elem){
+                        if (index !== i) {
+                            $(elem).remove();
+                        } else {
+                            if($this.attr('id') === 'btnOk') {//点击的是确认按钮
+                                //显示当前现在的图案
+                                showCurPic(elem, parent);
+                            }else{
+                                $(elem).remove();
+                            }
+                        }
+
+                });
+                //移除蒙层
+                $('#mask').remove();
+                //移除另一个按钮
+                $this.siblings('.btn').remove();
+                //将btn移除
+                $this.remove();
+
+            }
+        });
     }
 };
+function createBtn(style,className,ID,info){
+    var btn = $('<button class="'+className+'" id="'+ID+'">'+info+'</button>')
+        .css(style);
+    return btn
+}
 module.exports = transition;

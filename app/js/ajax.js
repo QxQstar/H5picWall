@@ -19,7 +19,10 @@ var ajax = {
                         var width = parseInt(item.width);
                         var height = parseInt(item.height);
                         var ratio = num / height;
-                        var img = $('<img>').attr("src",src).height(num).width(parseInt(width * ratio));
+                        var img = $('<img>')
+                            .attr("src",src)
+                            .height(num)
+                            .width(parseInt(width * ratio));
                         parent.append(img);
                     });
                 }
@@ -51,13 +54,14 @@ var ajax = {
                     $.each(result.data,function(index,item){
                         var W = item.width;
                         var H = item.height;
-                        var li = $('<li class="item swiper-slide" style=""></li>')
+                        var li = $('<li class="item swiper-slide"></li>')
                                     .css({
                                         'background':"url(" + item.ma_src + ") no-repeat center center",
                                          "height": parseInt(swiperElemH),
                                           "width": parseInt(swiperElemW),
                                           "float":'left'
                                     })
+                                    //下面两个属性在确定所选图案时，会用
                                     .attr({
                                         'data-w':parseInt(num/H * W),
                                          'data-H':num

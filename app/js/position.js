@@ -15,7 +15,7 @@ var position = {
         }
         parent.css({
             'width':"100%",
-            'z-index':'10'
+            'z-index':'12'
         });
         //当前列表内容的宽度
         var ListWidth = 0;
@@ -31,6 +31,7 @@ var position = {
             //设置元素的初始位置
             curEle.css({
                 position:"absolute",
+                zIndex:12,
 //                top:(i+1) * gap.Y + i*curEle.height(),
 //                left:(j+1) * gap.X + j*curEle.width()
                 top:gap.Y,
@@ -88,12 +89,10 @@ var position = {
         //将子元素插入父元素中
         parent.append(child);
 
-        //修改子元素在父元素中的位置并且保证子元素的大小不变
+        //修改子元素在父元素中的位置
         child.css({
             top:targetPos.Y - parentPos.Y,
-            left:targetPos.X - parentPos.X,
-            width:target.width(),
-            height:target.height()
+            left:targetPos.X - parentPos.X
         });
 
     },
@@ -135,7 +134,7 @@ var position = {
             var comPE = $(elem);
 
             //不能和自己进行比较
-            if(comPE.attr('id') !== curElem.attr('id') && comPE.attr('id') !== 'notice') {
+            if(comPE.attr('id') !== curElem.attr('id') && comPE.attr('id') !== 'notice' && comPE.attr('class') !=='canvas') {
                 //元素的位置
                 var curElemPos = curElem.offset();
                 var comPEPos = comPE.offset();

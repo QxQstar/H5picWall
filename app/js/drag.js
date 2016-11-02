@@ -124,7 +124,7 @@ var drag = {
             });
             //如果canvas存在就修改canvas的位置
             if(drag.canvas){
-                var padding = 100;
+                var padding = 200;
                 //之所以要减一，是因为参考线的宽度为1
                 drag.canvas.css({
                     'display':'block',
@@ -255,7 +255,7 @@ function supportCanvas(){
 //创建一个canvas
 function getCanvas(target){
     var canvas = $('<canvas class="canvas"></canvas>');
-    var padding = 100;
+    var padding = 200;
     canvas[0].height = target.height() + 2*padding;
     canvas[0].width = target.width() + 2*padding;
     canvas.css({

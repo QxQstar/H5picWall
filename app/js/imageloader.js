@@ -7,9 +7,11 @@
  * 预加载图片的函数
  * @param images 加载图片的数组或者对象
  * @param callback 全部图片加载完毕后调用的回调函数
+ * @param finish 移除加载动画
+ * @param loading 显示加载进度条的元素
  * @param timeout 加载超时的时长
  */
-function loadImage(images,callback,timeout){
+function loadImage(images,loading,finish,callback,timeout){
     //加载完成图片的计数器
     var count = 0;
     //全部图片加载成功的一个标志位
@@ -50,6 +52,7 @@ function loadImage(images,callback,timeout){
     }
     //如果计数为0，则直接调用callback
     if(!count){
+        finish();
        callback(success);
     }else if(timeout){
         timerId = setTimeout(onTimeout,timeout)
@@ -86,6 +89,7 @@ function loadImage(images,callback,timeout){
         function done(){
             img.onload = null;
             img.onerror = null;
+            loading.innerHTML = ((loaded / count | 0) * 100)  + '%';
             try{
                delete window[item.id]
             }catch (e){
@@ -94,6 +98,7 @@ function loadImage(images,callback,timeout){
             //每张图片加载完成，计数器减一，当所有图片加载完成没有超时的情况，清除定时器，且执行回调函数
             if(count === loaded && !isTimeout){
                 clearTimeout(timerId);
+                finish();
                 callback(success);
             }
         }

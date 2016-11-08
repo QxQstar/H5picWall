@@ -1,0 +1,47 @@
+/*图片预加载过程的动画效果，这个过程通过css去实现*/
+.g-container .m-animateLoading{
+    position: relative;
+    top:50%;
+    width: 60px;
+    height: 60px;
+    margin: -30px auto;
+}
+.m-animateLoading .double-bounce1,
+.m-animateLoading .double-bounce2{
+    position: absolute;
+    border-radius: 50%;
+    left: 0;
+    top:0;
+    opacity: 0.5;
+    background-color: #03beff;
+}
+.m-animateLoading #rate{
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    top:100%;
+}
+.m-animateLoading .double-bounce1{
+    -webkit-animation: bounce1 2s infinite ease-in-out 0s;
+}
+@-webkit-keyframes bounce1{
+    0%{
+        transform: scale(0);
+    }
+    100%{
+        transform:scale(1);
+    }
+}
+.m-animateLoading .double-bounce2{
+    -webkit-animation: bounce2 2s infinite ease-in-out 0s;
+}
+@-webkit-keyframes bounce2{
+    0%{
+        transform: scale(1);
+    }
+    100%{
+        transform: scale(0);
+    }
+}

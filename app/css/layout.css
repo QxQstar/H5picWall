@@ -1,0 +1,37 @@
+/*帧动画模块*/
+.g-container{
+    position: relative;
+}
+.g-container .m-animation{
+    height: 80px;
+    width: 102px;
+    display: none;
+    background-repeat: no-repeat;
+}
+.g-container .m-living{
+    position: relative;
+}
+.f-full{
+    height: 100%;
+    width: 100%;
+}
+.f-mask{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,.8);
+}
+.f-btnOk{
+    display: block;
+    width: 70%;
+    height: 30px;
+    margin: auto;
+    text-align: center;
+    border: none;
+}
+.f-cancel:focus{
+    outline: none;
+    border: none;
+}

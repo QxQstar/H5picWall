@@ -1,15 +1,26 @@
-/*帧动画模块*/
-.g-container{
+
+.g-container .m-top{
     position: relative;
+    height: 31px;
 }
-.g-container .m-animation{
-    height: 80px;
-    width: 102px;
-    display: none;
-    background-repeat: no-repeat;
+
+.g-container .m-top button{
+    position: absolute;
+    top: 0;
+    width: 16px;
+    height: 31px;
+    border: none;
+    z-index: 2;
+    background: url(./../img/icon.png) no-repeat;
 }
-.g-container .m-living{
-    position: relative;
+.g-container .m-top .backBtn{
+    background-position: 0 0;
+    left: 0;
+}
+.g-container .m-top .okBtn {
+    background-position: -16px 0;
+    width: 37px;
+    right: 0;
 }
 .f-full{
     height: 100%;
@@ -21,7 +32,14 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: rgba(0,0,0,.8);
+    z-index: 1;
+    background-color: rgba(0,0,0,.45);
+}
+.f-padding7{
+    padding: 7px;
+}
+.f-margin7{
+    margin: 7px;
 }
 .f-btnOk{
     display: block;
@@ -35,3 +53,259 @@
     outline: none;
     border: none;
 }
+
+.g-container .m-begin{
+    background: url(./../img/page1bg.jpg) no-repeat center;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+    color: #ffffff;
+}
+
+.m-begin .word{
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    font-size: 24px;
+    line-height: 50px;
+    text-align: center;
+}
+.m-begin .link{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 13%;
+    text-align: center;
+}
+.m-begin .link a{
+    display: inline-block;
+    width: 75px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 12px;
+    border: 1px #ffffff solid;
+    margin: 0 5px;
+
+}
+
+
+
+.g-container .m-case{
+    background-color: #e7e7e7;
+}
+.m-case .list .item{
+    margin: 7px 0;
+    border-radius: 5px;
+    border: 1px solid #c3c3c3;
+    padding: 0 10px;
+
+    background-color: #ffffff;
+}
+.m-case .item .link{
+    display: block;
+    color: #656565;
+}
+.m-case .item .title{
+    font-size: 11px;
+    line-height: 1.4;
+    transform:scale(0.8);
+    text-indent: -35px;
+}
+.m-case .item .content img{
+    max-width: 100%;
+}
+.m-case .item .footer{
+    height: 26px;
+    margin-top: 5px;
+}
+.m-case .item .footer .detail:after{
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: url(./../img/icon.png) no-repeat -162px 0;
+}
+.m-case .item .footer .detail span{
+    font-size: 11px;
+    transform:scale(0.8);
+}
+
+.g-container .m-scene{
+    padding-bottom: 7px;
+}
+.g-container .m-scene  .m-top h1{
+    position: absolute;
+    width: 100%;
+    height: 31px;
+    line-height: 31px;
+    font-size: 15px;
+    color: #535353;
+    text-align: center;
+
+}
+.m-scene .list img{
+    max-width: 100%;
+}
+.m-scene .list{
+    margin-left: .4%;
+}
+.m-scene .item{
+    float: left;
+    width: 48%;
+    margin: 10px 1% 0 1%;
+}
+.m-scene .item a{
+    display: block;
+}
+.m-scene .item .desc p{
+    font-size: 7px;
+    color: #535353;
+    line-height: 1.4;
+}
+
+.g-container .m-drag{
+    position: relative;
+    background-color: #ffffff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    -webkit-background-size: 100% 100%;
+    -o-background-size: 100% 100%;
+}
+/*小客厅*/
+.g-container .m-drag.bg-livingRoomS{
+    background-image: url(./../img/xktbg.jpg);
+}
+/*大客厅*/
+.g-container .m-drag.bg-livingRoomB{
+    background-image: url(./../img/dkebg.jpg);
+}
+/*卧室*/
+.g-container .m-drag.bg-bedRoom{
+    background-image: url(./../img/wsbg.jpg);
+}
+/*饭厅*/
+.g-container .m-drag.bg-diningRoom{
+    background-image: url(./../img/cfbg.jpg);
+}
+/*过道*/
+.g-container .m-drag.bg-aisle{
+    background-image: url(./../img/gdbg.jpg);
+}
+/*楼道*/
+.g-container .m-drag.bg-corridor{
+    background-image: url(./../img/ldbg.jpg);
+}
+/*对拼图页面重新定义m-top*/
+.g-container .m-drag .m-top{
+   position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    height: 31px;
+}
+.m-drag .control{
+    position: absolute;
+    top: 31px;
+    margin: 20px auto 0 auto;
+    left: 7px;
+    right: 7px;
+    background-color: #ffffff;
+    height: 250px;
+    z-index: 2;
+}
+/*放大或者缩小的icon*/
+.m-drag .magnify{
+    position: fixed;
+    border: none;
+    right: 7px;
+    width: 29px;
+    height: 30px;
+    z-index: 2;
+    background: transparent url(./../img/icon.png) no-repeat;
+}
+.m-drag .magnify.on{
+    background-position: -53px 0;
+}
+.m-drag .magnify.off{
+    background-position: -83px 0;
+}
+.m-drag .footer{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #ffffff;
+    overflow: hidden;
+    z-index: 2;
+}
+.m-drag .footer .content{
+    position: relative;
+    border: 1px solid #a9a9a9;
+}
+
+.m-drag .footer .next,
+.m-drag .footer .prev{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    margin: auto 0;
+    width: 25px;
+    height: 25px;
+    background: url(./../img/icon.png) no-repeat;
+}
+.m-drag .footer .prev{
+    left: 7px;
+    background-position: -112px 0;
+}
+.m-drag .footer .next{
+    right: 7px;
+    background-position: -137px 0;
+}
+.m-drag .footer .dragList{
+    position: absolute;
+    bottom: 0;
+    left: 32px;
+    right: 32px;
+    font-size: 0;
+}
+.m-drag .footer .item{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    width: 25%;
+    text-align: center;
+}
+.m-drag .footer .item .picGroup{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    position: relative;
+    text-align: center;
+    z-index: 3;
+}
+
+.m-drag .item .name,
+.m-drag .item .price{
+    font-size: 11px;
+    text-align: center;
+    transform:scale(0.8);
+}
+.m-drag  .picGroup .pic{
+    position: absolute;
+    top:0;
+    left:0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+
+}
+.m-drag img{
+    max-width: 100%;
+}
+

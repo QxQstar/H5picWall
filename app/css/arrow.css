@@ -1,0 +1,144 @@
+.m-living .arrows{
+    position: relative;
+}
+.m-living .arrows .u-arrow{
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    border: none;
+    background: url(./../img/arrow.png) no-repeat center;
+    background-size: cover;
+}
+/*向上的箭头*/
+.m-living .arrows .u-arrow-0{
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top:30px;
+    transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg); 	/* IE 9 */
+    -moz-transform:rotate(-90deg); 	/* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+    -o-transform:rotate(-90deg); 	/* Opera */
+    -webkit-animation: top .5s ease infinite alternate;
+    -o-animation: top .5s  ease infinite alternate;
+    animation: top .5s ease infinite alternate;
+}
+@keyframes top{
+
+    100%{
+        top:20px;
+    }
+}
+@-webkit-keyframes top{
+
+    100%{
+        top:20px;
+    }
+}
+@-o-keyframes top{
+
+    100%{
+        top:20px;
+    }
+}
+/*向下的箭头*/
+.m-living .arrows .u-arrow-1{
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom:30px;
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); 	/* IE 9 */
+    -moz-transform:rotate(90deg); 	/* Firefox */
+    -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+    -o-transform:rotate(90deg); 	/* Opera */
+    -webkit-animation: bottom .5s ease infinite alternate;
+    -o-animation: bottom .5s ease infinite alternate;
+    animation: bottom .5s ease infinite alternate;
+}
+@keyframes bottom{
+
+    100%{
+        bottom:20px;
+    }
+}
+@-webkit-keyframes bottom{
+
+    100%{
+        bottom:20px;
+    }
+}
+@-o-keyframes bottom{
+
+    100%{
+        bottom:20px;
+    }
+}
+
+/*向左的箭头*/
+.m-living .arrows .u-arrow-2{
+    left: 30px;
+    top:0;
+    bottom: 0;
+    margin: auto 0;
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg); 	/* IE 9 */
+    -moz-transform:rotate(180deg); 	/* Firefox */
+    -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+    -o-transform:rotate(180deg); 	/* Opera */
+    -webkit-animation: left .5s ease infinite alternate;
+    -o-animation: left .5s ease infinite alternate;
+    animation: left .5s ease infinite alternate;
+}
+@keyframes left {
+
+    100% {
+        left: 20px;
+    }
+}
+@-webkit-keyframes left {
+
+    100% {
+        left: 20px;
+    }
+}
+@-o-keyframes left {
+
+    100% {
+        left: 20px;
+    }
+}
+/*向右的箭头*/
+.m-living .arrows .u-arrow-3{
+    right: 30px;
+    top:0;
+    bottom: 0;
+    margin: auto 0;
+    transform:rotate(0deg);
+    -ms-transform:rotate(0deg); 	/* IE 9 */
+    -moz-transform:rotate(0deg); 	/* Firefox */
+    -webkit-transform:rotate(0deg); /* Safari 和 Chrome */
+    -o-transform:rotate(0deg); 	/* Opera */
+    -webkit-animation: right .5s ease infinite alternate;
+    -o-animation: right .5s ease infinite alternate;
+    animation: right .5s ease infinite alternate;
+}
+@keyframes right {
+
+    100% {
+        right: 20px;
+    }
+}
+@-webkit-keyframes right {
+
+    100% {
+        right: 20px;
+    }
+}
+@-o-keyframes right {
+
+    100% {
+        right: 20px;
+    }
+}

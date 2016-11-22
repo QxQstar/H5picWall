@@ -4,10 +4,18 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    font-size: 14px;
+    font:14px arial,'\5FAE\8F6F\96C5\9ED1',sans-serif;
+}
+html,body{
+    position: relative;
+    height: 100%;
+    width: 100%;
 }
 img{
     border: none;
+}
+button:focus{
+    outline: none;
 }
 a{
     outline: none;

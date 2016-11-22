@@ -45,3 +45,20 @@
         transform: scale(0);
     }
 }
+
+.g-container{
+    position: relative;
+}
+.g-container .m-animation{
+    display: none;
+    background-repeat: no-repeat;
+    background-color: #ffffff;
+}
+.g-container .m-animation img{
+    position: absolute;
+    top:0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    max-width: 100%;
+}

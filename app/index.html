@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title>入口html文件,完成后所有的操作都是在这个页面</title>
+</head>
+<body>
+    <div class="g-container f-full" id="container">
+        <!--开场动画模块，其中包括两个动画模块-->
+        <div class="m-animationGroup f-full" id="animationGroup">
+            <!--图片预加载过程显示的动画,图片加载结束后，这个模块要被移除-->
+            <div class="m-animateLoading" id="animateLoading">
+                <div class="double-bounce1 f-full"></div>
+                <div class="double-bounce2 f-full"></div>
+                <div id="rate">0%</div>
+            </div>
+            <!--运行帧动画模块-->
+            <div class="m-animation f-full" id="animation">
+                <img src="">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

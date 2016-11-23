@@ -16,6 +16,8 @@ function Scale(){
     this.controlOriginalSize = null;
     //控制台缩放的比例
     this.controlRate = null;
+    //默认画框不处于放大状态
+    this.frameMagnify = false;
 }
 /**
  * 缩放控制台
@@ -23,7 +25,9 @@ function Scale(){
  * @param control 要缩放的元素
  */
 Scale.prototype.controlScale = function(event,control){
-
+    if(this.frameMagnify){
+        return false;
+    }
     event.stopPropagation();
     event.preventDefault();
 
@@ -114,6 +118,78 @@ Scale.prototype.controlScale = function(event,control){
     }
 
     this.controlMagnify = ! this.controlMagnify;
+};
+/**
+ *放大相框
+ * @param elem 要放大的元素
+ */
+Scale.prototype.magnifyFrame = function(elem){
+
+    //将画框设置为放大状态
+    this.frameMagnify = true;
+    //控制台
+    var control = elem.parent();
+
+    //将兄弟元素隐藏起来
+    elem.siblings().each(function(index,cur){
+        $(cur).hide();
+    });
+    //移除事件，使画框在放大的时候，画框不能进行拖动
+    elem.find('.pic').unbind();
+
+    var frame = elem.children('img').first();
+    //将画框放大前的尺寸和位置缓存起来
+    frame.data({
+        'originH':frame.height(),
+        'originW':frame.width(),
+        'originT': frame.css('top'),
+        'originL':frame.css('top')
+    });
+    //画框宽和高的比例
+    var frameRate = frame.data('originW') / frame.data('originH');
+    //控制台宽和高的比例
+    var controlRate = control.width() / control.height();
+    //放大画框
+    if(frameRate > controlRate ){//很宽的画框
+        frame
+            .width( (control.width() * 0.7 ) | 0)
+            .height( (1/frameRate * frame.width() ) | 0)
+    }else{
+        frame
+            .height( (control.height() * 0.7) | 0)
+            .width( (frameRate * frame.height() ) | 0 );
+    }
+
+    //修改画框的位置
+    elem
+        .css({
+            top: (control.height() - elem.height() ) / 2 | 0,
+            left: (control.width() - elem.width() ) / 2 | 0
+        });
+
+    var title = $('<p>更换画心</p>')
+        .css({
+            'text-align':'center',
+            'margin-top': parseInt(elem.css('top')) * 0.3
+        });
+    var rate = $('<p>1/5</p>')
+                .css({
+                    'position':'absolute',
+                    'right':elem.css('left')
+                });
+
+    var head = $('<div></div>');
+    head.append(title).append(rate);
+    var footer = $('<div></div>')
+        .css({
+            'position':'absolute',
+            'bottom':'5%',
+            'right':elem.css('left')
+        });
+    var button = $('<button>确认</button>');
+    footer.append(button);
+    //使head成为父元素的第一个元素
+    control.prepend(head).append(footer);
 };
 
 

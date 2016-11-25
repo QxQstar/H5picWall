@@ -4,6 +4,7 @@
 
 var $ = require('jquery');
 var drag = require('./drag.js');
+var transition = require('./transition.js');
 
 //var ajax = {
 //    //得到可拖拽图片的初始列表
@@ -99,6 +100,10 @@ var drag = require('./drag.js');
  * @constructor
  */
 function Ajax(){
+    //用来保存每个相框请求到的画心列表
+    this.picData={
+
+    };
 }
 
 /**
@@ -183,15 +188,15 @@ Ajax.prototype.turnPage = function(page){
                 $.each(result.data,function(dataIndex,data){
                       listStr += '<li class="item f-padding7">'+
                                         '<div class="picGroup">'+
-                                            '<img src="/pw'+ data.pic_src +'" alt=" 相框 " data-code="'+ data.id +'" data-type="'+ data.type +'" data-twidth="'+ data.t_width +'" data-theight="'+ data.t_height +'"/>'+
-                                            '<img class="pic" src="/pw'+ data.de_src +'" alt=" 相框 " data-code="'+ data.ma_id +'" data-type="'+ data.type +'"/>'+
+                                            '<img src="/pw'+ data.pic_src +'" alt=" 相框 " data-code="'+ data.id +'" data-type="'+ data.type +'" data-twidth="'+ data.t_width +'" data-theight="'+ data.t_height +'" data-src="'+ data.imgfile +'"/>'+
+                                            '<img class="pic" src="/pw'+ data.de_src +'" alt=" 相框 " data-code="'+ data.ma_id +'" data-type="'+ data.type +'" data-src="/pw'+ data.de_src +'"/>'+
                                         '</div>'+
                                         '<div class="info">'+
                                             '<div class="name">'+
                                                 data.name+
                                             '</div>'+
                                             '<div class="price">'+
-                                                data.price+
+                                                parseFloat(data.price).toFixed(2)+
                                             '</div>'+
                                         '<div>'+
                                     '</li>';
@@ -205,6 +210,39 @@ Ajax.prototype.turnPage = function(page){
             }
         }
     });
+};
+/**
+ * 请求可以切换的画心
+ * @param picGroup 要切换画心的相框 jquery节点
+ */
+Ajax.prototype.getPic = function(picGroup){
+    var me = this;
+    var defaultPic = picGroup.find('.pic');
+    var type = defaultPic.attr('data-type');
+    var code = defaultPic.attr('data-code');
+    console.log('gitPic');
+    //如果存在要请求的相关数据则不发送请求
+    if(me.picData.hasOwnProperty(code)){
+        transition.addPicList(picGroup,me.picData.code);
+    }else{
+        $.ajax({
+            type: "POST",
+            data: {
+                type: type
+            },
+            url: "/pw/index.php/home/mater/findbytype",
+            dataType: 'json',
+            success: function (result) {
+                if (result.status === 1) {
+                    //将请求到的数据缓存起来
+                    me.picData.code = result.data;
+                    transition.addPicList(picGroup,me.picData.code);
+                }
+            }
+        })
+    }
+
+
 };
 /**
  * 得到hash值，不包含#/

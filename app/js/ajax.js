@@ -101,9 +101,7 @@ var transition = require('./transition.js');
  */
 function Ajax(){
     //用来保存每个相框请求到的画心列表
-    this.picData={
-
-    };
+    this.picData={};
 }
 
 /**
@@ -220,10 +218,9 @@ Ajax.prototype.getPic = function(picGroup){
     var defaultPic = picGroup.find('.pic');
     var type = defaultPic.attr('data-type');
     var code = defaultPic.attr('data-code');
-    console.log('gitPic');
     //如果存在要请求的相关数据则不发送请求
     if(me.picData.hasOwnProperty(code)){
-        transition.addPicList(picGroup,me.picData.code);
+        transition.addPicList(picGroup,me.picData[code]);
     }else{
         $.ajax({
             type: "POST",
@@ -235,8 +232,8 @@ Ajax.prototype.getPic = function(picGroup){
             success: function (result) {
                 if (result.status === 1) {
                     //将请求到的数据缓存起来
-                    me.picData.code = result.data;
-                    transition.addPicList(picGroup,me.picData.code);
+                    me.picData[code] = result.data;
+                    transition.addPicList(picGroup,me.picData[code]);
                 }
             }
         })

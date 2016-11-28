@@ -25,6 +25,7 @@ function Scale(){
  * @param control 要缩放的元素
  */
 Scale.prototype.controlScale = function(event,control){
+    
     //如果相框处于放大的状态就不能放大操作台
     if(this.frameMagnify){
         return false;
@@ -121,10 +122,10 @@ Scale.prototype.controlScale = function(event,control){
 };
 /**
  *放大相框
- * @param elem 要放大的元素
+ * @param picGroup 要放大的元素
  * @param ajaxObj ajax对象
  */
-Scale.prototype.magnifyFrame = function(elem,ajaxObj){
+Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     //如果操作台处于放大的状态不能放大相框
     if(this.controlMagnify){
         return false;
@@ -132,51 +133,51 @@ Scale.prototype.magnifyFrame = function(elem,ajaxObj){
     //将画框设置为放大状态
     this.frameMagnify = true;
     //控制台
-    var control = elem.parent();
+    var control = picGroup.parent();
 
     //将兄弟元素隐藏起来
-    elem.siblings().each(function(index,cur){
+    picGroup.siblings().each(function(index,cur){
         $(cur).hide();
     });
 
-    var frame = elem.children('img').first();
+    var frame = picGroup.children('img').first();
     //将画框放大前的尺寸和位置缓存起来
     frame.data({
         'originH':frame.height(),
         'originW':frame.width(),
-        'originT': elem.css('top'),
-        'originL':elem.css('left')
+        'originT': picGroup.css('top'),
+        'originL':picGroup.css('left')
     });
+    frame.hide();
     //画框宽和高的比例
     var frameRate = frame.data('originW') / frame.data('originH');
     //控制台宽和高的比例
     var controlRate = control.width() / control.height();
     //放大画框
       if( frameRate > controlRate ){
-          elem
+          picGroup
               .css({
                   'width':'70%',
                   'height':( 1/frameRate * (control.width() * 0.7)  ) + 'px'
               })
       }else{
-          elem
+          picGroup
               .css({
                   'height':'70%',
                   'width':(frameRate * (control.height() * 0.7)) +'px'
               })
       }
     //添加背景和修改位置
-        elem
+    picGroup
             .css({
                 'background-image': 'url(' + frame.attr('src') + ')',
                 'background-repeat': 'no-repeat',
                 'background-size': '100% 100%',
-                'top': ((control.height() - elem.height()) / 2 | 0) + 'px',
-                'left': ((control.width() - elem.width()) / 2 | 0) + 'px'
+                'top': ((control.height() - picGroup.height()) / 2 | 0) + 'px',
+                'left': ((control.width() - picGroup.width()) / 2 | 0) + 'px'
             });
-        frame.hide();
-    //发送请求，获得画心列表
-    ajaxObj.getPic(elem);
+
+
       var head,footer,sureBtn,prev,next;
        //生成一些必要的元素
     (function() {
@@ -184,12 +185,13 @@ Scale.prototype.magnifyFrame = function(elem,ajaxObj){
         var title = $('<p>更换画心</p>')
             .css({
                 'text-align': 'center',
-                'margin-top': parseInt(elem.css('top')) * 0.3
+                'margin-top': parseInt(picGroup.css('top')) * 0.3
             });
-        var rate = $('<p id="rate">1/5</p>')
+        //显示可切换的画心总数量和当前切换到的画心序号
+        var rate = $('<p id="rate"></p>')
             .css({
                 'position': 'absolute',
-                'right': elem.css('left')
+                'right': picGroup.css('left')
             });
 
         head = $('<div class="title"></div>');
@@ -215,31 +217,44 @@ Scale.prototype.magnifyFrame = function(elem,ajaxObj){
         control.prepend(head).append(footer).append(prev).append(next);
     })();
 
+    //发送请求，获得画心列表
+    ajaxObj.getPic(picGroup);
 
     var me = this;
     //给确定按钮绑定事件
-    sureBtn.unbind('click').on('click',function(event){
+    sureBtn.on('click',function(event){
 
         event.stopPropagation();
         event.preventDefault();
+        var list = picGroup.children('#list');
+        var pic = picGroup.children('.pic');
+        var W = list.children('li').first().width();
+        //切换到的画心的序号，从0开始计数
+        var curIndex = Math.abs( parseInt( list.css('marginLeft') ) ) / W;
+        picGroup.attr('data-picIndex',curIndex);
+        pic.attr('src',list.find('img').eq(curIndex).attr('src'));
 
         head.remove();
+        sureBtn.unbind('click');
         footer.remove();
-        prev.remove();
-        next.remove();
-
-        elem
+        //在从页面移除之前，先移除绑定的事件
+        prev.unbind('click').remove();
+        next.unbind('click').remove();
+        list.remove();
+        picGroup
             .css({
                 width:'auto',
                 height:'auto',
                 top:frame.data('originT'),
                 left:frame.data('originL'),
                 backgroundImage:'none'
-            });
-        elem.siblings().each(function(index,cur){
+            })
+            .siblings().each(function(index,cur){
             $(cur).show();
         });
         frame.show();
+
+        pic.show();
 
         me.frameMagnify = false;
 

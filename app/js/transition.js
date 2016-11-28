@@ -4,21 +4,19 @@
 var $ = require('jquery');
 
 var transition = {
-    swiperElemW:undefined,
-    swiperElemH:undefined,
     /**
      * 生成可切换的画心列表
-     * @param elem 要接受画心列表的元素 jquery节点
+     * @param picGroup 要接受画心列表的元素 jquery节点
      * @param data 画心列表数据，对象
      */
-    addPicList:function(elem,data){
+    addPicList:function(picGroup,data){
         //将已经存在的画心元素隐藏
-        var pic = elem.find('.pic').hide();
+        var pic = picGroup.find('.pic').hide();
         //生成列表
         var list = "";
-        console.log('addPic');
-        //应该首先显示的图片的索引，默认为0
+        //应该首先显示的图片的索引，默认为0,从0开始计数
         var index = 0;
+        //总共的画心数量
         var total = 0;
         $.each(data,function(index,item){
             list += "<li class='picItem'>"+
@@ -27,15 +25,17 @@ var transition = {
             total ++;
         });
 
-        if(typeof parseInt(elem.attr('data-picIndex')) === 'number'){
-            index = parseInt(elem.attr('data-picIndex'));
+        if(picGroup.attr('data-picIndex')
+            && typeof parseInt(picGroup.attr('data-picIndex')) === 'number'){
+            //data-picIndex属性表示该显示第几张画心，默认情况显示第一张画心
+            index = parseInt(picGroup.attr('data-picIndex'));
         }
         var ul = $('<ul id="list" class="clearfix"></ul>')
                    .css({
                         'position':'relative',
-                        'marginLeft':-(elem.width() * index) | 0 + 'px',
+                        'marginLeft':-(picGroup.width() * index) | 0 + 'px',
                         'height':'100%',
-                        'width':(elem.width() * total) | 0 + 'px'
+                        'width':(picGroup.width() * total) | 0 + 'px'
                     })
                     .html(list);
         ul
@@ -43,17 +43,19 @@ var transition = {
             .css({
                 'position':'relative',
                 'height':'100%',
-                'width':elem.width() | 0 + 'px',
+                'width':picGroup.width() | 0 + 'px',
                 'float':'left'
             })
             .find('.pic')
             .css({
                 'opacity':'1'
             });
-        elem.append(ul);
+        var rate = $('#rate');
+        rate.html( (index + 1 ) + '/' + total );
+        picGroup.append(ul);
         //绑定事件
-        elem.siblings('#picPrev').on('click',change);
-        elem.siblings('#picNext').on('click',change);
+        picGroup.siblings('#picPrev').on('click',change);
+        picGroup.siblings('#picNext').on('click',change);
 
         function change(event){
             transition.changePic(event,ul);
@@ -69,25 +71,36 @@ var transition = {
 
         event.stopPropagation();
         event.preventDefault();
+        //总共可以却换的画心数量
         var total  = list.children('li').length;
         var W = list.children('li').first().width();
         //当前marginLeft值
         var marginLeft = parseInt(list.css('marginLeft'));
+        var showRate  = function(){
+            //当前却换到的画心的序号
+            var curIndex = Math.abs( parseInt( list.css('marginLeft') ) ) / W + 1;
+            $('#rate').html(curIndex +'/' +total);
+
+
+        };
 
         var $target = $(event.target);
         if($target.attr('id') === 'picNext'){
             if(marginLeft > -(total -1) * W){
                 list.stop(false, true).animate({
                     'marginLeft': (marginLeft - W) | 0+ 'px'
-                }, 200);
+                }, 200,showRate);
             }
         }else{
             if(marginLeft < 0){
                 list.stop(false, true).animate({
                     'marginLeft': (marginLeft + W) | 0+ 'px'
-                }, 200);
+                }, 200,showRate);
+
+
             }
         }
+
     }
 //    //添加相框中的素材
 //    addSwiper: function (swiperElem) {

@@ -4,98 +4,98 @@
 'use strict';
 
 /**
- * Ô¤¼ÓÔØÍ¼Æ¬µÄº¯Êı
- * @param images ¼ÓÔØÍ¼Æ¬µÄÊı×é»òÕß¶ÔÏó
- * @param callback È«²¿Í¼Æ¬¼ÓÔØÍê±Ïºóµ÷ÓÃµÄ»Øµ÷º¯Êı
- * @param finish ÒÆ³ı¼ÓÔØ¶¯»­
- * @param loading ÏÔÊ¾¼ÓÔØ½ø¶ÈÌõµÄÔªËØ
- * @param timeout ¼ÓÔØ³¬Ê±µÄÊ±³¤
+ * é¢„åŠ è½½å›¾ç‰‡çš„å‡½æ•°
+ * @param images åŠ è½½å›¾ç‰‡çš„æ•°ç»„æˆ–è€…å¯¹è±¡
+ * @param callback å…¨éƒ¨å›¾ç‰‡åŠ è½½å®Œæ¯•åè°ƒç”¨çš„å›è°ƒå‡½æ•°
+ * @param finish ç§»é™¤åŠ è½½åŠ¨ç”»
+ * @param loading æ˜¾ç¤ºåŠ è½½è¿›åº¦æ¡çš„å…ƒç´ 
+ * @param timeout åŠ è½½è¶…æ—¶çš„æ—¶é•¿
  */
 function loadImage(images,loading,finish,callback,timeout){
-    //¼ÓÔØÍê³ÉÍ¼Æ¬µÄ¼ÆÊıÆ÷
+    //åŠ è½½å®Œæˆå›¾ç‰‡çš„è®¡æ•°å™¨
     var count = 0;
-    //È«²¿Í¼Æ¬¼ÓÔØ³É¹¦µÄÒ»¸ö±êÖ¾Î»
+    //å…¨éƒ¨å›¾ç‰‡åŠ è½½æˆåŠŸçš„ä¸€ä¸ªæ ‡å¿—ä½
     var success = true;
-    //³¬Ê±timerµÄid
+    //è¶…æ—¶timerçš„id
     var timerId = 0;
-    //ÊÇ·ñ¼ÓÔØ³¬Ê±µÄ±êÖ¾Î»
+    //æ˜¯å¦åŠ è½½è¶…æ—¶çš„æ ‡å¿—ä½
     var isTimeout = false;
-    //ÒÑ¾­¼ÓÔØÍê³ÉµÄ³¤¶È
+    //å·²ç»åŠ è½½å®Œæˆçš„é•¿åº¦
     var loaded = 0;
 
-    //¶ÔÍ¼Æ¬Êı×é£¨»ò¶ÔÏó£©½øĞĞ±éÀú
+    //å¯¹å›¾ç‰‡æ•°ç»„ï¼ˆæˆ–å¯¹è±¡ï¼‰è¿›è¡Œéå†
     for(var key in images){
-        //¹ıÂËµôprototypeÉÏµÄÊôĞÔ
+        //è¿‡æ»¤æ‰prototypeä¸Šçš„å±æ€§
         if(!images.hasOwnProperty(key)){
             continue;
         }
-        //»ñµÃÃ¿¸öÍ¼Æ¬ÔªËØ
-        //ÆÚÍûitemÊÇÒ»¸öobject£º{src:XXX}
+        //è·å¾—æ¯ä¸ªå›¾ç‰‡å…ƒç´ 
+        //æœŸæœ›itemæ˜¯ä¸€ä¸ªobjectï¼š{src:XXX}
         var item = images[key];
         if(typeof item === "string"){
             item = images[key] = {
                 src:item
             }
         }
-        //Èç¹û¸ñÊ½²»Âú×ãÆÚÍû£¬Ôò½øĞĞÏÂÒ»´Î±éÀú
+        //å¦‚æœæ ¼å¼ä¸æ»¡è¶³æœŸæœ›ï¼Œåˆ™è¿›è¡Œä¸‹ä¸€æ¬¡éå†
         if(!item || !item.src){
             continue;
         }
-       //¼ÆËã+1
-         ++ count;
-        //ÉèÖÃÍ¼Æ¬ÔªËØµÄid
+        //è®¡ç®—+1
+        ++ count;
+        //è®¾ç½®å›¾ç‰‡å…ƒç´ çš„id
         item.id = '__img__' + key + getId();
-        //ÉèÖÃÍ¼Æ¬ÔªËØµÄimage£¬ËüÊÇÒ»¸öimage¶ÔÏó
+        //è®¾ç½®å›¾ç‰‡å…ƒç´ çš„imageï¼Œå®ƒæ˜¯ä¸€ä¸ªimageå¯¹è±¡
         item.image = window[item.id] = new Image();
 
         doLoad(item);
     }
-    //Èç¹û¼ÆÊıÎª0£¬ÔòÖ±½Óµ÷ÓÃcallback
+    //å¦‚æœè®¡æ•°ä¸º0ï¼Œåˆ™ç›´æ¥è°ƒç”¨callback
     if(!count){
         finish();
-       callback(success);
+        callback(success);
     }else if(timeout){
         timerId = setTimeout(onTimeout,timeout)
     }
     /**
-     * ÕæÕı½øĞĞÍ¼Æ¬Ô¤¼ÓÔØµÄº¯Êı
-     * @param item Í¼Æ¬ÔªËØµÄ¶ÔÏó
+     * çœŸæ­£è¿›è¡Œå›¾ç‰‡é¢„åŠ è½½çš„å‡½æ•°
+     * @param item å›¾ç‰‡å…ƒç´ çš„å¯¹è±¡
      */
     function doLoad(item){
         item.state = 'loading';
 
         var img = item.image;
-        //Í¼Æ¬¼ÓÔØ³É¹¦µÄÒ»¸ö»Øµ÷º¯Êı
+        //å›¾ç‰‡åŠ è½½æˆåŠŸçš„ä¸€ä¸ªå›è°ƒå‡½æ•°
         img.onload = function(){
-            //Ö»ÒªÓĞÒ»ÕÅ³öÏÖ¼ÓÔØÊ§°Ü£¬success¾Í»áÎªfalse
+            //åªè¦æœ‰ä¸€å¼ å‡ºç°åŠ è½½å¤±è´¥ï¼Œsuccesså°±ä¼šä¸ºfalse
             success = success & true;
             item.state = 'load';
             loaded ++;
             done();
 
         };
-        //Í¼Æ¬¼ÓÔØÊ§°ÜµÄ»Øµ÷º¯Êı
+        //å›¾ç‰‡åŠ è½½å¤±è´¥çš„å›è°ƒå‡½æ•°
         img.onerror = function(){
             success = false;
             item.state = 'error';
             loaded ++;
             done();
         };
-        //¼ÓÔØÍ¼Æ¬
+        //åŠ è½½å›¾ç‰‡
         img.src = item.src;
         /**
-         * Ã¿ÕÅÍ¼Æ¬¼ÓÔØÍê³ÉµÄ»Øµ÷º¯Êı£¬²»ÂÛ³É¹¦»¹ÊÇÊ§°Ü
+         * æ¯å¼ å›¾ç‰‡åŠ è½½å®Œæˆçš„å›è°ƒå‡½æ•°ï¼Œä¸è®ºæˆåŠŸè¿˜æ˜¯å¤±è´¥
          */
         function done(){
             img.onload = null;
             img.onerror = null;
-            loading.innerHTML = ((loaded / count | 0) * 100)  + '%';
+            loading.innerHTML = ((loaded / count * 100)  | 0 ) + '%';
             try{
-               delete window[item.id]
+                delete window[item.id]
             }catch (e){
 
             }
-            //Ã¿ÕÅÍ¼Æ¬¼ÓÔØÍê³É£¬¼ÆÊıÆ÷¼õÒ»£¬µ±ËùÓĞÍ¼Æ¬¼ÓÔØÍê³ÉÃ»ÓĞ³¬Ê±µÄÇé¿ö£¬Çå³ı¶¨Ê±Æ÷£¬ÇÒÖ´ĞĞ»Øµ÷º¯Êı
+            //æ¯å¼ å›¾ç‰‡åŠ è½½å®Œæˆï¼Œè®¡æ•°å™¨å‡ä¸€ï¼Œå½“æ‰€æœ‰å›¾ç‰‡åŠ è½½å®Œæˆæ²¡æœ‰è¶…æ—¶çš„æƒ…å†µï¼Œæ¸…é™¤å®šæ—¶å™¨ï¼Œä¸”æ‰§è¡Œå›è°ƒå‡½æ•°
             if(count === loaded && !isTimeout){
                 clearTimeout(timerId);
                 finish();
@@ -105,7 +105,7 @@ function loadImage(images,loading,finish,callback,timeout){
     }
 
     /**
-     * ³¬Ê±º¯Êı
+     * è¶…æ—¶å‡½æ•°
      */
     function onTimeout(){
         isTimeout = true;
@@ -116,6 +116,6 @@ function loadImage(images,loading,finish,callback,timeout){
 
 var __id = 0;
 function getId(){
-   return ++ __id;
+    return ++ __id;
 }
 module.exports = loadImage;

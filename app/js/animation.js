@@ -5,7 +5,6 @@
 
 var loadImage = require('./imageloader.js');
 var Timeline = require('./timeline.js');
-var createScene = require('./createScene.js');
 
 //初始化状态
 var STATE_INITIAL = 0;
@@ -26,7 +25,6 @@ function next(callback){
 }
 /**
  * 帧动画对象
- * @param elem 执行帧动画的元素
  * @constructor
  */
 function Animation() {
@@ -39,7 +37,7 @@ function Animation() {
 /**
  * 添加一个同步任务，图片预加载
  * @param imagelist 图片数组
- * @param finish 图片预加载结束后执行函数
+ * @param finish 图片预加载结束后执行函数，将开始的css动画移除
  * @param loading 显示加载进度的元素
  */
 Animation.prototype.loadImage = function(imagelist,loading,finish){
@@ -59,13 +57,18 @@ Animation.prototype.loadImage = function(imagelist,loading,finish){
  */
 Animation.prototype.changePosition = function(ele,positions,imageUrl){
     var len = positions.length;
-    this.elem = ele;
     var type;
     var taskFn;
     var me = this;
+    var bgW = 80;
+    var bgH = 102;
+    var clientW = document.documentElement.clientWidth || document.body.clientWidth;
+    var clientH = document.documentElement.clientHeight || document.body.clientHeight;
+    var offsetWHalf = (clientW - bgW)/2 | 0;
+    var offsetHHalf = (clientH - bgH)/2 | 0;
     if(len){
         taskFn = function(next,time){
-            if(imageUrl){
+            if(imageUrl && !ele.style.backgroundImage){
                 ele.style.display = 'block';
                 ele.style.backgroundImage = 'url(' + imageUrl + ')';
             }
@@ -73,7 +76,7 @@ Animation.prototype.changePosition = function(ele,positions,imageUrl){
             var index = Math.min(time / me.interval | 0,len -1 );
             var position = positions[index].split(" ");
             //改变DOM背景图片的位置
-            ele.style.backgroundPosition = position[0] + 'px ' + position[1] + 'px';
+            ele.style.backgroundPosition = ( Number(position[0]) + offsetWHalf )+ 'px ' +( Number(position[1]) + offsetHHalf)+ 'px';
             //如果已经到达最后一帧，则执行下一个任务
             if(index === len -1){
                 next();
@@ -99,6 +102,7 @@ Animation.prototype.changeSrc  = function(ele,imagelist){
     var me = this;
     if(len){
         taskFn = function(next,time){
+            ele.style.display = 'block';
             //获得当前图片索引
             var index = Math.min(time/me.interval | 0,len-1);
             //改变image对象的图片地址
@@ -223,11 +227,8 @@ Animation.prototype.dispose = function(){
         this.state = STATE_INITIAL;
         this.timeline  = null;
         this.taskQueue = null;
-        this.elem.parentNode.removeChild(this.elem);
-        var creteSceneObj = new createScene();
-        //创建下一个场景
-        creteSceneObj.startCreate();
-
+        //改变页面的hash值
+        location.hash = "#/begin";
         return this;
     }
     return this;

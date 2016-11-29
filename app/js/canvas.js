@@ -23,15 +23,15 @@ Canvas.prototype.supportCanvas = function(){
  * @param parent 新建canvas的父元素
  */
 Canvas.prototype.createCanvas = function(target,parent){
-
+    var canvas;
     if(this.isSupport){
-        var canvas = $('<canvas class="canvas"></canvas>');
+        canvas = $('<canvas class="canvas"></canvas>');
         canvas[0].height = target.height() + 2*this.padding;
         canvas[0].width = target.width() + 2*this.padding;
         canvas.css({
-            'position':'absolute',
-            'display':'none',
-            'z-index':11
+            position:'absolute',
+            display:'none',
+            zIndex:11
         });
         parent.append(canvas);
         this.drawLine(canvas[0],this.padding);
@@ -46,7 +46,8 @@ Canvas.prototype.createCanvas = function(target,parent){
  * @param padding 参考线的长度
  */
 Canvas.prototype.drawLine = function(canvas,padding){
-    var context = canvas.getContext('2d');
+    var context;
+    context = canvas.getContext('2d');
 
     //画横线
     this.drawDash(context,0,canvas.width,padding,padding,10);
@@ -68,13 +69,14 @@ Canvas.prototype.drawLine = function(canvas,padding){
  * @param dashLen 虚线中线的长度
  */
 Canvas.prototype.drawDash = function(ctx,x1,x2,y1,y2,dashLen){
-    var offsetLenX = Math.abs(x1 - x2),
-        offsetLenY = Math.abs(y1 - y2),
-        dashLength = !dashLen ? 5 : dashLen,
-        dashNum = offsetLenX ? Math.floor(offsetLenX / dashLength) : Math.floor(offsetLenY / dashLength);
+    var offsetLenX,offsetLenY,dashLength,dashNum,i;
+    offsetLenX = Math.abs(x1 - x2);
+    offsetLenY = Math.abs(y1 - y2);
+    dashLength = !dashLen ? 5 : dashLen;
+    dashNum = offsetLenX ? Math.floor(offsetLenX / dashLength) : Math.floor(offsetLenY / dashLength);
 
     if(offsetLenX){//画水平线,y1和y2相等
-        for(var i=0; i<dashNum; i++){
+        for( i=0; i<dashNum; i++){
             if(i % 2 === 0){
                 ctx.moveTo(x1 + (offsetLenX/dashNum) * i,y1);
             }else{
@@ -82,7 +84,7 @@ Canvas.prototype.drawDash = function(ctx,x1,x2,y1,y2,dashLen){
             }
         }
     }else {//画竖直线，x1和x2相等
-        for (var i = 0; i < dashNum; i++) {
+        for (i = 0; i < dashNum; i++) {
             if (i % 2 === 0) {
                 ctx.moveTo(x1, y1 + (offsetLenY / dashNum) * i);
             } else {
@@ -93,7 +95,8 @@ Canvas.prototype.drawDash = function(ctx,x1,x2,y1,y2,dashLen){
 };
 
 module.exports = function(){
-    var canvas = new Canvas();
+    var canvas;
+    canvas = new Canvas();
     canvas.supportCanvas();
     return canvas;
 };

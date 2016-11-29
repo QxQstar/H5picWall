@@ -311,10 +311,8 @@
     background-position: -81px 0;
 }
 .m-drag .footer .dragList{
-    position: absolute;
-    bottom: 0;
-    left: 32px;
-    right: 32px;
+    margin-left: 32px;
+    margin-right: 32px;
     font-size: 0;
 }
 .m-drag .footer .item{
@@ -323,7 +321,6 @@
     zoom: 1;
     width: 25%;
     text-align: center;
-    height: 80%;
 }
 .m-drag .control .picGroup{
     overflow: hidden;
@@ -355,6 +352,7 @@
     margin: auto;
 
 }
+/*放大相框后生成的元素  开始*/
 .m-drag .control .changePic{
     position: absolute;
     margin: auto 0;
@@ -375,10 +373,21 @@
 }
 .m-drag .control .changePic.prev{
     background-position: -215px 0;
+    left:7px
 }
 .m-drag .control .changePic.next{
     background-position: -229px 0;
+    right: 7px;
 }
+.m-drag .control .head{
+    margin-top: 5px;
+}
+.m-drag .control .footer{
+    position: absolute;
+    bottom: 5px;
+    text-align: center;
+}
+/*结束*/
 .m-drag img{
     max-width: 100%;
     max-height: 100%;

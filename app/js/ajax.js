@@ -7,7 +7,6 @@ var drag = require('./drag.js');
 var transition = require('./transition.js');
 
 
-
 /**
  * 发送ajax请求的构造函数
  * @constructor
@@ -19,36 +18,62 @@ function Ajax(){
     this.sceneData={};
     //用来保存每一页相框的数据
     this.pagedata ={};
+    //用来保存厘米到像素转换的比例
+    this.scale = undefined;
 }
 
 /**
  * 发送创建场景的请求
  */
 Ajax.prototype.createScene = function(){
-    var hash,me,addScene;
+    var hash,me,addScene,hashArr;
     //hash的值的形式为begin或者drag$/bedRoom等，只有当$/前面的值为drag时，$/后面才会有值
     hash = getHashValue();
     me = this;
     addScene = function(result){
-        var container, isDrag, backBtn, link;
+        var container, isDrag, backBtn, link,button,isShow,imgs,count;
         container = $('#container');
         //在移除元素之前，解除子元素绑定的事件
-        container.find('a').each(function (index, cur) {
-            $(cur).unbind();
-        });
-        container.find('#backBtn').unbind();
+        link = container.find('a');
+        button  = container.find('button');
+        if(link.length > 0){
+            link.each(function (index, cur) {
+                $(cur).unbind();
+            });
+        }
+
+        if(button.length > 0){
+            button.unbind();
+        }
+
         //将返回的新模块插入模块容器中
         container.html(result);
 
         //如果现在渲染的页面是drag页面
         isDrag = container.find('#drag');
         if (isDrag.length > 0) {
-            drag.init(isDrag, me);
+//            imgs = isDrag.find('img');
+//            //已经加载的图片数量
+//            count = 0;
+//            imgs.unbind('load').on('load',function(){
+//                count ++;
+//                if(count === imgs.length){
+//                    drag.init(isDrag, me);
+//                }
+//            });
+            loadImg(isDrag,me,drag.init);
+
+        }
+        //如果现在渲染的页面是show页面
+        isShow = container.find('#show');
+        if(isShow.length > 0){
+//            modifySize(isShow,me.scale);
+            loadImg(isShow,me,modifySize);
         }
 
         backBtn = container.find('#backBtn');
 
-        if (backBtn) {
+        if (backBtn.length > 0) {
             //后退
             backBtn.on('click', function () {
                 history.back();
@@ -62,37 +87,46 @@ Ajax.prototype.createScene = function(){
             return href ? true : false;
         });
 
+        if(link.length > 0) {
+            link.each(function (index, cur) {
 
-        link.each(function (index, cur) {
-
-            $(cur).on('click', function (event) {
-                //防止连续发送请求
-                event.preventDefault();
-                $(this).unbind();
-                var hashValue = $(this).attr('data-id');
-                var type = $(this).attr('data-type');
-                //只有data-id的值为drag时，才会存在data-type
-                if (type) {
-                    //改变hash值
-                    location.hash = "#/" + hashValue + '$/' + type;
-                } else {
-                    location.hash = '#/' + hashValue;
-                }
+                $(cur).on('click', function (event) {
+                    //防止连续发送请求
+                    event.preventDefault();
+                    $(this).unbind();
+                    var hashValue = $(this).attr('data-id');
+                    var type = $(this).attr('data-type');
+                    //只有data-id的值为drag时，才会存在data-type
+                    if (type) {
+                        //改变hash值
+                        location.hash = "#/" + hashValue + '$/' + type;
+                    } else {
+                        location.hash = '#/' + hashValue;
+                    }
+                });
             });
-        });
+        }
+
     };
     //如果存在相关数据就不发送请求
     if(me.sceneData.hasOwnProperty(hash)){
         addScene(me.sceneData[hash]);
     }else {
+        hashArr = hash.split('$/');
         $.ajax({
             type: "POST",
-            data: {hash: hash.split('$/')[1]},
-            url: '/pw/index.php/home/' + hash.split('$/')[0] + '/index',
+            data: {
+                hash: hashArr[1],
+                ps_code:hashArr[2]
+            },
+            url: '/pw/index.php/home/' + hashArr[0] + '/index',
             dataType: 'html',
             success: function (result) {
-                me.sceneData[hash] = result;
-                addScene(me.sceneData[hash]);
+                if(hash.split('$/')[0] !== 'show'){
+                    me.sceneData[hash] = result;
+                }
+
+                addScene(result);
             }
         });
     }
@@ -112,8 +146,8 @@ Ajax.prototype.turnPage = function(page){
         $.each(data, function (dataIndex, item) {
             listStr += '<li class="item f-padding7">' +
                             '<div class="picGroup">' +
-                                '<img src="/pw' + item.pic_src + '" alt=" 相框 " data-code="' + item.id + '" data-type="' + item.type + '" data-twidth="' + item.t_width + '" data-theight="' + item.t_height + '" data-src="' + item.imgfile + '"/>' +
-                                '<img class="pic" src="/pw' + item.de_src + '" alt=" 相框 " data-code="' + item.ma_id + '" data-type="' + item.type + '" data-src="/pw' + item.de_src + '"/>' +
+                                '<img src="/pw' + item.pic_src + '" alt=" 相框 " data-code="' + item.id + '" data-type="' + item.type + '" data-twidth="' + item.t_width + '" data-theight="' + item.t_height + '" data-src="' + item.imgfile + '" data-piccode="'+ item.ma_id +'"/>' +
+                                '<img class="pic" src="/pw' + item.de_src + '" alt=" 画心 " data-code="' + item.ma_id + '" data-type="' + item.type + '" data-src="/pw' + item.de_src + '"/>' +
                             '</div>' +
                             '<div class="info">' +
                                 '<div class="name">' +
@@ -137,7 +171,6 @@ Ajax.prototype.turnPage = function(page){
     if(me.pagedata.hasOwnProperty(page)){
         addPage(me.pagedata[page]);
     }else {
-
         $.ajax({
             type: "POST",
             data: {
@@ -148,6 +181,8 @@ Ajax.prototype.turnPage = function(page){
             success: function (result) {
                 if (result.status === 1) {
                     me.pagedata[page] = result.data;
+                    //获取总共有多少页
+                    me.totalPicPage = result.pageCount;
                     addPage(me.pagedata[page]);
                 }
             }
@@ -168,7 +203,7 @@ Ajax.prototype.getPic = function(picGroup){
     code = defaultPic.attr('data-code');
     //如果存在要请求的相关数据则不发送请求
     if(me.picData.hasOwnProperty(code)){
-        transition.addPicList(picGroup,me.picData[code]);
+        transition.addPicList(picGroup,me.picData[code],drag);
     }else{
         $.ajax({
             type: "POST",
@@ -181,7 +216,7 @@ Ajax.prototype.getPic = function(picGroup){
                 if (result.status === 1) {
                     //将请求到的数据缓存起来
                     me.picData[code] = result.data;
-                    transition.addPicList(picGroup,me.picData[code]);
+                    transition.addPicList(picGroup,me.picData[code],drag);
                 }
             }
         })
@@ -190,10 +225,82 @@ Ajax.prototype.getPic = function(picGroup){
 
 };
 /**
+ * 确认所拼的照片墙
+ * @param control 控制台，一个jquery 节点
+ * @param scale 厘米与像素之间的转换比例
+ */
+Ajax.prototype.confirm = function(control,scale){
+    this.scale = scale;
+    var data = {};
+    control.find('.picGroup').each(function(index,picGroup){
+        var $picGroup,frame;
+        $picGroup = $(picGroup);
+        frame = $picGroup.children('img').first();
+        data[index] = {
+            pic_id:frame.attr('data-code'),
+            ma_id:frame.attr('data-piccode'),
+            m_x:$picGroup.offset().left | 0,
+            m_y:$picGroup.offset().top | 0,
+            t_x:parseInt( $picGroup.css('left') ) / scale | 0,
+            t_y:parseInt( $picGroup.css('top') ) / scale | 0
+        }
+    });
+    $.ajax({
+        type: "POST",
+        data:data,
+        url: "/pw/index.php/home/show/add",
+        dataType: 'json',
+        success:function(result){
+            var oldHash;
+            if(result.status === 1){
+                oldHash = getHashValue();
+                location.hash = "#/" + 'show' + '$/' + oldHash.split('$/')[1] + '$/' + result.data
+            }
+        }
+    });
+
+};
+/**
  * 得到hash值，不包含#/
  */
 function getHashValue(){
     return location.hash.split('#/')[1];
+}
+/**
+ * 修改show页面中picGroup的尺寸
+ * @param show id属性为#show的jquery节点
+ * @param ajaxObj ajax对象
+ */
+function modifySize(show,ajaxObj){
+    var scale = ajaxObj.scale;
+    show.find('.picGroup').each(function(index,picGroup){
+        var frame;
+        frame = $(picGroup).children('img').first();
+        frame
+            .height(( (frame.attr('data-theight') | 0) * scale) | 0)
+            .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
+    });
+}
+/**
+ * 给图片加载添加回调
+ * @param parent img的祖先元素
+ * @param ajaxObj ajax对象
+ * @param callback 图片全部加载完成后执行的回调函数
+ */
+function loadImg(parent,ajaxObj,callback){
+    var count,length,imgs;
+    //已经加载完成的图片数量
+    count = 0;
+    imgs = parent.find('img');
+    length = imgs.length;
+    imgs
+        .unbind('load')
+        .on('load',function(){
+            count ++;
+            if(count === length){
+                callback(parent,ajaxObj);
+            }
+        });
 }
 module.exports  = function(){
     return new Ajax();

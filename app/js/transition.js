@@ -8,8 +8,9 @@ var transition = {
      * 生成可切换的画心列表
      * @param picGroup 要接受画心列表的元素 jquery节点
      * @param data 画心列表数据，对象
+     * @param drag drag模块中的对象
      */
-    addPicList: function (picGroup, data) {
+    addPicList: function (picGroup, data,drag) {
         var pic,list,index,total,ul,rate;
         //将已经存在的img.pic元素隐藏
         pic = picGroup.find('.pic').hide();
@@ -21,7 +22,7 @@ var transition = {
         total = 0;
         $.each(data, function (index, item) {
             list += "<li class='picItem'>" +
-                "<img id='" + index + "' src='/pw" + item.ma_src + "' class='pic' />" +
+                "<img id='" + index + "' src='/pw" + item.ma_src + "' class='pic' data-code='"+ item.id +"' />" +
                 "</li>";
             total++;
         });
@@ -31,7 +32,7 @@ var transition = {
             //data-picIndex属性表示首先该显示第几张画心，默认情况显示第一张画心
             index = parseInt(picGroup.attr('data-picIndex'));
         }
-        ul = $('<ul id="list" class="clearfix"></ul>')
+        ul = $('<ul id="picList" class="clearfix"></ul>')
             .css({
                 position: 'relative',
                 marginLeft: -(picGroup.width() * index) | 0 + 'px',
@@ -51,8 +52,15 @@ var transition = {
             .css({
                 opacity: '1'
             });
+        ul.find('.pic').on('load',function(){
+            //为了防止画心太小，不好滑动，给li页要绑定touch事件
+            drag.listener($(this).parent('li'),'touchstart',drag.touchStart);
+            drag.listener($(this),'touchstart',drag.touchStart);
+        });
+        //给li触摸事件，使可以滑动切换画心
+
         rate = $('#rate');
-        rate.html((index + 1 ) + '/' + total);
+        rate.html( ( (index + 1 ) | 0) + '/' + total);
         picGroup.append(ul);
         //绑定事件
         picGroup.siblings('#picPrev').on('click', change);
@@ -70,11 +78,11 @@ var transition = {
      */
     changePic: function (event, list) {
         var total, W,marginLeft,showRate,$target;
-
-        event.stopPropagation();
-        event.preventDefault();
-        $target = $(event.target);
-
+        if(typeof event === 'object'){
+            event.stopPropagation();
+            event.preventDefault();
+            $target = $(event.target);
+        }
         //总共可以却换的画心数量
          total = list.children('li').length;
          W = list.children('li').first().width();
@@ -82,11 +90,11 @@ var transition = {
          marginLeft = parseInt(list.css('marginLeft'));
          showRate = function () {
             //当前却换到的画心的序号
-            var curIndex = Math.abs(parseInt(list.css('marginLeft'))) / W + 1;
+            var curIndex = ( Math.abs(parseInt(list.css('marginLeft'))) / W + 1) | 0;
             $('#rate').html(curIndex + '/' + total);
         };
-
-        if ($target.attr('id') === 'picNext') {
+        if (event === 1 ||
+            ($target && $target.attr('id') === 'picNext')) {
             if (marginLeft > -(total - 1) * W) {
                 list.stop(false, true).animate({
                     marginLeft: (marginLeft - W) | 0 + 'px'

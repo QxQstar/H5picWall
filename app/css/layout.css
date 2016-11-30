@@ -9,7 +9,6 @@
     top: 0;
     width: 14px;
     height: 25px;
-    border: none;
     z-index: 2;
     background: url(./../img/icon.png) no-repeat;
 }
@@ -51,18 +50,6 @@
 }
 .f-margin7{
     margin: 7px;
-}
-.f-btnOk{
-    display: block;
-    width: 70%;
-    height: 30px;
-    margin: auto;
-    text-align: center;
-    border: none;
-}
-.f-cancel:focus{
-    outline: none;
-    border: none;
 }
 
 .g-container .m-begin{
@@ -180,7 +167,8 @@
     line-height: 1.4;
 }
 
-.g-container .m-drag{
+.g-container .m-drag,
+.g-container .m-show{
     position: relative;
     background-color: #ffffff;
     background-repeat: no-repeat;
@@ -193,27 +181,27 @@
     background-position: -240px 0;
 }
 /*小客厅*/
-.g-container .m-drag.bg-livingRoomS{
+.g-container .bg-livingRoomS{
     background-image: url(./../img/xktbg.jpg);
 }
 /*大客厅*/
-.g-container .m-drag.bg-livingRoomB{
+.g-container .bg-livingRoomB{
     background-image: url(./../img/dkebg.jpg);
 }
 /*卧室*/
-.g-container .m-drag.bg-bedRoom{
+.g-container .bg-bedRoom{
     background-image: url(./../img/wsbg.jpg);
 }
 /*饭厅*/
-.g-container .m-drag.bg-diningRoom{
+.g-container .bg-diningRoom{
     background-image: url(./../img/cfbg.jpg);
 }
 /*过道*/
-.g-container .m-drag.bg-aisle{
+.g-container .bg-aisle{
     background-image: url(./../img/gdbg.jpg);
 }
 /*楼道*/
-.g-container .m-drag.bg-corridor{
+.g-container .bg-corridor{
     background-image: url(./../img/ldbg.jpg);
 }
 /*对拼图页面重新定义m-top*/
@@ -224,14 +212,14 @@
     right: 7px;
     height: 31px;
 }
-.m-drag .control{
+.m-drag .control
+{
     position: absolute;
     top: 31px;
     margin: 20px auto 0 auto;
     left: 7px;
     right: 7px;
     background-color: #ffffff;
-    height: 250px;
     z-index: 2;
 }
 .m-drag .fixed{
@@ -242,9 +230,6 @@
 }
 /*放大或者缩小的icon*/
 .m-drag .fixed .magnify{
-    /*position: fixed;*/
-    border: none;
-    /*right: 7px;*/
     width: 31px;
     height: 30px;
 
@@ -361,7 +346,6 @@
     top: 0;
     bottom: 0;
     background: url(./../img/icon.png) no-repeat;
-    border: none;
 }
 .m-drag .control .sure{
     width: 80px;
@@ -388,7 +372,76 @@
     text-align: center;
 }
 /*结束*/
-.m-drag img{
-    max-width: 100%;
-    max-height: 100%;
+
+.g-container .m-show{
+    position: relative;
+    font-size: 12px;
+    margin-top: -31px;
+}
+.g-container .m-show .m-top{
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    height: 31px;
+}
+.m-show .m-top .sale{
+    position: absolute;
+    right: 0;
+}
+.m-show .m-top .shareBtn{
+    width: auto;
+    height: 25px;
+    background: none;
+    border: 1px solid #000000;
+    padding: 0 5px;
+    font-size: 12px;
+}
+.m-show .m-top .price{
+    color: #ff4400;
+    font-weight: bold;
+    margin-right: 10px;
+}
+.m-show .m-top .saleBtn{
+    display: inline-block;
+    height: 25px;
+    font-size: 12px;
+    color: #ffffff;
+    background-color: #ff4400;
+    line-height: 25px;
+    padding: 0 10px;
+
+}
+
+.m-show .showContent{
+    margin-top: 31px;
+    margin-left: 7px;
+    margin-right: 7px;
+}
+.m-show .back{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20%;
+    text-align: center;
+
+}
+.m-show .backBtn{
+    border: 1px solid #000000;
+    height: 25px;
+    font-size: 12px;
+    padding: 0 5px;
+}
+.m-show .picGroup{
+    position: absolute;
+    overflow: hidden;
+}
+.m-show  .picGroup .pic{
+    position: absolute;
+    top:0;
+    left:0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+
 }

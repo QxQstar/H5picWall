@@ -51,30 +51,32 @@ var drag = {
      * @param ajaxObj 发送ajax的对象
      */
     init:function(dragDOM,ajaxObj){
-        var listContent,height,fixed,control,controlMaxSize,wallSize,rateWall,rateControl,next,prev;
+        var listContent,height,fixed,control,controlMaxSize,wallSize,rateWall,
+            rateControl,next,prev,okBtn;
         //将ajax对象保存起来
-        this.ajaxObj = ajaxObj;
+        drag.ajaxObj = ajaxObj;
         //将控制台重置为未放大状态
         scaleObj.controlMagnify = false;
         //将画框重置为未放大状态
         scaleObj.frameMagnify = false;
+
         drag.__setID('dragList','control');
-        //设置拖拽列表的高度
+        //获取拖拽列表的高度
         listContent = dragDOM.find('#footer');
         height = listContent.height() | 0;
-
-        //綁定拖拽事件
-        listContent.find('.pic').each(function(index,cur){
-            drag.listener($(cur),'touchstart',drag.touchStart);
-        });
         //给放大缩小的icon定位
         fixed = dragDOM.find('#fixed');
         fixed.css({
             bottom:height + 20 + 'px'
         });
+        //綁定拖拽事件
+        listContent.find('.pic').each(function(index,cur){
+            drag.listener($(cur),'touchstart',drag.touchStart);
+        });
+
 
         //控制台
-        control = dragDOM.find('#' + this.control);
+        control = dragDOM.find('#' + drag.control);
         //控制台能够显示的最大尺寸
         controlMaxSize = {
             W:control.width(),
@@ -86,7 +88,7 @@ var drag = {
         };
 
 
-        //照片墙的真实尺寸，单位是cm
+        //要创建的照片墙的真实尺寸，单位是cm
         wallSize = {
             W:dragDOM.attr('data-width') | 0,
             H:dragDOM.attr('data-height') |0
@@ -95,18 +97,20 @@ var drag = {
         rateWall = wallSize.H / wallSize.W;
         rateControl = controlMaxSize.H / controlMaxSize.W;
         if( rateWall> rateControl){
-            var controlH = controlMaxSize.H * 0.8;
+            var controlH = controlMaxSize.H * 0.9;
             control.height(controlH | 0).width(controlH/wallSize.H*wallSize.W | 0);
         }else{
             control.width(controlMaxSize.W).height(rateWall * controlMaxSize.W | 0)
         }
         //将控制台放大前的尺寸保存起来
-            scaleObj.controlOriginalSize = {
-                H:control.height(),
-                W:control.width()
-            };
-
+        scaleObj.controlOriginalSize = {
+            H:control.height(),
+            W:control.width()
+        };
+        //控制台缩放的比例
         scaleObj.controlRate = scaleObj.controlMaxSize.H / scaleObj.controlOriginalSize.H;
+        //从厘米到像素的转换比例
+        scaleObj.transformRate = scaleObj.controlOriginalSize.W / ($('#drag').attr('data-width') | 0);
 
         //给放大缩小icon绑定事件
         drag.listener($('#magnify'),'click',scale);
@@ -129,6 +133,27 @@ var drag = {
             turnPage(event,ajaxObj);
         }
 
+        //给顶部的确定按钮绑定事件
+        okBtn = dragDOM.find('#okBtn');
+        drag.listener(okBtn,'click',confirm);
+        function confirm(event){
+            var $target;
+            //阻止默认行为和冒泡/捕获
+            event.stopPropagation();
+            event.preventDefault();
+
+            $target = $(event.target);
+            //如果存在一个相框处于放大状态，不能点确定
+            if(scaleObj.frameMagnify){
+                return false;
+            }
+            //解除绑定的事件，防止多次提交
+            $target.unbind('click');
+
+            ajaxObj.confirm(control,scaleObj.transformRate);
+
+        }
+
     },
     /**
      * 注册事件
@@ -147,10 +172,7 @@ var drag = {
         //阻止浏览器默认的缩放和滚动
         event.preventDefault();
 
-        //如果相框处于放大的状态不能拖动
-        if(scaleObj.frameMagnify){
-            return false;
-        }
+
          $target = $(event.target);
         //实际要移动的节点
         picGroup = $target.parent('.picGroup');
@@ -160,62 +182,64 @@ var drag = {
 
         drag.touchPos.X = drag.startTouchPos.X;
         drag.touchPos.Y = drag.startTouchPos.Y;
-
-        drag.touchOffsetPos.X = drag.startTouchPos.X - picGroup.offset().left;
-        drag.touchOffsetPos.Y = drag.startTouchPos.Y - picGroup.offset().top;
-         control = $('#' + drag.control);
-        //如果移动的元素是拖拽列表的后代，则要替换图片,还需要修改尺寸
-        if(isOffspring(picGroup,drag.dragParent)){
-
-            $target.css({
-                    opacity:'1'
-            });
-
-
-            frame = picGroup.children().first('img');
-
-            //将缩略图缓存起来
-            picGroup.data({
-                thumbnail:frame.attr('src')
-            });
-
-            drag.listener(frame,'load',function(){
-                var scale,baseScale;
-
-                //相框从列表拖到控制台要缩放的比例
-                scale = scaleObj.controlOriginalSize.W / ($('#drag').attr('data-width') | 0);
-                baseScale = scale;
-                //如果控制台处于放大的状态
-                if(scaleObj.controlMagnify){
-                    scale = scale * scaleObj.controlRate;
-                }
-                //修改相框的尺寸,并将尺寸保存在属性，在放大和缩小控制台的时候需要使用
-                frame
-                    .height(( (frame.attr('data-theight') | 0) * scale) | 0)
-                    .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
-                    .attr({
-                        originalWidth: ( (frame.attr('data-twidth') | 0) * baseScale ) | 0,
-                        originalHeight: ( (frame.attr('data-theight') | 0) * baseScale ) | 0
-                    });
-
-                drag.canvas = canvasObj.createCanvas(picGroup,control);
-
-            });
-
-            //修改src属性
-            frame.attr({
-                src:frame.attr('data-src')
-            })
-        }else{
-            drag.canvas = canvasObj.createCanvas(picGroup,control);
+        if(picGroup.length > 0) {
+            drag.touchOffsetPos.X = drag.startTouchPos.X - picGroup.offset().left;
+            drag.touchOffsetPos.Y = drag.startTouchPos.Y - picGroup.offset().top;
         }
 
+        //如果相框处于放大的状态不能拖动
+        if(!scaleObj.frameMagnify) {
 
+
+            control = $('#' + drag.control);
+            //如果移动的元素是拖拽列表的后代，则要替换图片,还需要修改尺寸
+            if (isOffspring(picGroup, drag.dragParent)) {
+
+                $target.css({
+                    opacity: '1'
+                });
+
+
+                frame = picGroup.children().first('img');
+
+                //将缩略图缓存起来
+                picGroup.data({
+                    thumbnail: frame.attr('src')
+                });
+
+                drag.listener(frame, 'load', function () {
+                    var scale;
+                    scale = scaleObj.transformRate;
+                    //如果控制台处于放大的状态
+                    if (scaleObj.controlMagnify) {
+                        scale = scaleObj.transformRate * scaleObj.controlRate;
+                    }
+                    //修改相框的尺寸,并将尺寸保存在属性，在放大和缩小控制台的时候需要使用
+                    frame
+                        .height(( (frame.attr('data-theight') | 0) * scale) | 0)
+                        .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
+                        .attr({
+                            originalWidth: ( (frame.attr('data-twidth') | 0) * scale ) | 0,
+                            originalHeight: ( (frame.attr('data-theight') | 0) * scale ) | 0
+                        });
+
+                    drag.canvas = canvasObj.createCanvas(picGroup, control);
+
+                });
+
+                //修改src属性,修改src属性会引起图片的加载
+                frame.attr({
+                    src: frame.attr('data-src')
+                })
+            } else {
+                drag.canvas = canvasObj.createCanvas(picGroup, control);
+            }
+        }
         //给目标元素绑定touchMove事件
-        drag.listener($target,'touchmove',drag.touchMove);
+        drag.listener($target, 'touchmove', drag.touchMove);
 
         //给目标元素绑定touchend事件
-        drag.listener($target,'touchend',drag.touchEnd);
+        drag.listener($target, 'touchend', drag.touchEnd);
     },
     touchMove:function(event){
         var $target,picGroup,control,dragListPar,controlOffset,sitControl,padding;
@@ -224,10 +248,7 @@ var drag = {
 
         //阻止浏览器默认的缩放和滚动
         event.preventDefault();
-        //如果相框处于放大的状态不能拖动，
-        if(scaleObj.frameMagnify){
-            return false;
-        }
+
         $target = $(event.target);
         //实际要移动的节点
         picGroup = $target.parent('.picGroup');
@@ -236,40 +257,46 @@ var drag = {
         drag.touchPos.X = event.targetTouches[0].clientX;
         drag.touchPos.Y = event.targetTouches[0].clientY;
 
-        //修改移动块的位置
-        picGroup.offset({
-            top: ( (drag.touchPos.Y - drag.touchOffsetPos.Y) | 0 ),
-            left:( (drag.touchPos.X - drag.touchOffsetPos.X) | 0 )
-        });
-        //得到控制台和拖动元素列表的祖先元素
-        control = $("#" + drag.control);
-        dragListPar = $('#' + drag.dragParent);
-        if(!controlOffset){
-            controlOffset = getControlOffset(control);
-        }
+        //如果相框处于放大的状态不能拖动，
+        if(!scaleObj.frameMagnify) {
 
-        //拖动元素是否位于控制台的范围内,
-        sitControl = position.isRang(control, dragListPar, picGroup);
 
-        //如果canvas存在就修改canvas的位置,当被拖的元素位于控制台才显示canvas
-        if(drag.canvas && sitControl ){
-            padding = canvasObj.padding;
-            //之所以要减一，是因为参考线的宽度为1
-            drag.canvas.css({
-                display:'block',
-                top:(drag.touchPos.Y - drag.touchOffsetPos.Y - controlOffset.top - padding-1)+'px',
-                left:(drag.touchPos.X - drag.touchOffsetPos.X - controlOffset.left - padding-1)+'px'
+            //修改移动块的位置
+            picGroup.offset({
+                top: ( (drag.touchPos.Y - drag.touchOffsetPos.Y) | 0 ),
+                left: ( (drag.touchPos.X - drag.touchOffsetPos.X) | 0 )
             });
-        }
-        if(!sitControl && drag.canvas){
-            drag.canvas.css({
-                display:'none'
-            })
+            //得到控制台和拖动元素列表的祖先元素
+            control = $("#" + drag.control);
+            dragListPar = $('#' + drag.dragParent);
+            if (!controlOffset) {
+                controlOffset = getControlOffset(control);
+            }
+
+            //拖动元素是否位于控制台的范围内,
+            sitControl = position.isRang(control, dragListPar, picGroup);
+
+            //如果canvas存在就修改canvas的位置,当被拖的元素位于控制台才显示canvas
+            if (drag.canvas && sitControl) {
+                padding = canvasObj.padding;
+                //之所以要减一，是因为参考线的宽度为1
+                drag.canvas.css({
+                    display: 'block',
+                    top: (drag.touchPos.Y - drag.touchOffsetPos.Y - controlOffset.top - padding - 1) + 'px',
+                    left: (drag.touchPos.X - drag.touchOffsetPos.X - controlOffset.left - padding - 1) + 'px'
+                });
+            }
+            if (!sitControl && drag.canvas) {
+                drag.canvas.css({
+                    display: 'none'
+                })
+            }
         }
 
     },
     touchEnd:function(event) {
-        var $target,picGroup,control,dragListPar,controlOffset,sitControl,newPicGroup,total,nowPrice,newPrice;
+        var $target,picGroup,control,dragListPar,controlOffset,
+            sitControl,newPicGroup,total,nowPrice,newPrice;
         //阻止冒泡
         event.stopPropagation();
 
@@ -282,25 +309,36 @@ var drag = {
             drag.canvas.remove();
             drag.canvas = undefined;
         }
-        //如果相框处于放大的状态不执行后续操作
-        if(scaleObj.frameMagnify){
-            return false;
-        }
+
         $target = $(event.target);
         picGroup = $target.parent('.picGroup');
-
         //得到控制台和拖动元素列表的祖先元素
         control = $("#" + drag.control);
         dragListPar = $('#' + drag.dragParent);
 
         controlOffset = getControlOffset(control);
-
-        //拖动元素是否位于控制台的范围内,
-        sitControl = position.isRang(control, dragListPar, picGroup);
-        //是否存在覆盖
-        drag.isCover = position.compare(control,picGroup);
+        if(picGroup.length > 0) {
+            //拖动元素是否位于控制台的范围内,
+            sitControl = position.isRang(control, dragListPar, picGroup);
+            //是否存在覆盖
+            drag.isCover = position.compare(control, picGroup);
+        }
         //拖动相框，而非点击放大
-        if( (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 3 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 3 ) ) {
+        if( (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 2 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 2 ) ) {
+            //如果相框处于放大的状态执行切换画心的操作，不移动元素
+
+            if(scaleObj.frameMagnify){
+
+                if(drag.startTouchPos.X > drag.touchPos.X){
+                    //下一张
+                    //$('#list')表示画心列表
+                    transition.changePic(1,$('#picList'));
+                }else if(drag.startTouchPos.X < drag.touchPos.X){
+                    //上一张
+                    transition.changePic(-1,$('#picList'));
+                }
+                return false;
+            }
             //如果被移动的元素是拖拽列表的后代
             if (isOffspring(picGroup, drag.dragParent)) {
 
@@ -395,6 +433,12 @@ function turnPage(event,ajaxObj){
     var page = listContent.data('page');
     var _target = $(event.target);
     if(_target.attr('id') === 'next'){
+        if(ajaxObj.totalPicPage){
+            //如果当前就为最后一页，不发送请求，也不改变当前的页码
+            if(page >= ajaxObj.totalPicPage){
+                return;
+            }
+        }
         listContent.data({
             page:++page
         });

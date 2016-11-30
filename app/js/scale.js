@@ -18,6 +18,8 @@ function Scale(){
     this.controlRate = null;
     //默认画框不处于放大状态
     this.frameMagnify = false;
+    //从厘米到像素的转换比例
+    this.transformRate = null;
 }
 /**
  * 缩放控制台
@@ -156,8 +158,8 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     frame.data({
         originH:frame.height(),
         originW:frame.width(),
-        originT: picGroup.css('top'),
-        originL:picGroup.css('left')
+        originT: parseInt(picGroup.css('top')),
+        originL:parseInt(picGroup.css('left'))
     });
     frame.hide();
     //画框宽和高的比例
@@ -223,21 +225,25 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
 
     //给确定按钮绑定事件
     sureBtn.on('click',function(event){
-        var list,pic, W,curIndex;
+        var list,pic, W,curIndex,frame,optionalPic;
         //阻止冒泡/捕获和默认行为
         event.stopPropagation();
         event.preventDefault();
         //动态生成的画心列表的父元素
-        list = picGroup.children('#list');
+        list = picGroup.children('#picList');
         //picGroup中直接子元素，表示画心的那个img元素
         pic = picGroup.children('.pic');
+        //picGroup中直接子元素，表示相框的那个img元素
+        frame = picGroup.children('img').first();
 
         W = list.children('li').first().width();
         //切换到的画心的序号，从0开始计数
-        curIndex = Math.abs( parseInt( list.css('marginLeft') ) ) / W;
+        curIndex = Math.abs( parseInt( list.css('marginLeft') ) ) / W | 0;
         picGroup.attr('data-picIndex',curIndex);
         //显示切换到的那个画心
-        pic.attr('src',list.find('img').eq(curIndex).attr('src'));
+        optionalPic = list.find('img');
+        pic.attr('src',optionalPic.eq(curIndex).attr('src'));
+        frame.attr('data-piccode',optionalPic.eq(curIndex).attr('data-code'));
 
         head.remove();
         sureBtn.unbind('click');
@@ -245,6 +251,8 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         //在从页面移除之前，先移除绑定的事件
         prev.unbind('click').remove();
         next.unbind('click').remove();
+        optionalPic.unbind();
+        list.find('li').unbind();
         list.remove();
         picGroup
             .css({

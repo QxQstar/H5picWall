@@ -222,6 +222,18 @@
     background-color: #ffffff;
     z-index: 2;
 }
+.m-drag .control .notice{
+    position: absolute;
+    display: none;
+    border: 1px red dashed;
+    font-size: 11px;
+    color: red;
+}
+/*.m-drag .control .notice span{*/
+    /*display: block;*/
+    /*margin-top: -20px;*/
+    /*transform:scale(0.5);*/
+/*}*/
 .m-drag .fixed{
     position: fixed;
     left: 7px;

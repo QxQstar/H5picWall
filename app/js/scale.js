@@ -149,7 +149,7 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     control = picGroup.parent();
 
     //将兄弟元素隐藏起来
-    picGroup.siblings().each(function(index,cur){
+    picGroup.siblings('.picGroup').each(function(index,cur){
         $(cur).hide();
     });
     //表示相框的那个img元素
@@ -262,7 +262,7 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
                 left:frame.data('originL') + 'px',
                 backgroundImage:'none'
             })
-            .siblings().each(function(index,cur){
+            .siblings('.picGroup').each(function(index,cur){
                 //将隐藏的兄弟节点显示出来
                 $(cur).show();
             });

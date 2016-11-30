@@ -52,7 +52,7 @@ var drag = {
      */
     init:function(dragDOM,ajaxObj){
         var listContent,height,fixed,control,controlMaxSize,wallSize,rateWall,
-            rateControl,next,prev,okBtn;
+            rateControl,next,prev,okBtn,info;
         //将ajax对象保存起来
         drag.ajaxObj = ajaxObj;
         //将控制台重置为未放大状态
@@ -77,6 +77,9 @@ var drag = {
 
         //控制台
         control = dragDOM.find('#' + drag.control);
+        info = $('<div id="notice" class="notice"></div>');
+
+        $('#control').append(info);
         //控制台能够显示的最大尺寸
         controlMaxSize = {
             W:control.width(),
@@ -269,13 +272,15 @@ var drag = {
             //得到控制台和拖动元素列表的祖先元素
             control = $("#" + drag.control);
             dragListPar = $('#' + drag.dragParent);
-            if (!controlOffset) {
-                controlOffset = getControlOffset(control);
-            }
+
+            //控制台相对于浏览器窗口的偏移量对象
+            controlOffset = getControlOffset(control);
 
             //拖动元素是否位于控制台的范围内,
             sitControl = position.isRang(control, dragListPar, picGroup);
 
+            //是否存在覆盖
+            drag.isCover = position.compare(control, picGroup);
             //如果canvas存在就修改canvas的位置,当被拖的元素位于控制台才显示canvas
             if (drag.canvas && sitControl) {
                 padding = canvasObj.padding;
@@ -320,13 +325,11 @@ var drag = {
         if(picGroup.length > 0) {
             //拖动元素是否位于控制台的范围内,
             sitControl = position.isRang(control, dragListPar, picGroup);
-            //是否存在覆盖
-            drag.isCover = position.compare(control, picGroup);
+
         }
         //拖动相框，而非点击放大
         if( (Math.abs(drag.startTouchPos.X - drag.touchPos.X) > 2 || Math.abs(drag.startTouchPos.Y - drag.touchPos.Y) > 2 ) ) {
             //如果相框处于放大的状态执行切换画心的操作，不移动元素
-
             if(scaleObj.frameMagnify){
 
                 if(drag.startTouchPos.X > drag.touchPos.X){
@@ -377,7 +380,7 @@ var drag = {
                 //将移动元素恢复到初始位置
                 position.restore(picGroup);
                 //隐藏提示
-//                control.find('#notice').hide();
+                control.find('#notice').hide();
 
             } else {
                 if (!sitControl) {
@@ -392,7 +395,7 @@ var drag = {
                 //回复到原来的位置
                 if (drag.isCover) {
                     //隐藏提示
-//                    control.find('#notice').hide();
+                    control.find('#notice').hide();
                     picGroup.css({
                         top: picGroup.attr('coordY') + 'px',
                         left: picGroup.attr('coordX') + 'px'

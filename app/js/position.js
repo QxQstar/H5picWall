@@ -69,7 +69,12 @@ var position = {
         }
         return isSituate;
     },
-    //相交检测
+    /**
+     * 相交检测
+     * @param parent curElem的父元素 jquery节点
+     * @param curElem 正在移动的元素 jquery节点
+     * @returns {boolean} 是否相交
+     */
     compare:function(parent,curElem){
         var list,gap,isCover,control,info;
         list = parent.children();
@@ -85,9 +90,10 @@ var position = {
                 comPEShadow_x,comPEShadow_y,intersect_x,intersect_y;
             comPE = $(elem);
 
-            //不能和自己和canvas进行比较
+            //不能和自己，canvas，提示信息进行比较
             if(comPE.attr('id') !== curElem.attr('id') &&
-                comPE.attr('class') !=='canvas') {
+                comPE.attr('class') !=='canvas' &&
+                comPE.attr('id') !== 'notice') {
                 //元素的位置
                 curElemPos = curElem.offset();
                 comPEPos = comPE.offset();
@@ -112,26 +118,26 @@ var position = {
 
 
                 isCover = isCover || Booleans;
-                if(isCover){
-                    return false;
-                }
-
-//                if (isCover) {
-//
-//                    info.height(comPE.height() + 2*gap)
-//                        .width(comPE.width() + 2*gap)
-//                        .css({
-//                            'top':comPEPos.top - parent.offset().top- gap,
-//                            'left':comPEPos.left - parent.offset().left - gap,
-//                            'display':'block'
-//                        });
+//                if(isCover){
 //                    return false;
-//
-//                }else{
-//                    info.css({
-//                        'display':'none'
-//                    });
 //                }
+
+                if (isCover) {
+
+                    info.height(comPE.height() + 2*gap)
+                        .width(comPE.width() + 2*gap)
+                        .css({
+                            'top':comPEPos.top - parent.offset().top- gap,
+                            'left':comPEPos.left - parent.offset().left - gap,
+                            'display':'block'
+                        });
+                    return false;
+
+                }else{
+                    info.css({
+                        'display':'none'
+                    });
+                }
 
             }
 

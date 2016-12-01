@@ -254,6 +254,7 @@
     left: 7px;
     right: 7px;
     z-index: 2;
+    text-align: center;
 }
 /*放大或者缩小的icon*/
 .m-drag .fixed .magnify{
@@ -262,6 +263,14 @@
 
     float: right;
     background: transparent url(./../img/icon.png) no-repeat;
+}
+.m-drag .fixed .delete{
+    display: inline-block;
+    width: 18px;
+    height: 26px;
+    vertical-align: middle;
+    background: transparent url(./../img/icon.png) no-repeat;
+    background-position: -169px 0;
 }
 .m-drag .fixed .total{
     display: block;

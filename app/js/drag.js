@@ -52,7 +52,7 @@ var drag = {
      */
     init:function(dragDOM,ajaxObj){
         var listContent,height,fixed,control,controlMaxSize,wallSize,rateWall,
-            rateControl,next,prev,okBtn,info;
+            rateControl,next,prev,okBtn,info,controlH;
         //将ajax对象保存起来
         drag.ajaxObj = ajaxObj;
         //将控制台重置为未放大状态
@@ -63,6 +63,7 @@ var drag = {
         drag.__setID('dragList','control');
         //获取拖拽列表的高度
         listContent = dragDOM.find('#footer');
+
         height = listContent.height() | 0;
         //给放大缩小的icon定位
         fixed = dragDOM.find('#fixed');
@@ -82,7 +83,7 @@ var drag = {
         $('#control').append(info);
         //控制台能够显示的最大尺寸
         controlMaxSize = {
-            W:control.width(),
+            W:$(window).width() - parseInt(control.css('left')) - parseInt(control.css('right')),
             H:$(window).height() - 52 - (height + 20 + fixed.height())
         };
         //控制台能够放大的最大尺寸受高度控制
@@ -100,7 +101,7 @@ var drag = {
         rateWall = wallSize.H / wallSize.W;
         rateControl = controlMaxSize.H / controlMaxSize.W;
         if( rateWall> rateControl){
-            var controlH = controlMaxSize.H * 0.9;
+            controlH = controlMaxSize.H * 0.9;
             control.height(controlH | 0).width(controlH/wallSize.H*wallSize.W | 0);
         }else{
             control.width(controlMaxSize.W).height(rateWall * controlMaxSize.W | 0)
@@ -140,18 +141,15 @@ var drag = {
         okBtn = dragDOM.find('#okBtn');
         drag.listener(okBtn,'click',confirm);
         function confirm(event){
-            var $target;
             //阻止默认行为和冒泡/捕获
             event.stopPropagation();
             event.preventDefault();
 
-            $target = $(event.target);
             //如果存在一个相框处于放大状态，不能点确定
             if(scaleObj.frameMagnify){
                 return false;
             }
-            //解除绑定的事件，防止多次提交
-            $target.unbind('click');
+
 
             ajaxObj.confirm(control,scaleObj.transformRate);
 

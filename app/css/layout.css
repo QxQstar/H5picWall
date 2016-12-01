@@ -31,7 +31,22 @@
     background: url(./../img/icon.png) no-repeat;
     background-position: 0 0;
 }
+.g-container .m-popUpInfo{
+    position: absolute;
+    width: 150px;
+    height: 40px;
+    left: 50%;
+    top:50%;
+    margin-left: -75px;
+    line-height: 40px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #777;
+    opacity: 0;
+    text-align: center;
+    background-color: #ffffff;
+    z-index: 999;
 
+}
 .f-full{
     height: 100%;
     width: 100%;

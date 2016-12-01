@@ -5,7 +5,8 @@
 var $ = require('jquery');
 var drag = require('./drag.js');
 var transition = require('./transition.js');
-
+//var layer = require('./layer.js');
+var popUp = require('./popUp.js')();
 
 /**
  * 发送ajax请求的构造函数
@@ -31,8 +32,12 @@ Ajax.prototype.createScene = function(){
     hash = getHashValue();
     me = this;
     addScene = function(result){
-        var container, isDrag, backBtn, link,button,isShow,imgs,count;
-        container = $('#container');
+        var container, isDrag, backBtn, link,button,isShow;
+        container = $('#container').css({
+            width:0,
+            opacity:0
+        });
+
         //在移除元素之前，解除子元素绑定的事件
         link = container.find('a');
         button  = container.find('button');
@@ -48,26 +53,22 @@ Ajax.prototype.createScene = function(){
 
         //将返回的新模块插入模块容器中
         container.html(result);
-
+        container
+            .animate({
+                opacity:1,
+                width:'100%'
+            },400);
         //如果现在渲染的页面是drag页面
         isDrag = container.find('#drag');
         if (isDrag.length > 0) {
-//            imgs = isDrag.find('img');
-//            //已经加载的图片数量
-//            count = 0;
-//            imgs.unbind('load').on('load',function(){
-//                count ++;
-//                if(count === imgs.length){
-//                    drag.init(isDrag, me);
-//                }
-//            });
+            //等图片加载完
             loadImg(isDrag,me,drag.init);
 
         }
+
         //如果现在渲染的页面是show页面
         isShow = container.find('#show');
         if(isShow.length > 0){
-//            modifySize(isShow,me.scale);
             loadImg(isShow,me,modifySize);
         }
 
@@ -107,12 +108,14 @@ Ajax.prototype.createScene = function(){
             });
         }
 
+
     };
     //如果存在相关数据就不发送请求
     if(me.sceneData.hasOwnProperty(hash)){
         addScene(me.sceneData[hash]);
     }else {
         hashArr = hash.split('$/');
+        popUp.loading();
         $.ajax({
             type: "POST",
             data: {
@@ -231,30 +234,34 @@ Ajax.prototype.getPic = function(picGroup){
  */
 Ajax.prototype.confirm = function(control,scale){
     this.scale = scale;
-    var data = {};
+    var data = {},bg;
+    bg = getHashValue().split('$/')[1];
     control.find('.picGroup').each(function(index,picGroup){
         var $picGroup,frame;
         $picGroup = $(picGroup);
         frame = $picGroup.children('img').first();
+
         data[index] = {
             pic_id:frame.attr('data-code'),
             ma_id:frame.attr('data-piccode'),
             m_x:$picGroup.offset().left | 0,
             m_y:$picGroup.offset().top | 0,
             t_x:parseInt( $picGroup.css('left') ) / scale | 0,
-            t_y:parseInt( $picGroup.css('top') ) / scale | 0
+            t_y:parseInt( $picGroup.css('top') ) / scale | 0,
+            bg:bg
         }
     });
     $.ajax({
         type: "POST",
-        data:data,
+        data: data,
         url: "/pw/index.php/home/show/add",
         dataType: 'json',
         success:function(result){
-            var oldHash;
             if(result.status === 1){
                 oldHash = getHashValue();
                 location.hash = "#/" + 'show' + '$/' + oldHash.split('$/')[1] + '$/' + result.data
+            }else{
+                popUp.info();
             }
         }
     });

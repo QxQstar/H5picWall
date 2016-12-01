@@ -19,9 +19,16 @@ img{
 }
 button{
     border: none;
-    background-color: #ffffff;
+    background-color: transparent;
 }
+button:active{
+     outline: none;
+ }
 button:focus{
+    outline: none;
+    border: none;
+}
+button:visited{
     outline: none;
 }
 a{

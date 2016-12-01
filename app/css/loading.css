@@ -49,16 +49,67 @@
 .g-container{
     position: relative;
 }
-.g-container .m-animation{
-    display: none;
-    background-repeat: no-repeat;
-    background-color: #ffffff;
-}
 .g-container .m-animation img{
     position: absolute;
-    top:0;
+    display: none;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.g-container .m-load{
+    position: absolute;
+    width: 200px;
+    height: 30px;
+    line-height: 30px;
+    top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    max-width: 100%;
+    margin: auto;
+    text-align: center;
+    z-index: 999;
+}
+.g-container .m-load .u-text{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0;
+    -webkit-animation: scale 1.5s infinite;
+    -o-animation: scale 1.5s infinite;
+    animation: scale 1.5s infinite;
+}
+.g-container .m-load .u-text-1{
+    animation-delay:.1s;
+}
+.g-container .m-load .u-text-2{
+    animation-delay:.4s;
+}
+.g-container .m-load .u-text-3{
+    animation-delay:.5s;
+}
+.g-container .m-load .u-text-4{
+    animation-delay:.6s;
+}
+.g-container .m-load .u-text-5{
+    animation-delay:.7s;
+}
+.g-container .m-load .u-text-6{
+    animation-delay:.8s;
+}
+.g-container .m-load .u-text-7{
+    animation-delay:.9s;
+}
+@keyframes scale{
+    0%{
+        opacity: 1;
+        transform:scale(1);
+    }
+    100%{
+        opacity: 0;
+        transform:scale(.3);
+    }
 }

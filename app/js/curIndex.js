@@ -18,7 +18,7 @@ if(location.href.indexOf('#/') >= 0) {
 var loading = $('#rate')[0];
 
 //帧动画相关变量
-var animationBg = $('#animation');
+var animationImg = $('#animation').find('img');
 
 //需要预加载的图片列表
 var imageList = [
@@ -105,7 +105,7 @@ var imageList = [
 //帧动画对象
 var animationObj = animation()
                     .loadImage(imageList,loading,loadFinish)
-                    .changeSrc(animationBg[0].getElementsByTagName('img')[0],imageList);
+                    .changeSrc(animationImg[0],imageList);
 
 //开始动画,这是后续操作的入口
     animationObj.start(100);

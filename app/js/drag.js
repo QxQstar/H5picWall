@@ -30,6 +30,8 @@ var drag = {
         X:undefined,
         Y:undefined
     },
+    //标志图片是否加载完成
+    loaded:false,
     //是否重叠
     isCover:undefined,
     //canvas用于生成参考线
@@ -187,20 +189,16 @@ var drag = {
             drag.touchOffsetPos.X = drag.startTouchPos.X - picGroup.offset().left;
             drag.touchOffsetPos.Y = drag.startTouchPos.Y - picGroup.offset().top;
         }
-
+        drag.load = true;
         //如果相框处于放大的状态不能拖动
         if(!scaleObj.frameMagnify) {
-
-
             control = $('#' + drag.control);
             //如果移动的元素是拖拽列表的后代，则要替换图片,还需要修改尺寸
             if (isOffspring(picGroup, drag.dragParent)) {
-
+                drag.loaded = false;
                 $target.css({
                     opacity: '1'
                 });
-
-
                 frame = picGroup.children().first('img');
 
                 //将缩略图缓存起来
@@ -210,6 +208,7 @@ var drag = {
 
                 drag.listener(frame, 'load', function () {
                     var scale;
+                    drag.loaded = true;
                     scale = scaleObj.transformRate;
                     //如果控制台处于放大的状态
                     if (scaleObj.controlMagnify) {
@@ -231,7 +230,7 @@ var drag = {
                 //修改src属性,修改src属性会引起图片的加载
                 frame.attr({
                     src: frame.attr('data-src')
-                })
+                });
             } else {
                 drag.canvas = canvasObj.createCanvas(picGroup, control);
             }
@@ -243,7 +242,7 @@ var drag = {
         drag.listener($target, 'touchend', drag.touchEnd);
     },
     touchMove:function(event){
-        var $target,picGroup,control,dragListPar,controlOffset,sitControl,padding;
+        var $target,picGroup,control,dragListPar,controlOffset,sitControl,padding,frame;
         //阻止冒泡
         event.stopPropagation();
 
@@ -251,6 +250,7 @@ var drag = {
         event.preventDefault();
 
         $target = $(event.target);
+        frame = $target.siblings('img');
         //实际要移动的节点
         picGroup = $target.parent('.picGroup');
 
@@ -258,9 +258,8 @@ var drag = {
         drag.touchPos.X = event.targetTouches[0].clientX;
         drag.touchPos.Y = event.targetTouches[0].clientY;
 
-        //如果相框处于放大的状态不能拖动，
-        if(!scaleObj.frameMagnify) {
-
+        //如果相框处于放大的状态或未加载结束不能拖动，
+        if(!scaleObj.frameMagnify && drag.loaded) {
 
             //修改移动块的位置
             picGroup.offset({

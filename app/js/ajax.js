@@ -35,6 +35,7 @@ Ajax.prototype.createScene = function(){
         var container, isDrag, backBtn, link,button,isShow;
         container = $('#container').css({
             width:0,
+            height:0,
             opacity:0
         });
 
@@ -56,7 +57,8 @@ Ajax.prototype.createScene = function(){
         container
             .animate({
                 opacity:1,
-                width:'100%'
+                width:'100%',
+                height:'100%'
             },400);
         //如果现在渲染的页面是drag页面
         isDrag = container.find('#drag');

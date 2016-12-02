@@ -5,8 +5,8 @@
 var $ = require('jquery');
 var drag = require('./drag.js');
 var transition = require('./transition.js');
-//var layer = require('./layer.js');
 var popUp = require('./popUp.js')();
+var showObj = require('./show.js')();
 
 /**
  * 发送ajax请求的构造函数
@@ -19,8 +19,6 @@ function Ajax(){
     this.sceneData={};
     //用来保存每一页相框的数据
     this.pagedata ={};
-    //用来保存厘米到像素转换的比例
-    this.scale = undefined;
 }
 
 /**
@@ -71,7 +69,8 @@ Ajax.prototype.createScene = function(){
         //如果现在渲染的页面是show页面
         isShow = container.find('#show');
         if(isShow.length > 0){
-            loadImg(isShow,me,modifySize);
+            showObj.init(isShow);
+            loadImg(isShow,me,showObj.modifySize);
         }
 
         backBtn = container.find('#backBtn');
@@ -127,11 +126,8 @@ Ajax.prototype.createScene = function(){
             url: '/pw/index.php/home/' + hashArr[0] + '/index',
             dataType: 'html',
             success: function (result) {
-                if(hash.split('$/')[0] !== 'show'){
-                    me.sceneData[hash] = result;
-                }
-
-                addScene(result);
+                me.sceneData[hash] = result;
+                addScene(me.sceneData[hash]);
             }
         });
     }
@@ -232,11 +228,19 @@ Ajax.prototype.getPic = function(picGroup){
 /**
  * 确认所拼的照片墙
  * @param control 控制台，一个jquery 节点
- * @param scale 厘米与像素之间的转换比例
+ * @param scaleObj 缩放对象
  */
-Ajax.prototype.confirm = function(control,scale){
-    this.scale = scale;
-    var data = {},bg;
+Ajax.prototype.confirm = function(control,scaleObj){
+    var offsetScale,data = {},bg,scale;
+    //判断控制台是否进行了放大
+    if(scaleObj.controlMagnify){
+        offsetScale = scaleObj.controlRate;
+    }else{
+        offsetScale = 1;
+    }
+    this.scaleObj = scaleObj;
+    //从厘米到像素的转换比例
+    scale = scaleObj.transformRate;
     bg = getHashValue().split('$/')[1];
     control.find('.picGroup').each(function(index,picGroup){
         var $picGroup,frame;
@@ -246,10 +250,10 @@ Ajax.prototype.confirm = function(control,scale){
         data[index] = {
             pic_id:frame.attr('data-code'),
             ma_id:frame.attr('data-piccode'),
-            m_x:$picGroup.offset().left | 0,
-            m_y:$picGroup.offset().top | 0,
-            t_x:parseInt( $picGroup.css('left') ) / scale | 0,
-            t_y:parseInt( $picGroup.css('top') ) / scale | 0,
+            m_x:$picGroup.offset().left / offsetScale | 0,
+            m_y:$picGroup.offset().top / offsetScale| 0,
+            t_x:parseInt( $picGroup.css('left') ) / scale /offsetScale | 0,
+            t_y:parseInt( $picGroup.css('top') ) / scale / offsetScale| 0,
             bg:bg
         }
     });
@@ -275,21 +279,7 @@ Ajax.prototype.confirm = function(control,scale){
 function getHashValue(){
     return location.hash.split('#/')[1];
 }
-/**
- * 修改show页面中picGroup的尺寸
- * @param show id属性为#show的jquery节点
- * @param ajaxObj ajax对象
- */
-function modifySize(show,ajaxObj){
-    var scale = ajaxObj.scale;
-    show.find('.picGroup').each(function(index,picGroup){
-        var frame;
-        frame = $(picGroup).children('img').first();
-        frame
-            .height(( (frame.attr('data-theight') | 0) * scale) | 0)
-            .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
-    });
-}
+
 /**
  * 给图片加载添加回调
  * @param parent img的祖先元素

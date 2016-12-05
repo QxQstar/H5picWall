@@ -54,7 +54,7 @@ var drag = {
      */
     init:function(dragDOM,ajaxObj){
         var listContent,height,fixed,control,controlMaxSize,wallSize,rateWall,
-            rateControl,next,prev,okBtn,info,controlH;
+            rateControl,next,prev,okBtn,info,controlH,setSize;
         //将ajax对象保存起来
         drag.ajaxObj = ajaxObj;
         //将控制台重置为未放大状态
@@ -63,60 +63,81 @@ var drag = {
         scaleObj.frameMagnify = false;
 
         drag.__setID('dragList','control');
-        //获取拖拽列表的高度
+        //获取拖拽列表
         listContent = dragDOM.find('#footer');
-
-        height = listContent.height() | 0;
         //给放大缩小的icon定位
         fixed = dragDOM.find('#fixed');
-        fixed.css({
-            bottom:height + 20 + 'px'
-        });
-        //綁定拖拽事件
-        listContent.find('.pic').each(function(index,cur){
-            drag.listener($(cur),'touchstart',drag.touchStart);
-        });
+
+        //设置各种需要设置的高度
+        setSize = function(){
+            height = listContent.height() | 0;
+            //给放大缩小的icon定位
+            fixed = dragDOM.find('#fixed');
+            fixed.css({
+                bottom:height + 20 + 'px',
+                opacity:1
+            });
+            //綁定拖拽事件
+            listContent.find('.pic').each(function(index,cur){
+                drag.listener($(cur),'touchstart',drag.touchStart);
+            });
 
 
-        //控制台
-        control = dragDOM.find('#' + drag.control);
-        info = $('<div id="notice" class="notice"></div>');
+            //控制台
+            control = dragDOM.find('#' + drag.control).css({opacity:0});
+            //间隔200毫秒后显示出控制台
+            setTimeout(function(){
+                control.animate({opacity:1},400);
+            },200);
+            info = $('<div id="notice" class="notice"></div>');
 
-        $('#control').append(info);
-        //控制台能够显示的最大尺寸
-        controlMaxSize = {
-            W:$(window).width() - parseInt(control.css('left')) - parseInt(control.css('right')),
-            H:$(window).height() - 52 - (height + 20 + fixed.height())
+            $('#control').append(info);
+            //控制台能够显示的最大尺寸
+            controlMaxSize = {
+                W:$(window).width() - parseInt(control.css('left')) - parseInt(control.css('right')),
+                H:$(window).height() - 52 - (height + 20 + fixed.height())
+            };
+            //控制台能够放大的最大尺寸受高度控制
+            scaleObj.controlMaxSize = {
+                H:controlMaxSize.H
+            };
+
+
+            //要创建的照片墙的真实尺寸，单位是cm
+            wallSize = {
+                W:dragDOM.attr('data-width') | 0,
+                H:dragDOM.attr('data-height') |0
+            };
+
+            rateWall = wallSize.H / wallSize.W;
+            rateControl = controlMaxSize.H / controlMaxSize.W;
+            if( rateWall> rateControl){
+                controlH = controlMaxSize.H * 0.9;
+                control.height(controlH | 0).width(controlH/wallSize.H*wallSize.W | 0);
+            }else{
+                control.width(controlMaxSize.W).height(rateWall * controlMaxSize.W | 0)
+            }
+            //将控制台放大前的尺寸保存起来
+            scaleObj.controlOriginalSize = {
+                H:control.height(),
+                W:control.width()
+            };
+
+            //控制台缩放的比例
+            scaleObj.controlRate = scaleObj.controlMaxSize.H / scaleObj.controlOriginalSize.H;
+            //从厘米到像素的转换比例
+            scaleObj.transformRate = scaleObj.controlOriginalSize.W / ($('#drag').attr('data-width') | 0);
+
         };
-        //控制台能够放大的最大尺寸受高度控制
-        scaleObj.controlMaxSize = {
-            H:controlMaxSize.H
-        };
 
+        setTimeout(function(){
+            //间隔500毫秒后再改变拖拽列表的高度，拖拽列表的高度改变后再设置控制台的尺寸
+            listContent.animate({
+                height:'130px',
+                padding:'7px'
+            },500,setSize);
 
-        //要创建的照片墙的真实尺寸，单位是cm
-        wallSize = {
-            W:dragDOM.attr('data-width') | 0,
-            H:dragDOM.attr('data-height') |0
-        };
-
-        rateWall = wallSize.H / wallSize.W;
-        rateControl = controlMaxSize.H / controlMaxSize.W;
-        if( rateWall> rateControl){
-            controlH = controlMaxSize.H * 0.9;
-            control.height(controlH | 0).width(controlH/wallSize.H*wallSize.W | 0);
-        }else{
-            control.width(controlMaxSize.W).height(rateWall * controlMaxSize.W | 0)
-        }
-        //将控制台放大前的尺寸保存起来
-        scaleObj.controlOriginalSize = {
-            H:control.height(),
-            W:control.width()
-        };
-        //控制台缩放的比例
-        scaleObj.controlRate = scaleObj.controlMaxSize.H / scaleObj.controlOriginalSize.H;
-        //从厘米到像素的转换比例
-        scaleObj.transformRate = scaleObj.controlOriginalSize.W / ($('#drag').attr('data-width') | 0);
+        },500);
 
         //给放大缩小icon绑定事件
         drag.listener($('#magnify'),'click',scale);
@@ -146,14 +167,11 @@ var drag = {
             //阻止默认行为和冒泡/捕获
             event.stopPropagation();
             event.preventDefault();
-
             //如果存在一个相框处于放大状态，不能点确定
             if(scaleObj.frameMagnify){
                 return false;
             }
-
-
-            ajaxObj.confirm(control,scaleObj.transformRate);
+            ajaxObj.confirm(control,scaleObj);
 
         }
 

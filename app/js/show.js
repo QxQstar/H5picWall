@@ -2,111 +2,147 @@
  * Created by Administrator on 2016/12/2.
  */
 var $ = require('jquery');
+var share = require('./nativeShare.js');
 /**
- * Õ¹Ê¾Ä£¿éµÄ¹¹Ôìº¯Êı
+ * å±•ç¤ºæ¨¡å—çš„æ„é€ å‡½æ•°
  * @constructor
  */
 function Show(){
-    //ajax¶ÔÏó
+    //ajaxå¯¹è±¡
     this.ajaxObj = null;
-    //scale¶ÔÏó
+    //scaleå¯¹è±¡
     this.scaleObj = null;
-    //ÕÕÆ¬Ç½µÄÊıÁ¿£¬Ä¬ÈÏÎª1
+    //ç…§ç‰‡å¢™çš„æ•°é‡ï¼Œé»˜è®¤ä¸º1
     this.length = 1;
-    //µ±Ç°¸ÃÏÔÊ¾µÄÕÕÆ¬µÄĞòºÅ£¬´Ó1¿ªÊ¼ÅÅĞò
+    //å½“å‰è¯¥æ˜¾ç¤ºçš„ç…§ç‰‡çš„åºå·ï¼Œä»1å¼€å§‹æ’åº
     this.index = 1;
+    this.warpElem = null
 
 }
 /**
- * ĞŞ¸ÄÕ¹Ê¾Ä£¿éÖĞÏà¿òµÄ³ß´çºÍÎ»ÖÃ
- * @param show Õ¹Ê¾Ä£¿é idÊôĞÔÎªshowµÄjquery½Úµã
- * @param ajaxObj ¶ÔÏó
+ * ä¿®æ”¹å±•ç¤ºæ¨¡å—ä¸­ç›¸æ¡†çš„å°ºå¯¸å’Œä½ç½®
+ * @param show å±•ç¤ºæ¨¡å— idå±æ€§ä¸ºshowçš„jqueryèŠ‚ç‚¹
+ * @param ajaxObj å¯¹è±¡
  */
 Show.prototype.modifySize = function(show,ajaxObj){
-    this.ajaxObj = ajaxObj;
-    this.scaleObj = ajaxObj.scaleObj;
+
     var scale = this.scaleObj.transformRate;
     show.find('.picGroup').each(function(index,picGroup){
-        var frame;
-        frame = $(picGroup).children('img').first();
+        var frame,$picGroup;
+        $picGroup = $(picGroup);
+        frame = $picGroup.children('img').first();
         frame
             .height(( (frame.attr('data-theight') | 0) * scale) | 0)
-            .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
+            .width(( (frame.attr('data-twidth') | 0) * scale ) | 0);
+
+        //å¤§å°ä¿®æ”¹å®Œæˆåå°†ç›¸æ¡†æ˜¾ç¤ºå‡ºæ¥
+        $picGroup
+            .animate({
+                opacity:1
+            },1000);
+
     });
+
+
 };
 /**
- * ³õÊ¼»¯showÄ£¿é£¬°ó¶¨±ØÒªµÄÊÂ¼ş
- * @param show Òª°ó¶¨ÊÂ¼şµÄ½Úµã£¬Ò»¸öjquery½Úµã
+ * åˆå§‹åŒ–showæ¨¡å—ï¼Œç»‘å®šå¿…è¦çš„äº‹ä»¶
+ * @param show è¦ç»‘å®šäº‹ä»¶çš„èŠ‚ç‚¹ï¼Œä¸€ä¸ªjqueryèŠ‚ç‚¹
+ * @param ajaxObj å¯¹è±¡
  */
-Show.prototype.init = function(show){
-    var me = this;
+Show.prototype.init = function(show,ajaxObj){
+    var me,shareBtn;
+    me = this;
+    //å°†showæ¨¡å—æœ€å¤–å±‚çš„å…ƒç´ idä¿å­˜èµ·æ¥
+    me.warpElem = show.attr('id');
+    me.ajaxObj = ajaxObj;
+    me.scaleObj = ajaxObj.scaleObj;
+    me.modifySize(show,ajaxObj);
+    shareBtn = $('#shareBtn');
+    //ç»™åˆ†äº«æŒ‰é’®ç»‘å®šäº‹ä»¶
+    shareBtn.on('click',function(){
+        var nativeShare,config;
+        nativeShare = $('<div id="nativeShare"></div>');
+        $('#' + me.warpElem).append(nativeShare);
+        config = {
+            url:'http://blog.wangjunfeng.com',
+            title:'é­…æ‹“ç…§ç‰‡å¢™',
+            desc:'é­…æ‹“ç…§ç‰‡å¢™',
+            img:'http://www.wangjunfeng.com/img/face.jpg',
+            img_title:'ç…§ç‰‡å¢™',
+            from:'é­…æ‹“ç…§ç‰‡å¢™'
+        };
+        share('nativeShare',config);
+    });
     show.unbind('touchstart').on('touchstart',function(event){
         me.touchStart(event,me);
     });
+
 };
 /**
- * ¿ªÊ¼´¥ÃşµÄÊÂ¼ş´¦Àí³ÌĞò
- * @param event ÊÂ¼ş¶ÔÏó
- * @param me Show¶ÔÏó
+ * å¼€å§‹è§¦æ‘¸çš„äº‹ä»¶å¤„ç†ç¨‹åº
+ * @param event äº‹ä»¶å¯¹è±¡
+ * @param me Showå¯¹è±¡
  */
 Show.prototype.touchStart = function(event,me){
     var $target;
-    event.stopPropagation();
-    event.preventDefault();
     $target = $(event.target);
-    //¿ªÊ¼´¥ÃşÊ±µÄ´¥ÃşµãµÄÎ»ÖÃ
+    if($target.attr('id') === 'show'){
+        event.stopPropagation();
+        event.preventDefault();
+    }
+    //å¼€å§‹è§¦æ‘¸æ—¶çš„è§¦æ‘¸ç‚¹çš„ä½ç½®
     me.startTouchPos = {
         X:event.targetTouches[0].clientX,
         Y:event.targetTouches[0].clientY
     };
-    //µ±Ç°´¥ÃşµãµÄÎ»ÖÃ
+    //å½“å‰è§¦æ‘¸ç‚¹çš„ä½ç½®
     me.touchPos = {
         X:event.targetTouches[0].clientX,
         Y:event.targetTouches[0].clientY
     };
 
-    //°ó¶¨touchmoveÊÂ¼ş
+    //ç»‘å®štouchmoveäº‹ä»¶
     $target.unbind('touchmove').on('touchmove',function(event){
         me.touchMove(event,me)
 
     });
 };
 /**
- * ´¥ÃşÒÆ¶¯µÄÊÂ¼ş´¦Àí³ÌĞò
- * @param event ÊÂ¼ş¶ÔÏó
- * @param me Show¶ÔÏó
+ * è§¦æ‘¸ç§»åŠ¨çš„äº‹ä»¶å¤„ç†ç¨‹åº
+ * @param event äº‹ä»¶å¯¹è±¡
+ * @param me Showå¯¹è±¡
  */
 Show.prototype.touchMove = function(event,me){
     var $target;
     event.stopPropagation();
     event.preventDefault();
     $target = $(event.target);
-    //µ±Ç°´¥ÃşµãµÄÎ»ÖÃ
+    //å½“å‰è§¦æ‘¸ç‚¹çš„ä½ç½®
     me.touchPos = {
         X:event.targetTouches[0].clientX,
         Y:event.targetTouches[0].clientY
     };
 
-    //°ó¶¨touchendÊÂ¼ş
+    //ç»‘å®štouchendäº‹ä»¶
     $target.unbind('touchend').on('touchend',function(event){
         me.touchEnd(event,me)
     });
 };
 /**
- * ´¥Ãş½áÊøµÄÊÂ¼ş´¦Àí³ÌĞò
- * @param event ÊÂ¼ş¶ÔÏó
- * @param me Show¶ÔÏó
+ * è§¦æ‘¸ç»“æŸçš„äº‹ä»¶å¤„ç†ç¨‹åº
+ * @param event äº‹ä»¶å¯¹è±¡
+ * @param me Showå¯¹è±¡
  */
 Show.prototype.touchEnd = function(event,me){
     event.stopPropagation();
     event.preventDefault();
     if(me.touchPos.X - me.startTouchPos.X > 10){
-        //ÉÏÒ»ÕÅ,·¢ËÍajaxÇëÇó
+        //ä¸Šä¸€å¼ ,å‘é€ajaxè¯·æ±‚
+        console.log('pre');
 
     }else if(me.touchPos.X - me.startTouchPos.X < -10){
-        //ÏÂÒ»ÕÅ£¬·¢ËÍajaxÇëÇó
-    }else{
-        return false;
+        //ä¸‹ä¸€å¼ ï¼Œå‘é€ajaxè¯·æ±‚
     }
 };
 module.exports = function(){

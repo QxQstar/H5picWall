@@ -249,6 +249,8 @@
     right: 7px;
     z-index: 2;
     text-align: center;
+    bottom: 0;
+    opacity: 0;
 }
 /*放大或者缩小的icon*/
 .m-drag .fixed .magnify{
@@ -301,6 +303,8 @@
     left: 0;
     background-color: #ffffff;
     z-index: 2;
+    height: 0;
+    padding: 0;
 }
 .m-drag .footer .content{
     position: relative;
@@ -340,6 +344,7 @@
 .m-drag .control .picGroup{
     overflow: hidden;
 }
+
 .m-drag .footer .item .picGroup{
     display: inline-block;
     *display: inline;
@@ -350,7 +355,12 @@
     overflow: hidden;
 }
 
-
+.m-drag .footer img{
+    max-width: 60px;
+}
+.m-drag .footer .pic{
+    max-width: 100%;
+}
 .m-drag .item .name,
 .m-drag .item .price{
     font-size: 11px;
@@ -377,6 +387,12 @@
     bottom: 0;
     background: url(./../img/icon.png) no-repeat;
 }
+.m-drag .control .footer{
+    position: absolute;
+    bottom: 5px;
+    text-align: center;
+    height: 30px;
+}
 .m-drag .control .sure{
     width: 80px;
     height: 30px;
@@ -396,11 +412,7 @@
 .m-drag .control .head{
     margin-top: 5px;
 }
-.m-drag .control .footer{
-    position: absolute;
-    bottom: 5px;
-    text-align: center;
-}
+
 /*结束*/
 
 .g-container .m-show{
@@ -465,6 +477,7 @@
 .m-show .picGroup{
     position: absolute;
     overflow: hidden;
+    opacity: 0;
 }
 .m-show  .picGroup .pic{
     position: absolute;

@@ -20,6 +20,7 @@ img{
 button{
     border: none;
     background-color: transparent;
+    outline: none;
 }
 button:active{
      outline: none;

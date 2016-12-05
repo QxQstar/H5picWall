@@ -145,6 +145,10 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     }
     //将画框设置为放大状态
     me.frameMagnify = true;
+    //将顶部隐藏起来
+    $('.m-top').css({
+        opacity:0
+    });
     //控制台
     control = picGroup.parent();
 
@@ -271,6 +275,10 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         pic.show();
         //将画框修改为未放大状态
         me.frameMagnify = false;
+        //将顶部显示出来
+        $('.m-top').css({
+            opacity:1
+        });
 
     });
 

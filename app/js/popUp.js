@@ -45,7 +45,10 @@ PopUp.prototype.info = function(){
 PopUp.prototype.loading = function(){
     var load,str,arr, i,len,mask;
     arr = ['L','o','a','d','i','n','g'];
-    mask = $('<div class="f-mask"></div>').css({zIndex:800});
+    mask = $('<div class="f-mask" id="popMask"></div>').css({
+        zIndex:800,
+        backgroundColor:'transparent'
+    });
     load = $('<div class="m-load" id="popUpLoad"></div>');
     mask.append(load);
     str = '';

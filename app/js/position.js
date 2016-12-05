@@ -118,10 +118,6 @@ var position = {
 
 
                 isCover = isCover || Booleans;
-//                if(isCover){
-//                    return false;
-//                }
-
                 if (isCover) {
 
                     info.height(comPE.height() + 2*gap)

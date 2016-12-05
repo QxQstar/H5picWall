@@ -30,12 +30,8 @@ Ajax.prototype.createScene = function(){
     hash = getHashValue();
     me = this;
     addScene = function(result){
-        var container, isDrag, backBtn, link,button,isShow;
-        container = $('#container').css({
-            width:0,
-            height:0,
-            opacity:0
-        });
+        var container, isDrag, backBtn, link,button,isShow,during;
+        container = $('#container');
 
         //在移除元素之前，解除子元素绑定的事件
         link = container.find('a');
@@ -45,71 +41,109 @@ Ajax.prototype.createScene = function(){
                 $(cur).unbind();
             });
         }
-
         if(button.length > 0){
             button.unbind();
         }
 
-        //将返回的新模块插入模块容器中
-        container.html(result);
-        container
-            .animate({
-                opacity:1,
-                width:'100%',
-                height:'100%'
-            },400);
-        //如果现在渲染的页面是drag页面
-        isDrag = container.find('#drag');
-        if (isDrag.length > 0) {
-            //等图片加载完
-            loadImg(isDrag,me,drag.init);
 
-        }
-
-        //如果现在渲染的页面是show页面
-        isShow = container.find('#show');
-        if(isShow.length > 0){
-            showObj.init(isShow);
-            loadImg(isShow,me,showObj.modifySize);
-        }
-
-        backBtn = container.find('#backBtn');
-
-        if (backBtn.length > 0) {
-            //后退
-            backBtn.on('click', function () {
-                history.back();
-            });
-        }
-
-        //得到所有没有href属性的a标签
-        link = container.find('a').not(function (cur) {
-            var href;
-            href = $(cur).attr('href');
-            return href ? true : false;
-        });
-
-        if(link.length > 0) {
-            link.each(function (index, cur) {
-
-                $(cur).on('click', function (event) {
-                    //防止连续发送请求
-                    event.preventDefault();
-                    $(this).unbind();
-                    var hashValue = $(this).attr('data-id');
-                    var type = $(this).attr('data-type');
-                    //只有data-id的值为drag时，才会存在data-type
-                    if (type) {
-                        //改变hash值
-                        location.hash = "#/" + hashValue + '$/' + type;
-                    } else {
-                        location.hash = '#/' + hashValue;
-                    }
+        //将要渲染的页面是展示页面
+        if(hash.indexOf('show') >= 0){
+            container
+                .find('#footer')
+                .animate({
+                    height:0,
+                    padding:0
+                },400,function(){
+                    container
+                        .find('#fixed')
+                        .animate({
+                            opacity:0
+                        },200,function(){
+                            container
+                                .find('#control')
+                                .animate({
+                                    opacity:0
+                                },1000,crateScene);
+                        });
                 });
-            });
+        }else{
+            if(hash.indexOf('drag') >= 0){
+                during = 200
+            }else{
+                during = 400;
+            }
+            container
+                .css({
+                    width:0,
+                    height:0,
+                    opacity:0
+                })
+                .animate({
+                    opacity:1,
+                    width:'100%',
+                    height:'100%'
+                },during);
+            crateScene();
         }
 
+        function crateScene() {
 
+            //将返回的新模块插入到模块容器中
+            container.html(result);
+            //如果现在渲染的页面是drag页面
+            isDrag = container.find('#drag');
+            //如果现在渲染的页面是show页面
+            isShow = container.find('#show');
+
+            if (isDrag.length > 0) {
+                //等图片加载完
+                loadImg(isDrag, me, drag.init);
+
+            } else if (isShow.length > 0) {
+                loadImg(isShow, me, function (isShow, ajaxObj) {
+                    showObj.init(isShow, ajaxObj);
+                });
+            }
+
+
+            backBtn = container.find('#backBtn');
+
+            if (backBtn.length > 0) {
+                //后退
+                backBtn.on('click', function (event) {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    history.back();
+                });
+            }
+
+            //得到所有没有href属性的a标签
+            link = container.find('a').not(function (cur) {
+                var href;
+                href = $(cur).attr('href');
+                return href ? true : false;
+            });
+
+            if (link.length > 0) {
+                link.each(function (index, cur) {
+
+                    $(cur).on('click', function (event) {
+                        //防止连续发送请求
+                        event.preventDefault();
+                        $(this).unbind();
+                        var hashValue = $(this).attr('data-id');
+                        var type = $(this).attr('data-type');
+                        //只有data-id的值为drag时，才会存在data-type
+                        if (type) {
+                            //改变hash值
+                            location.hash = "#/" + hashValue + '$/' + type;
+                        } else {
+                            location.hash = '#/' + hashValue;
+                        }
+                    });
+                });
+            }
+        }
     };
     //如果存在相关数据就不发送请求
     if(me.sceneData.hasOwnProperty(hash)){
@@ -126,7 +160,15 @@ Ajax.prototype.createScene = function(){
             url: '/pw/index.php/home/' + hashArr[0] + '/index',
             dataType: 'html',
             success: function (result) {
+                //请求成功后将loading移除
+                $('#popMask').animate({
+                    opacity:0
+                },500,function(){
+                    $('#popMask').remove();
+                });
+                //缓存结果
                 me.sceneData[hash] = result;
+
                 addScene(me.sceneData[hash]);
             }
         });

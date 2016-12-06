@@ -3,6 +3,7 @@
  */
 var $ = require('jquery');
 var share = require('./nativeShare.js');
+var popUpObj = require('./popUp.js')();
 /**
  * 展示模块的构造函数
  * @constructor
@@ -16,15 +17,14 @@ function Show(){
     this.length = 1;
     //当前该显示的照片的序号，从1开始排序
     this.index = 1;
-    this.warpElem = null
+    this.warpElem = null;
 
 }
 /**
  * 修改展示模块中相框的尺寸和位置
  * @param show 展示模块 id属性为show的jquery节点
- * @param ajaxObj 对象
  */
-Show.prototype.modifySize = function(show,ajaxObj){
+Show.prototype.modifySize = function(show){
 
     var scale = this.scaleObj.transformRate;
     show.find('.picGroup').each(function(index,picGroup){
@@ -51,32 +51,58 @@ Show.prototype.modifySize = function(show,ajaxObj){
  * @param ajaxObj 对象
  */
 Show.prototype.init = function(show,ajaxObj){
-    var me,shareBtn;
+    var me,ancestor;
     me = this;
     //将show模块最外层的元素id保存起来
     me.warpElem = show.attr('id');
     me.ajaxObj = ajaxObj;
     me.scaleObj = ajaxObj.scaleObj;
     me.modifySize(show,ajaxObj);
-    shareBtn = $('#shareBtn');
+    ancestor = $('#' + me.warpElem);
+    //让ajax对象成为popUp对象的一个属性，方便在popUp模块中调用ajax对象中的方法
+    popUpObj.ajaxObj = ajaxObj;
+//    shareBtn = $('#shareBtn');
     //给分享按钮绑定事件
-    shareBtn.on('click',function(){
-        var nativeShare,config;
-        nativeShare = $('<div id="nativeShare"></div>');
-        $('#' + me.warpElem).append(nativeShare);
-        config = {
-            url:'http://blog.wangjunfeng.com',
-            title:'魅拓照片墙',
-            desc:'魅拓照片墙',
-            img:'http://www.wangjunfeng.com/img/face.jpg',
-            img_title:'照片墙',
-            from:'魅拓照片墙'
-        };
-        share('nativeShare',config);
-    });
-    show.unbind('touchstart').on('touchstart',function(event){
-        me.touchStart(event,me);
-    });
+//    shareBtn.on('click',function(){
+//        var nativeShare,config;
+//        nativeShare = $('<div id="nativeShare"></div>');
+//        $('#' + me.warpElem).append(nativeShare);
+//        config = {
+//            url:'http://blog.wangjunfeng.com',
+//            title:'魅拓照片墙',
+//            desc:'魅拓照片墙',
+//            img:'http://www.wangjunfeng.com/img/face.jpg',
+//            img_title:'照片墙',
+//            from:'魅拓照片墙'
+//        };
+//        share('nativeShare',config);
+//    });
+    //
+//    show.unbind('touchstart').on('touchstart',function(event){
+//        me.touchStart(event,me);
+//    });
+
+    //重置backbtn的事件处理程序
+    ancestor
+        .find('#backBtn')
+        .unbind('click').on('click',function(event){
+            event.stopPropagation();
+            event.preventDefault();
+            popUpObj.resetInfo(ancestor)
+        });
+    //添加购物车
+    ancestor
+        .find('#carBtn')
+        .on('click',function(event){
+            event.stopPropagation();
+            event.preventDefault();
+            //如果已经登录
+            if(window.isLogin){
+
+            }else{
+                popUpObj.login( $('#container') );
+            }
+        });
 
 };
 /**

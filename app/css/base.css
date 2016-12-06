@@ -17,7 +17,7 @@ img{
     max-width: 100%;
     max-height: 100%;
 }
-button{
+button,input{
     border: none;
     background-color: transparent;
     outline: none;

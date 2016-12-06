@@ -309,11 +309,56 @@ Ajax.prototype.confirm = function(control,scaleObj){
                 oldHash = getHashValue();
                 location.hash = "#/" + 'show' + '$/' + oldHash.split('$/')[1] + '$/' + result.data
             }else{
-                popUp.info();
+                popUp.info('没有拖入相框');
             }
         }
     });
 
+};
+/**
+ * 发送登录请假
+ * @param login 登录模块的父元素 jquery对象
+ */
+Ajax.prototype.login = function(login){
+    var data;
+     data = {
+        username:login.find('#message').val(),
+        password:login.find('#password').val()
+    };
+    $.ajax({
+        type: "POST",
+        data: data,
+        url: "/pw/index.php/home/login/login",
+        dataType: 'json',
+        success:function(result){
+            if(result.status === 1){
+                window.isLogin = true;
+                popUp.info(result.msg);
+            }else{
+                popUp.info(result.msg);
+            }
+        }
+    });
+
+};
+/**
+ * 发送验证码
+ * @param tel 发送验证码的手机号
+ */
+Ajax.prototype.sendYZM = function(tel){
+    var exp = /^\d{6}1$/;
+    $.ajax({
+        type: "POST",
+        url:"/Execution.aspx?type=shouji_yzm&shouji=" + tel + "",
+        processData: true,
+        success:function(data){
+            if(exp.test(data)){
+                popUp.info('发送成功');
+            }else{
+                popUp.info('发送失败');
+            }
+        }
+    });
 };
 /**
  * 得到hash值，不包含#/

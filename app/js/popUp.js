@@ -1,4 +1,5 @@
 var $ = require('jquery');
+var registerObj = require('./register.js')();
 /**
  * 弹窗类
  * @constructor
@@ -271,55 +272,9 @@ PopUp.prototype.register = function(ancestor){
     getYzm.on('click',function(event){
         event.preventDefault();
         event.stopPropagation();
-
-        sendYZM(register,me);
+        registerObj.sendYZM(register,me);
     });
 };
-/**
- * 发送验证码
- * @param register 注册模块，jquery对象
- * @param popUpObj popUp对象
- */
-function sendYZM(register,popUpObj){
-    var $target,myreg,tel,timer;
-    tel = register.find('#tel');
-    $target = register.find('#yzm');
-    myreg = /(?:^1[3,8]\d{9}$)|(?:^15[^4]\d{8}$)|(?:^14[7,5,9]\d{8}$)|(?:^17[3,6,7,8]\d{8}$)/;
-    if( !myreg.test( tel.val() ) ){
-        popUpObj.info('手机号码格式不正确');
-    }else{
-        $target.attr('disabled',true);
-        $target.data({
-            time:120
-        });
-        timer = setInterval(function(){
-            count($target,timer);
-        },1000);
-
-        popUpObj.ajaxObj.sendYZM(tel.val());
-
-
-    }
-
-}
-/**
- * 计时
- * @param $target 显示计时的元素 jquery对象
- * @param timer 定时器
- */
-function count($target,timer){
-    var time;
-    time = $target.data('time') | 0;
-    $target.html(time + '秒后可重发');
-    if( time <= 0){
-            clearInterval(timer);
-            $target.attr('disabled',false).html('重发验证码');
-            return false;
-    }
-    $target.data({
-        time:time - 1
-    });
-}
 module.exports = function(){
     return new PopUp()
 };

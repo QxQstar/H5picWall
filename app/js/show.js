@@ -2,7 +2,6 @@
  * Created by Administrator on 2016/12/2.
  */
 var $ = require('jquery');
-var share = require('./nativeShare.js');
 var popUpObj = require('./popUp.js')();
 /**
  * 展示模块的构造函数
@@ -61,7 +60,7 @@ Show.prototype.init = function(show,ajaxObj){
     ancestor = $('#' + me.warpElem);
     //让ajax对象成为popUp对象的一个属性，方便在popUp模块中调用ajax对象中的方法
     popUpObj.ajaxObj = ajaxObj;
-//    shareBtn = $('#shareBtn');
+    shareBtn = $('#shareBtn');
     //给分享按钮绑定事件
 //    shareBtn.on('click',function(){
 //        var nativeShare,config;
@@ -77,10 +76,7 @@ Show.prototype.init = function(show,ajaxObj){
 //        };
 //        share('nativeShare',config);
 //    });
-    //
-//    show.unbind('touchstart').on('touchstart',function(event){
-//        me.touchStart(event,me);
-//    });
+
 
     //重置backbtn的事件处理程序
     ancestor
@@ -104,72 +100,6 @@ Show.prototype.init = function(show,ajaxObj){
             }
         });
 
-};
-/**
- * 开始触摸的事件处理程序
- * @param event 事件对象
- * @param me Show对象
- */
-Show.prototype.touchStart = function(event,me){
-    var $target;
-    $target = $(event.target);
-    if($target.attr('id') === 'show'){
-        event.stopPropagation();
-        event.preventDefault();
-    }
-    //开始触摸时的触摸点的位置
-    me.startTouchPos = {
-        X:event.targetTouches[0].clientX,
-        Y:event.targetTouches[0].clientY
-    };
-    //当前触摸点的位置
-    me.touchPos = {
-        X:event.targetTouches[0].clientX,
-        Y:event.targetTouches[0].clientY
-    };
-
-    //绑定touchmove事件
-    $target.unbind('touchmove').on('touchmove',function(event){
-        me.touchMove(event,me)
-
-    });
-};
-/**
- * 触摸移动的事件处理程序
- * @param event 事件对象
- * @param me Show对象
- */
-Show.prototype.touchMove = function(event,me){
-    var $target;
-    event.stopPropagation();
-    event.preventDefault();
-    $target = $(event.target);
-    //当前触摸点的位置
-    me.touchPos = {
-        X:event.targetTouches[0].clientX,
-        Y:event.targetTouches[0].clientY
-    };
-
-    //绑定touchend事件
-    $target.unbind('touchend').on('touchend',function(event){
-        me.touchEnd(event,me)
-    });
-};
-/**
- * 触摸结束的事件处理程序
- * @param event 事件对象
- * @param me Show对象
- */
-Show.prototype.touchEnd = function(event,me){
-    event.stopPropagation();
-    event.preventDefault();
-    if(me.touchPos.X - me.startTouchPos.X > 10){
-        //上一张,发送ajax请求
-        console.log('pre');
-
-    }else if(me.touchPos.X - me.startTouchPos.X < -10){
-        //下一张，发送ajax请求
-    }
 };
 /**
  * 检查是否登录

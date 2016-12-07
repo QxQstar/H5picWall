@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var registerObj = require('./register.js')();
+var share = require('./nativeShare.js');
 /**
  * 弹窗类
  * @constructor
@@ -95,7 +96,7 @@ PopUp.prototype.loading = function(){
  * @param ancestor 弹窗的祖先元素 jquery对象
  */
 PopUp.prototype.resetInfo = function(ancestor){
-    var bottom,me;
+    var bottom,me,cancel;
     me = this;
     //将底部隐藏
     bottom = ancestor.find('.bottom');
@@ -104,6 +105,40 @@ PopUp.prototype.resetInfo = function(ancestor){
         me.createReset(ancestor);
     }else{
         //提示分享
+        var nativeShare,config;
+        nativeShare = $('<div id="nativeShare" class="m-nativeShare"></div>');
+        ancestor.append(nativeShare);
+        config = {
+            url:'http://www.xiaoyu4.com/pw/html/index.html',
+            title:'魅拓照片墙',
+            desc:'有意思',
+            img:'http://www.wangjunfeng.com/img/face.jpg',
+            img_title:'照片墙',
+            from:'魅拓照片墙'
+        };
+        share('nativeShare',config);
+        //不分享
+        cancel = nativeShare.find('#cancel');
+        if(cancel.length >= 1){
+            cancel
+                .unbind('click')
+                .on('click',function(event){
+                    event.preventDefault();
+                    event.stopPropagation();
+                    cancel.unbind('click');
+                    nativeShare.remove();
+                    me.createReset(ancestor);
+                });
+        }else{
+            nativeShare.on('click',function(){
+                event.preventDefault();
+                event.stopPropagation();
+                nativeShare.unbind('click');
+                nativeShare.remove();
+                me.createReset(ancestor);
+            });
+        }
+
     }
 
 };

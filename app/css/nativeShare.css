@@ -1,0 +1,76 @@
+/**
+ * Created by Jeffery Wang.
+ * Create Time: 2015-06-16 19:52
+ * Author Link: http://blog.wangjunfeng.com
+ */
+.m-nativeShare {
+    position: absolute;
+    top:51px;
+    width: 90%;
+    margin-left: 5%;
+    padding: 10px;
+    background-color: #ffffff;
+    font-size: 13px;
+    border-radius: 5px;
+
+}
+.m-nativeShare .cancel{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 16px;
+    width: 16px;
+    background: url('./../img/cancel.png') no-repeat center;
+}
+.m-nativeShare .label {
+    font-size: 20px;
+}
+
+.m-nativeShare .list {
+    width: 100%;
+}
+
+.m-nativeShare .list span {
+    width: 30%;
+    display: inline-block;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.m-nativeShare .list span i {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 5px;
+}
+
+.m-nativeShare .weibo i {
+    background-image: url('./../img/weibo.png');
+    background-size: cover;
+}
+
+.m-nativeShare .weixin i {
+    background-image: url('./../img/weixin_friend.png');
+    background-size: cover;
+}
+
+.m-nativeShare .weixin_timeline i {
+    background-image: url('./../img/weixin.png');
+    background-size: cover;
+}
+
+.m-nativeShare .qq i {
+    background-image: url('./../img/qq.png');
+    background-size: cover;
+}
+
+.m-nativeShare .qzone i {
+    background-image: url('./../img/qqzone.png');
+    background-size: cover;
+}
+
+.m-nativeShare .more i {
+    background-image: url('./../img/more.png');
+    background-size: cover;
+}

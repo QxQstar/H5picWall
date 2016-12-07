@@ -47,7 +47,7 @@ Show.prototype.modifySize = function(show){
 };
 /**
  * 初始化show模块，绑定必要的事件
- * @param show 要绑定事件的节点，一个jquery节点
+ * @param show show模块，一个jquery节点
  * @param ajaxObj 对象
  */
 Show.prototype.init = function(show,ajaxObj){
@@ -96,9 +96,9 @@ Show.prototype.init = function(show,ajaxObj){
         .on('click',function(event){
             event.stopPropagation();
             event.preventDefault();
-            //如果已经登录
-            if(window.isLogin){
-
+            //如果已经登录,执行添加到购物车
+            if(isLogin()){
+                me.ajaxObj.addCart(show);
             }else{
                 popUpObj.login( $('#container') );
             }
@@ -171,6 +171,19 @@ Show.prototype.touchEnd = function(event,me){
         //下一张，发送ajax请求
     }
 };
+/**
+ * 检查是否登录
+ * @returns {boolean}
+ */
+function isLogin(){
+    var cookie = document.cookie;
+    if(cookie.indexOf('www_xiaoyu4_comuser_name=') >= 0){
+        return true;
+    }else{
+        return false
+    }
+
+}
 module.exports = function(){
     return new Show();
 };

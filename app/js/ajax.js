@@ -331,12 +331,7 @@ Ajax.prototype.login = function(login){
         url: "/pw/index.php/home/login/login",
         dataType: 'json',
         success:function(result){
-            if(result.status === 1){
-                window.isLogin = true;
-                popUp.info(result.msg);
-            }else{
-                popUp.info(result.msg);
-            }
+            popUp.info(result.msg);
         }
     });
 
@@ -352,12 +347,7 @@ Ajax.prototype.register = function(data){
         url: "/pw/index.php/home/login/reg",
         dataType: 'json',
         success:function(result){
-            if(result.status){
-                window.isLogin = true;
-                popUp.info(result.msg);
-            }else{
-                popUp.info(result.msg);
-            }
+            popUp.info(result.msg);
         }
     });
 };
@@ -408,7 +398,50 @@ Ajax.prototype.checkTel = function(tel,registerObj){
 function getHashValue(){
     return location.hash.split('#/')[1];
 }
+/**
+ * 添加到购物车
+ * @param show show模块 jquery对象
+ */
+Ajax.prototype.addCart = function(show){
+    var data,hashArr,picGroups,gouwuchehao,frames,pics;
+    hashArr = getHashValue().split('$/');
+    gouwuchehao = hashArr[ hashArr.length - 1 ];
+    data = {};
+    picGroups = show.find('.picGroup');
+    frames = picGroups.find('.frame');
+    pics = picGroups.find('.pic');
+    frames.each(function(index,frame){
+        data[index] = {
+            leixing:'相框',
+            laiyuanbianhao:$(frame).attr('data-code'),
+            gouwuchehao:gouwuchehao
+        }
+    });
+    pics.each(function(index,pic){
+        data[frames.length + index] = {
+            leixing:'作品',
+            laiyuanbianhao:$(pic).attr('data-code'),
+            gouwuchehao:gouwuchehao
+        }
+    });
+    $.ajax({
+        type: "POST",
+        data: data,
+        url: "/pw/index.php/home/cart/addcart",
+        dataType: 'json',
+        success:function(result){
+            if(result.status){
+                popUp.info(result.msg);
+                setTimeout(function(){
+                    location.href = result.data;
+                },2000);
 
+            }else{
+                popUp.info(result.msg);
+            }
+        }
+    });
+};
 /**
  * 给图片加载添加回调
  * @param parent img的祖先元素

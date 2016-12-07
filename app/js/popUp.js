@@ -13,7 +13,7 @@ function PopUp(){
  * @param message 提示系统
  */
 PopUp.prototype.info = function(message){
-    var info,mask,isLogin,isRegister,bottom,showContent ;
+    var info,mask,login,register,bottom,showContent ;
     bottom = $('#show').find('.bottom');
     showContent = $('#showContent');
     mask = $('<div class="f-mask" id="popUpMask"></div>')
@@ -44,24 +44,24 @@ PopUp.prototype.info = function(message){
             });
     },1000);
 
-    isLogin = $('#login');
-    isRegister = $('#register');
-    if(isLogin.length > 0 && window.isLogin){
+    login = $('#login');
+    register = $('#register');
+    if(login.length > 0 && isLogin()){
         setTimeout(function(){
-            isLogin
+            login
                 .find('button')
                 .unbind('click');
-            isLogin.remove();
+            login.remove();
             bottom.show();
             showContent.show();
         },2000);
-    }else if(isRegister.length > 0 && window.isLogin){
+    }else if(register.length > 0 && isLogin()){
         setTimeout(function(){
-            isRegister
+            register
                 .find('button')
                 .unbind('click');
 
-            isRegister.remove();
+            register.remove();
             bottom.show();
             showContent.show();
         },2000);
@@ -154,7 +154,7 @@ PopUp.prototype.createReset = function(ancestor){
  * @param ancestor 祖先元素 jquery对象
  */
 PopUp.prototype.login = function(ancestor){
-    var login,content,bottom,showContent,submit,me,register;
+    var login,content,bottom,showContent,submit,me,register,cancel;
     me = this;
     bottom = ancestor.find('.bottom');
     showContent = ancestor.find('#showContent');
@@ -162,6 +162,7 @@ PopUp.prototype.login = function(ancestor){
     showContent.hide();
     login = $('<div class="m-login" id="login"></div>');
     content = '<form class="loginForm" id="loginForm">'+
+                    '<button type="button" class="cancel" id="cancel"></button>'+
                     '<div class="head">魅拓用户登录</div>'+
                      '<div class="tel">'+
                             '<input type="text" placeholder="手机号/邮箱" id="message">'+
@@ -182,16 +183,30 @@ PopUp.prototype.login = function(ancestor){
             .find('#submit')
             .on('click',function(event){
                 event.stopPropagation();
+                event.preventDefault();
                 me.ajaxObj.login(login);
             });
     register = login
                 .find('#register')
                 .on('click',function(event){
                     event.stopPropagation();
+                    event.preventDefault();
                     submit.unbind('click');
                     login.remove();
                     me.register(ancestor);
                 });
+    //取消登录
+    cancel = login.find('#cancel');
+    cancel
+        .unbind('click')
+        .on('click',function(event){
+            event.stopPropagation();
+            submit.unbind('click');
+            cancel.unbind('click');
+            login.remove();
+            showContent.show();
+            bottom.show();
+        });
 
 };
 /**
@@ -199,10 +214,11 @@ PopUp.prototype.login = function(ancestor){
  * @param ancestor 祖先元素 jquery对象
  */
 PopUp.prototype.register = function(ancestor){
-    var register,content,getYzm,me,tel,timer,submit;
+    var register,content,getYzm,me,tel,timer,submit,cancel;
     me = this;
     register = $('<div class="m-register" id="register"></div>');
     content = '<form class="registerForm" id="registerForm">'+
+                    '<button type="button" class="cancel" id="cancel"></button>'+
                     '<div class="head">用户注册</div>'+
                     '<table class="table">'+
                         '<tr class="row">'+
@@ -271,6 +287,7 @@ PopUp.prototype.register = function(ancestor){
     getYzm = register.find('#getyzm');
     tel = register.find('#tel');
     submit = register.find('#submit');
+    cancel = register.find('#cancel');
     //为发送验证码绑定事件
     getYzm
         .unbind('click')
@@ -295,9 +312,38 @@ PopUp.prototype.register = function(ancestor){
             event.stopPropagation();
             event.preventDefault();
             registerObj.submit(register,me);
+        });
+    //取消注册
+    cancel
+        .unbind('click')
+        .on('click',function(){
+            event.stopPropagation();
+            event.preventDefault();
+            submit.unbind('click');
+            tel.unbind('keyup');
+            cancel.unbind('click');
+            getYzm.unbind('click');
+            register.remove();
+            ancestor.find('.bottom').show();
+            ancestor.find('#showContent').show();
+
         })
 
+
 };
+/**
+ * 检查是否登录
+ * @returns {boolean}
+ */
+function isLogin(){
+    var cookie = document.cookie;
+    if(cookie.indexOf('www_xiaoyu4_comuser_name=') >= 0){
+        return true;
+    }else{
+        return false
+    }
+
+}
 module.exports = function(){
     return new PopUp()
 };

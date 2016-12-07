@@ -361,6 +361,28 @@ Ajax.prototype.sendYZM = function(tel){
     });
 };
 /**
+ * 发送验证电话号码是否已经注册的请求
+ * @param tel 要验证的电话号码
+ * @param registerObj register对象
+ */
+Ajax.prototype.checkTel = function(tel,registerObj){
+    $.ajax({
+        type: "POST",
+        data: {tel:tel},
+        url: "/pw/index.php/home/login/checkuser",
+        dataType: 'json',
+        success:function(result){
+
+            registerObj.telStatus = result.status;
+            //1表示可用
+            if(!result.status){
+                popUp.info(result.msg);
+
+            }
+        }
+    });
+};
+/**
  * 得到hash值，不包含#/
  */
 function getHashValue(){

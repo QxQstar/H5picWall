@@ -9,6 +9,8 @@ var $ = require('jquery');
 
 function Register(){
     this.ajaxObj = null;
+    //电话号码是否可用,默认不可用
+    this.telStatus = false;
 }
 /**
  * 发送验证码
@@ -24,6 +26,8 @@ Register.prototype.sendYZM = function(register,popUpObj){
         popUpObj.info('手机号码为空');
     }else if( !myreg.test( tel.val() ) ){
         popUpObj.info('手机号码格式不正确');
+    }else if(!this.telStatus){
+        popUpObj.info('该电话号码已注册');
     }else{
         $target.attr('disabled',true);
         $target.data({
@@ -40,7 +44,15 @@ Register.prototype.sendYZM = function(register,popUpObj){
 
     }
 };
-
+/**
+ * 验证电话号码是否已经注册了
+ * @param tel 要验证的电话号码
+ * @param popUpObj popUp对象
+ */
+Register.prototype.checkTel = function(tel,popUpObj){
+    this.ajaxObj = popUpObj.ajaxObj;
+    popUpObj.ajaxObj.checkTel(tel,this);
+};
 /**
  * 计时
  * @param $target 显示计时的元素 jquery对象

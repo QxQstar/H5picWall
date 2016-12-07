@@ -199,7 +199,7 @@ PopUp.prototype.login = function(ancestor){
  * @param ancestor 祖先元素 jquery对象
  */
 PopUp.prototype.register = function(ancestor){
-    var register,content,getYzm,me;
+    var register,content,getYzm,me,tel,timer;
     me = this;
     register = $('<div class="m-register"></div>');
     content = '<form class="registerForm" id="registerForm">'+
@@ -269,11 +269,26 @@ PopUp.prototype.register = function(ancestor){
     register.html(content);
     ancestor.append(register);
     getYzm = register.find('#yzm');
-    getYzm.on('click',function(event){
-        event.preventDefault();
-        event.stopPropagation();
-        registerObj.sendYZM(register,me);
-    });
+    tel = register.find('#tel');
+    //为发送验证码绑定事件
+    getYzm
+        .unbind('click')
+        .on('click',function(event){
+            event.preventDefault();
+            event.stopPropagation();
+            registerObj.sendYZM(register,me);
+        });
+    //输入号码绑定事件
+    tel
+        .unbind('keyup')
+        .on('keyup',function(){
+            clearTimeout(timer);
+            timer = setTimeout(function(){
+                registerObj.checkTel(tel.val(),me);
+            },1000);
+        });
+
+
 };
 module.exports = function(){
     return new PopUp()

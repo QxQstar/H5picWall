@@ -6,17 +6,21 @@
 require('./../css/base.css');
 require('./../css/loading.css');
 require('./../css/layout.css');
-
+require('./../css/nativeShare.css');
+require('./../css/login.css');
+require('./../css/register.css');
+//默认没有登录
+window.isLogin = false;
 //引入需要的js模块
 var $ = require('jquery');
 var animation = require('./animation.js');
 var createSceneObj = require('./createScene.js')();
-if(location.href.indexOf('#/') >= 0) {
-    location.href = location.href.split('#/')[0];
-}
+//if(location.href.indexOf('#/') >= 0) {
+//    location.href = location.href.split('#/')[0];
+//}
+
 //进度显示元素
 var loading = $('#rate')[0];
-
 //帧动画相关变量
 var animationImg = $('#animation').find('img');
 
@@ -107,8 +111,20 @@ var animationObj = animation()
                     .loadImage(imageList,loading,loadFinish)
                     .changeSrc(animationImg[0],imageList);
 
-//开始动画,这是后续操作的入口
+if(location.href.split('#/').length <= 1){
+    //url为http://www.xiaoyu4.com/pw/html/index.html
+    //开始动画
     animationObj.start(100);
+}else{
+    if(location.href.indexOf('#/show$/') >= 0){
+        location.href = location.href.split('#/')[0] + '#/scene';
+    }else{
+        render();
+    }
+
+
+}
+
 
 /**
  * 图片加载结束后执行的回调函数
@@ -119,7 +135,13 @@ function loadFinish(){
     loading.remove();
 }
 //给window绑定事件
-$(window).on('hashchange',function(){
+$(window).on('hashchange',render);
+
+/**
+ * 渲染页面
+ * @returns {boolean}
+ */
+function render(){
     var hash = location.hash;
     var hashValue;
     if(hash.indexOf('$/') < 0) {
@@ -134,5 +156,5 @@ $(window).on('hashchange',function(){
     if(elem.length < 1){
         createSceneObj.createScene();
     }
-});
+}
 

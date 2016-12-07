@@ -342,6 +342,26 @@ Ajax.prototype.login = function(login){
 
 };
 /**
+ * 注册
+ * @param data 提交的数据
+ */
+Ajax.prototype.register = function(data){
+    $.ajax({
+        type: "POST",
+        data: data,
+        url: "/pw/index.php/home/login/reg",
+        dataType: 'json',
+        success:function(result){
+            if(result.status){
+                window.isLogin = true;
+                popUp.info(result.msg);
+            }else{
+                popUp.info(result.msg);
+            }
+        }
+    });
+};
+/**
  * 发送验证码
  * @param tel 发送验证码的手机号
  */

@@ -199,9 +199,9 @@ PopUp.prototype.login = function(ancestor){
  * @param ancestor 祖先元素 jquery对象
  */
 PopUp.prototype.register = function(ancestor){
-    var register,content,getYzm,me,tel,timer;
+    var register,content,getYzm,me,tel,timer,submit;
     me = this;
-    register = $('<div class="m-register"></div>');
+    register = $('<div class="m-register" id="register"></div>');
     content = '<form class="registerForm" id="registerForm">'+
                     '<div class="head">用户注册</div>'+
                     '<table class="table">'+
@@ -216,11 +216,11 @@ PopUp.prototype.register = function(ancestor){
                         '</tr>'+
                         '<tr class="row">'+
                             '<td class="col col-1">'+
-                                '<label for="yzm">验证码:</label>'+
+                                '<label for="getyzm">验证码:</label>'+
                             '</td>'+
                             '<td class="col col-2">'+
-                                '<input type="text" id="setYzm">'+
-                                '<button type="button" class="getYzm" id="yzm">获取验证码</button>'+
+                                '<input type="text" id="yzm" class="yzm">'+
+                                '<button type="button" class="getYzm" id="getyzm">获取验证码</button>'+
                             '</td>'+
                         '</tr>'+
                         '<tr class="row">'+
@@ -268,8 +268,9 @@ PopUp.prototype.register = function(ancestor){
 
     register.html(content);
     ancestor.append(register);
-    getYzm = register.find('#yzm');
+    getYzm = register.find('#getyzm');
     tel = register.find('#tel');
+    submit = register.find('#submit');
     //为发送验证码绑定事件
     getYzm
         .unbind('click')
@@ -288,6 +289,13 @@ PopUp.prototype.register = function(ancestor){
             },1000);
         });
 
+    submit
+        .unbind('click')
+        .on('click',function(event){
+            event.stopPropagation();
+            event.preventDefault();
+            registerObj.submit(register,me);
+        })
 
 };
 module.exports = function(){

@@ -39,6 +39,8 @@
     height: 25px;
     line-height: 25px;
     padding: 0 10px;
+    border: 1px solid #d6d4d4;
+    background-color: #ffffff;
 }
 .registerForm #checkBox{
     width: auto;
@@ -53,14 +55,13 @@
     font-size: 12px;
     font-weight: bold;
 }
-.registerForm .col input{
-    border: 1px solid #666565;
-}
-.registerForm #setYzm{
+.registerForm .col-2 .yzm{
     width: 50%;
     margin-right: 1%;
 }
-.registerForm #yzm{
+.registerForm .col-2 .getYzm{
     float: right;
+    height: 25px;
+    line-height: 25px;
     background-color: #b9b9b9;
 }

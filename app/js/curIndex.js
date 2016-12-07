@@ -9,15 +9,12 @@ require('./../css/layout.css');
 require('./../css/nativeShare.css');
 require('./../css/login.css');
 require('./../css/register.css');
-//默认没有登录
-window.isLogin = false;
 //引入需要的js模块
 var $ = require('jquery');
 var animation = require('./animation.js');
 var createSceneObj = require('./createScene.js')();
-//if(location.href.indexOf('#/') >= 0) {
-//    location.href = location.href.split('#/')[0];
-//}
+//配置微信分享
+require('./wxConfig.js')();
 
 //进度显示元素
 var loading = $('#rate')[0];
@@ -124,8 +121,6 @@ if(location.href.split('#/').length <= 1){
 
 
 }
-
-
 /**
  * 图片加载结束后执行的回调函数
  */
@@ -157,4 +152,8 @@ function render(){
         createSceneObj.createScene();
     }
 }
+
+
+
+
 

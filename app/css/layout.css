@@ -233,8 +233,8 @@
     margin: 20px auto 0 auto;
     left: 7px;
     right: 7px;
-    background-color: #ffffff;
-    z-index: 2;
+    background-color: transparent;
+    z-index: 80;
 }
 .m-drag .control .notice{
     position: absolute;
@@ -242,6 +242,9 @@
     border: 1px red dashed;
     font-size: 11px;
     color: red;
+}
+.m-drag .control .footer{
+    background-color: transparent;
 }
 .m-drag .fixed{
     position: fixed;
@@ -397,6 +400,17 @@
     color: #ffffff;
     font-size: 12px;
 }
+@media all and (min-width: 768px) {
+    .m-drag .control .footer{
+        height: 45px;
+    }
+    .m-drag .control .sure{
+        width: 150px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 14px;
+    }
+}
 .m-drag .control .changePic.prev{
     background-position: -215px 0;
     left:7px
@@ -414,45 +428,9 @@
 .g-container .m-show{
     position: relative;
     font-size: 12px;
-    margin-top: -31px;
 }
-/*.g-container .m-show .m-top{*/
-    /*position: absolute;*/
-    /*top: 7px;*/
-    /*left: 7px;*/
-    /*right: 7px;*/
-    /*height: 31px;*/
-/*}*/
-/*.m-show .m-top .sale{*/
-    /*position: absolute;*/
-    /*right: 0;*/
-/*}*/
-/*.m-show .m-top .shareBtn{*/
-    /*width: auto;*/
-    /*height: 25px;*/
-    /*background: none;*/
-    /*border: 1px solid #000000;*/
-    /*padding: 0 5px;*/
-    /*font-size: 12px;*/
-/*}*/
-/*.m-show .m-top .price{*/
-    /*color: #ff4400;*/
-    /*font-weight: bold;*/
-    /*margin-right: 10px;*/
-/*}*/
-/*.m-show .m-top .saleBtn{*/
-    /*display: inline-block;*/
-    /*height: 25px;*/
-    /*font-size: 12px;*/
-    /*color: #ffffff;*/
-    /*background-color: #ff4400;*/
-    /*line-height: 25px;*/
-    /*padding: 0 10px;*/
-
-/*}*/
 
 .m-show .showContent{
-    margin-top: 31px;
     margin-left: 7px;
     margin-right: 7px;
 }
@@ -480,6 +458,11 @@
     z-index: 100;
 
 }
+@media all and (min-width: 768px) {
+    .m-show .bottom{
+        height: 100px;
+    }
+}
 .m-show .bottom .price{
     height: 15px;
     line-height: 15px;
@@ -488,9 +471,25 @@
     font-size: 15px;
     padding: 0 5% 20px 0;
 }
+@media all and (min-width: 768px) {
+    .m-show .bottom .price{
+        height: 24px;
+        line-height: 24px;
+        font-size: 18px;
+        padding-bottom: 30px;
+
+    }
+}
 .m-show .bottom .handle{
     height: 45px;
     line-height: 45px;
+}
+@media all and (min-width: 768px) {
+    .m-show .bottom .handle{
+        height: 76px;
+        line-height: 76px;
+
+    }
 }
 .bottom .handle button{
     height: 45px;
@@ -503,7 +502,14 @@
     font-weight: bold;
 
 }
+@media all and (min-width: 768px) {
+    .bottom .handle button{
+        height: 76px;
+        line-height: 76px;
+        font-size: 14px;
 
+    }
+}
 .m-show .resetInfo{
     position: absolute;
     padding: 10px;
@@ -527,6 +533,14 @@
     color: #ffffff;
     font-size: 11px;
 
+}
+@media all and (min-width: 768px) {
+    .m-show .resetInfo button{
+        height: 45px;
+        line-height: 45px;
+        font-size: 14px;
+
+    }
 }
 .m-show .resetInfo .cancel{
     margin-left: 10px;

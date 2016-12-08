@@ -3,7 +3,17 @@
     position: absolute;
     top:50px;
     left: 0;
+    right: 0;
     width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+@media all and (min-width: 768px) {
+    .g-container .m-register{
+        top:20%;
+        margin: auto;
+    }
+
 }
 .m-register .registerForm{
     position: absolute;
@@ -11,6 +21,16 @@
     width: 90%;
     left: 5%;
     padding: 20px;
+}
+.m-register .registerForm .cancel{
+    position: absolute;
+    right: 0;
+    top:0;
+    display: inline-block;
+    height: 16px;
+    width: 16px;
+    background: url(./../img/cancel.png) no-repeat center;
+
 }
 .m-register .registerForm .head{
     font-size: 18px;

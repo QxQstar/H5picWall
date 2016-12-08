@@ -21,20 +21,23 @@ Canvas.prototype.supportCanvas = function(){
  * 创建canvas
  * @param target 新创建的canvas的尺寸依据
  * @param parent 新建canvas的父元素
+ * @param padding 参考线生长的长度
  */
-Canvas.prototype.createCanvas = function(target,parent){
+Canvas.prototype.createCanvas = function(target,parent,padding){
     var canvas;
+    padding = typeof padding !== 'undefined' ? padding : this.padding;
     if(this.isSupport){
         canvas = $('<canvas class="canvas"></canvas>');
-        canvas[0].height = target.height() + 2*this.padding;
-        canvas[0].width = target.width() + 2*this.padding;
+        canvas[0].height = target.height() + 2*padding;
+        canvas[0].width = target.width() + 2*padding;
+
         canvas.css({
             position:'absolute',
             display:'none',
             zIndex:11
         });
         parent.append(canvas);
-        this.drawLine(canvas[0],this.padding);
+        this.drawLine(canvas[0],padding);
         return canvas;
     }else {
         return this.isSupport;
@@ -43,7 +46,7 @@ Canvas.prototype.createCanvas = function(target,parent){
 /**
  * 画参考线
  * @param canvas 画参考线的canvas元素
- * @param padding 参考线的长度
+ * @param padding 参考线生长的长度
  */
 Canvas.prototype.drawLine = function(canvas,padding){
     var context;

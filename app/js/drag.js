@@ -54,7 +54,7 @@ var drag = {
      */
     init:function(dragDOM,ajaxObj){
         var listContent,height,fixed,control,controlMaxSize,wallSize,rateWall,
-            rateControl,next,prev,okBtn,info,controlH,setSize;
+            rateControl,next,prev,okBtn,info,controlH,setSize,controlCanvas;
         //将ajax对象保存起来
         drag.ajaxObj = ajaxObj;
         //将控制台重置为未放大状态
@@ -84,11 +84,13 @@ var drag = {
 
 
             //控制台
-            control = dragDOM.find('#' + drag.control).css({opacity:0});
+            control = dragDOM.find('#' + drag.control);
+
+//            control = dragDOM.find('#' + drag.control).css({opacity:0});
             //间隔200毫秒后显示出控制台
-            setTimeout(function(){
-                control.animate({opacity:1},400);
-            },200);
+//            setTimeout(function(){
+//                control.animate({opacity:1},400);
+//            },200);
             info = $('<div id="notice" class="notice"></div>');
 
             $('#control').append(info);
@@ -117,6 +119,14 @@ var drag = {
             }else{
                 control.width(controlMaxSize.W).height(rateWall * controlMaxSize.W | 0)
             }
+            //给控制台创建一个虚线框
+            controlCanvas = canvasObj.createCanvas(control,dragDOM,0);
+
+            controlCanvas.css({
+                top:control.offset().top + 'px',
+                left:control.offset().left + 'px',
+                display:'block'
+            }).attr({id:'controlCvs'});
             //将控制台放大前的尺寸保存起来
             scaleObj.controlOriginalSize = {
                 H:control.height(),
@@ -131,9 +141,15 @@ var drag = {
         };
 
         setTimeout(function(){
+            var height;
+            if($(window).width() >= 768){
+                height = '190px';
+            }else{
+                height =  '130px';
+            }
             //间隔500毫秒后再改变拖拽列表的高度，拖拽列表的高度改变后再设置控制台的尺寸
             listContent.animate({
-                height:'130px',
+                height:height,
                 padding:'7px'
             },500,setSize);
 
@@ -240,7 +256,6 @@ var drag = {
                             originalWidth: ( (frame.attr('data-twidth') | 0) * scale ) | 0,
                             originalHeight: ( (frame.attr('data-theight') | 0) * scale ) | 0
                         });
-
                     drag.canvas = canvasObj.createCanvas(picGroup, control);
 
                 });
@@ -260,7 +275,7 @@ var drag = {
         drag.listener($target, 'touchend', drag.touchEnd);
     },
     touchMove:function(event){
-        var $target,picGroup,control,dragListPar,controlOffset,sitControl,padding,frame;
+        var $target,picGroup,control,dragListPar,controlOffset,sitControl,padding,frame,canvasCvs;
         //阻止冒泡
         event.stopPropagation();
 
@@ -296,6 +311,7 @@ var drag = {
 
             //是否存在覆盖
             drag.isCover = position.compare(control, picGroup);
+            canvasCvs = $('#controlCvs');
             //如果canvas存在就修改canvas的位置,当被拖的元素位于控制台才显示canvas
             if (drag.canvas && sitControl) {
                 padding = canvasObj.padding;
@@ -305,18 +321,20 @@ var drag = {
                     top: (drag.touchPos.Y - drag.touchOffsetPos.Y - controlOffset.top - padding - 1) + 'px',
                     left: (drag.touchPos.X - drag.touchOffsetPos.X - controlOffset.left - padding - 1) + 'px'
                 });
+//                canvasCvs.show();
             }
             if (!sitControl && drag.canvas) {
                 drag.canvas.css({
                     display: 'none'
-                })
+                });
+//                canvasCvs.hide();
             }
         }
 
     },
     touchEnd:function(event) {
         var $target,picGroup,control,dragListPar,controlOffset,
-            sitControl,newPicGroup,total,nowPrice,newPrice;
+            sitControl,newPicGroup,total,nowPrice,newPrice,controlCvs;
         //阻止冒泡
         event.stopPropagation();
 

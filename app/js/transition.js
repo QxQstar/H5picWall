@@ -22,7 +22,7 @@ var transition = {
         total = 0;
         $.each(data, function (index, item) {
             list += "<li class='picItem'>" +
-                "<img id='" + index + "' src='/pw" + item.ma_src + "' class='pic' data-code='"+ item.id +"' />" +
+                "<img id='" + index + "' src='/pw" + item.ma_src + "' class='pic' data-code='"+ item.id +"' data-price='"+  item.price +"'/>" +
                 "</li>";
             total++;
         });

@@ -27,7 +27,7 @@ function Scale(){
  * @param control 要缩放的元素
  */
 Scale.prototype.controlScale = function(event,control){
-    var $target,drag,dragOriginalSize,controlPicGroups,me,frame;
+    var $target,drag,dragOriginalSize,controlPicGroups,me,frame,controlCvs;
     //阻止冒泡/捕获
     event.stopPropagation();
     me = this;
@@ -52,8 +52,11 @@ Scale.prototype.controlScale = function(event,control){
 
      controlPicGroups = control.find('.picGroup');
 
+     controlCvs = $('#controlCvs');
+
     //如果控制台没有处于放大状态，将控制台进行放大
     if( ! me.controlMagnify ){
+
         //修改icon的状态
         $target
             .addClass('off')
@@ -62,6 +65,7 @@ Scale.prototype.controlScale = function(event,control){
         control
             .height(me.controlMaxSize.H)
             .width( ( me.controlMaxSize.H * ( me.controlOriginalSize.W / me.controlOriginalSize.H ) ) | 0 );
+
         //修改整个模块的尺寸
         drag
             .width( control.width() + control.offset().left * 2 )
@@ -128,6 +132,9 @@ Scale.prototype.controlScale = function(event,control){
             });
 
     }
+    controlCvs
+        .height(control.height())
+        .width(control.width());
     //修改控制台的状态
     this.controlMagnify = ! this.controlMagnify;
 };
@@ -137,8 +144,16 @@ Scale.prototype.controlScale = function(event,control){
  * @param ajaxObj ajax对象
  */
 Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
-    var control,frame,frameRate,controlRate,head,footer,sureBtn,prev,next,me;
+    var control,frame,frameRate,controlRate,head,footer,sureBtn,prev,next,me,controlCvs,magnify;
     me = this;
+    //控制台的虚线
+    controlCvs = $('#controlCvs');
+    controlCvs.hide();
+    //放大/缩小的icon
+    magnify = $('#magnify');
+    magnify.css({
+        'opacity':0
+    });
     //如果操作台处于放大的状态和已经存在一个相框处于放大状态不能放大相框
     if(me.controlMagnify || me.frameMagnify){
         return false;
@@ -229,7 +244,7 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
 
     //给确定按钮绑定事件
     sureBtn.on('click',function(event){
-        var list,pic, W,curIndex,frame,optionalPic;
+        var list,pic, W,curIndex,frame,optionalPic,newPrice,oldPrice,total,oldTotalPrice;
         //阻止冒泡/捕获和默认行为
         event.stopPropagation();
         event.preventDefault();
@@ -245,9 +260,18 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         curIndex = Math.abs( parseInt( list.css('marginLeft') ) ) / W | 0;
         picGroup.attr('data-picIndex',curIndex);
         //显示切换到的那个画心
-        optionalPic = list.find('img');
-        pic.attr('src',optionalPic.eq(curIndex).attr('src'));
-        frame.attr('data-piccode',optionalPic.eq(curIndex).attr('data-code'));
+        optionalPic = list.find('img').eq(curIndex);
+        newPrice = parseFloat( optionalPic.attr('data-price') );
+        oldPrice = parseFloat( pic.attr('data-price') );
+        pic.attr({
+            'src':optionalPic.attr('src'),
+            'data-price':newPrice
+        });
+        frame.attr('data-piccode',optionalPic.attr('data-code'));
+        //修改总价
+        total = $('#fixed').find('.total');
+        oldTotalPrice = parseFloat( total.html() );
+        total.html( oldTotalPrice - oldPrice + newPrice);
 
         head.remove();
         sureBtn.unbind('click');
@@ -273,6 +297,10 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         //将表示画框和画心的img直接子元素显示出来
         frame.show();
         pic.show();
+        controlCvs.show();
+        magnify.css({
+            'opacity':1
+        });
         //将画框修改为未放大状态
         me.frameMagnify = false;
         //将顶部显示出来

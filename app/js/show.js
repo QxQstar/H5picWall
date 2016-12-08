@@ -38,7 +38,7 @@ Show.prototype.modifySize = function(show){
         $picGroup
             .animate({
                 opacity:1
-            },1000);
+            },10);
 
     });
 

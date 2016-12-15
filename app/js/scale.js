@@ -146,6 +146,13 @@ Scale.prototype.controlScale = function(event,control){
 Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     var control,frame,frameRate,controlRate,head,footer,sureBtn,prev,next,me,controlCvs,magnify;
     me = this;
+
+    //如果操作台处于放大的状态和已经存在一个相框处于放大状态不能放大相框
+    if(me.controlMagnify || me.frameMagnify){
+        return false;
+    }
+    //将画框设置为放大状态
+    me.frameMagnify = true;
     //控制台的虚线
     controlCvs = $('#controlCvs');
     controlCvs.hide();
@@ -154,12 +161,6 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     magnify.css({
         'opacity':0
     });
-    //如果操作台处于放大的状态和已经存在一个相框处于放大状态不能放大相框
-    if(me.controlMagnify || me.frameMagnify){
-        return false;
-    }
-    //将画框设置为放大状态
-    me.frameMagnify = true;
     //将顶部隐藏起来
     $('.m-top').css({
         opacity:0
@@ -261,17 +262,17 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         picGroup.attr('data-picIndex',curIndex);
         //显示切换到的那个画心
         optionalPic = list.find('img').eq(curIndex);
-        newPrice = parseFloat( optionalPic.attr('data-price') );
-        oldPrice = parseFloat( pic.attr('data-price') );
+        newPrice = parseFloat( optionalPic.attr('data-price'));
+        oldPrice = parseFloat( pic.attr('data-price'));
         pic.attr({
             'src':optionalPic.attr('src'),
-            'data-price':newPrice
+            'data-price':newPrice.toFixed(2)
         });
         frame.attr('data-piccode',optionalPic.attr('data-code'));
         //修改总价
         total = $('#fixed').find('.total');
         oldTotalPrice = parseFloat( total.html() );
-        total.html( oldTotalPrice - oldPrice + newPrice);
+        total.html( ( oldTotalPrice - oldPrice + newPrice ).toFixed(2));
 
         head.remove();
         sureBtn.unbind('click');

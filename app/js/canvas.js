@@ -34,7 +34,8 @@ Canvas.prototype.createCanvas = function(target,parent,padding){
         canvas.css({
             position:'absolute',
             display:'none',
-            zIndex:11
+            zIndex:11,
+            margin:'auto'
         });
         parent.append(canvas);
         this.drawLine(canvas[0],padding);

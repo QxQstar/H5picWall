@@ -439,6 +439,7 @@
     position: absolute;
     overflow: hidden;
     opacity: 0;
+    box-shadow: 2px 2px  2px #888;
 }
 .m-show  .picGroup .pic{
     position: absolute;

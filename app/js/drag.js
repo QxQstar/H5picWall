@@ -124,7 +124,8 @@ var drag = {
 
             controlCanvas.css({
                 top:control.offset().top + 'px',
-                left:control.offset().left + 'px',
+                left:0 ,
+                right:0,
                 display:'block'
             }).attr({id:'controlCvs'});
             //将控制台放大前的尺寸保存起来
@@ -255,6 +256,9 @@ var drag = {
                         .attr({
                             originalWidth: ( (frame.attr('data-twidth') | 0) * scale ) | 0,
                             originalHeight: ( (frame.attr('data-theight') | 0) * scale ) | 0
+                        })
+                        .css({
+                            'max-width':'none'
                         });
                     drag.canvas = canvasObj.createCanvas(picGroup, control);
 
@@ -405,7 +409,7 @@ var drag = {
                     //总价增加
                     total = $('#fixed').find('.total');
                     nowPrice = parseFloat( total.html() );
-                    newPrice = nowPrice + parseFloat(newPicGroup.data('price'));
+                    newPrice = ( nowPrice + parseFloat(newPicGroup.data('price'))).toFixed(2);
                     total.html(newPrice);
 
 
@@ -420,7 +424,7 @@ var drag = {
                     //总价减少
                     total = $('#fixed').find('.total');
                     nowPrice = parseFloat( total.html() );
-                    newPrice = nowPrice - parseFloat(picGroup.data('price'));
+                    newPrice = ( nowPrice - parseFloat(picGroup.data('price'))).toFixed(2);
                     total.html(newPrice);
                     picGroup.remove();
 

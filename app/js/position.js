@@ -45,7 +45,8 @@ var position = {
 
             frame
                 .height('auto')
-                .width('auto');
+                .width('auto')
+                .css({'max-width':'100%'})
         });
         frame
             .attr('src',picGroup.data('thumbnail'))

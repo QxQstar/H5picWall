@@ -256,10 +256,8 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         //picGroup中直接子元素，表示相框的那个img元素
         frame = picGroup.children('img').first();
 
-        W = list.children('li').first().width();
         //切换到的画心的序号，从0开始计数
-        curIndex = Math.abs( parseInt( list.css('marginLeft') ) ) / W | 0;
-        picGroup.attr('data-picIndex',curIndex);
+        curIndex = picGroup.attr('data-picIndex');
         //显示切换到的那个画心
         optionalPic = list.find('img').eq(curIndex);
         newPrice = parseFloat( optionalPic.attr('data-price'));

@@ -109,11 +109,13 @@ var position = {
 
                 //检测是否X轴上相交
                 intersect_x = (curElemShadow_x[0] > comPEShadow_x[0] && curElemShadow_x[0] < comPEShadow_x[1])
-                    || (curElemShadow_x[1] > comPEShadow_x[0] && curElemShadow_x[1] < comPEShadow_x[1]);
+                    || (curElemShadow_x[1] > comPEShadow_x[0] && curElemShadow_x[1] < comPEShadow_x[1])
+                    ||(curElemShadow_x[0] < comPEShadow_x[0] && curElemShadow_x[1] > comPEShadow_x[1]);
 
                 //检测是否Y轴上相交
                 intersect_y = (curElemShadow_y[0] > comPEShadow_y[0] && curElemShadow_y[0] < comPEShadow_y[1])
-                    || (curElemShadow_y[1] > comPEShadow_y[0] && curElemShadow_y[1] < comPEShadow_y[1]);
+                    || (curElemShadow_y[1] > comPEShadow_y[0] && curElemShadow_y[1] < comPEShadow_y[1])
+                    ||(curElemShadow_y[0] < comPEShadow_y[0] && curElemShadow_y[1] > comPEShadow_y[1]);
 
                 Booleans = intersect_x && intersect_y;
 

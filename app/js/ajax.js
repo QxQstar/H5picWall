@@ -273,7 +273,7 @@ Ajax.prototype.getPic = function(picGroup){
  * @param scaleObj 缩放对象
  */
 Ajax.prototype.confirm = function(control,scaleObj){
-    var offsetScale,data = {},bg,scale;
+    var offsetScale,data = {},bg,scale,ratio,screen_height;
     //判断控制台是否进行了放大
     if(scaleObj.controlMagnify){
         offsetScale = scaleObj.controlRate;
@@ -283,7 +283,9 @@ Ajax.prototype.confirm = function(control,scaleObj){
     this.scaleObj = scaleObj;
     //从厘米到像素的转换比例
     scale = scaleObj.transformRate;
+    ratio = parseFloat( ( $(window).width() / $(window).height() ).toFixed(2) );
     bg = getHashValue().split('$/')[1];
+    screen_height = $(window).height();
     control.find('.picGroup').each(function(index,picGroup){
         var $picGroup,frame;
         $picGroup = $(picGroup);
@@ -296,7 +298,11 @@ Ajax.prototype.confirm = function(control,scaleObj){
             m_y:$picGroup.offset().top / offsetScale| 0,
             t_x:parseInt( $picGroup.css('left') ) / scale /offsetScale | 0,
             t_y:parseInt( $picGroup.css('top') ) / scale / offsetScale| 0,
-            bg:bg
+            pic_height:frame.height() / offsetScale,
+            pic_width:frame.width() / offsetScale,
+            bg:bg,
+            ratio:ratio,
+            screen_height:screen_height
         }
     });
     $.ajax({

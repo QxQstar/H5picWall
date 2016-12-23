@@ -254,8 +254,8 @@ var drag = {
                         .height(( (frame.attr('data-theight') | 0) * scale) | 0)
                         .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
                         .attr({
-                            originalWidth: ( (frame.attr('data-twidth') | 0) * scale ) | 0,
-                            originalHeight: ( (frame.attr('data-theight') | 0) * scale ) | 0
+                            originalWidth: ( (frame.attr('data-twidth') | 0) * scaleObj.transformRate ) | 0,
+                            originalHeight: ( (frame.attr('data-theight') | 0) * scaleObj.transformRate ) | 0
                         })
                         .css({
                             'max-width':'none'

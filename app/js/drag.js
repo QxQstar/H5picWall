@@ -63,6 +63,8 @@ var drag = {
         scaleObj.frameMagnify = false;
 
         drag.__setID('dragList','control');
+        //进入drag页面时，隐藏向上翻页的icon
+        $('#prev').hide();
         //获取拖拽列表
         listContent = dragDOM.find('#footer');
         //给放大缩小的icon定位
@@ -97,8 +99,11 @@ var drag = {
             //控制台能够显示的最大尺寸
             controlMaxSize = {
                 W:$(window).width() - parseInt(control.css('left')) - parseInt(control.css('right')),
-                H:$(window).height() - 52 - (height + 20 + fixed.height())
+                H:$(window).height() - 62 - (height + 20 + fixed.height())
             };
+            if($(window).width() > 700){
+                controlMaxSize.H = controlMaxSize.H - 20;
+            }
             //控制台能够放大的最大尺寸受高度控制
             scaleObj.controlMaxSize = {
                 H:controlMaxSize.H
@@ -174,6 +179,9 @@ var drag = {
         drag.listener(prev,'click',clickPage);
 
         function clickPage(event){
+            if(!ajaxObj.pageLoad){
+                return;
+            }
             turnPage(event,ajaxObj);
         }
 
@@ -482,6 +490,7 @@ function turnPage(event,ajaxObj){
         listContent.data({
             page:++page
         });
+
     }else if(_target.attr('id') === 'prev'){
 
         //如果当前就为第一页，不发送请求，也不改变当前的页码
@@ -493,6 +502,7 @@ function turnPage(event,ajaxObj){
             page:--page
         });
     }
+
     ajaxObj.turnPage(page);
 }
 /**

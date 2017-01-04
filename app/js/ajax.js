@@ -19,6 +19,8 @@ function Ajax(){
     this.sceneData={};
     //用来保存每一页相框的数据
     this.pagedata ={};
+    //翻页的请求是否完成，默认是
+    this.pageLoad = true;
 }
 
 /**
@@ -179,7 +181,7 @@ Ajax.prototype.createScene = function(){
  * @param page 要请求的页码
  */
 Ajax.prototype.turnPage = function(page){
-    var me,addPage;
+    var me,addPage,checkShow;
     me = this;
     //生成一页新的相框
     addPage = function(data){
@@ -209,11 +211,29 @@ Ajax.prototype.turnPage = function(page){
         });
 
     };
-
+    checkShow = function(page){
+        if(page <= 1){
+            $('#prev').hide();
+            if(me.totalPicPage > 1){
+                $('#next').show();
+            }
+        }else if(page >= me.totalPicPage ){
+            $('#next').hide();
+            if(me.totalPicPage > 1){
+                $('#prev').show();
+            }
+        }else if(page > 1 && page < me.totalPicPage){
+            $('#prev').show();
+            $('#next').show();
+        }
+    };
     //如果存在相关数据就不发送请求
     if(me.pagedata.hasOwnProperty(page)){
         addPage(me.pagedata[page]);
+        checkShow(page);
     }else {
+        //将翻页的加载状态设置为未完成
+        me.pageLoad = false;
         $.ajax({
             type: "POST",
             data: {
@@ -224,8 +244,11 @@ Ajax.prototype.turnPage = function(page){
             success: function (result) {
                 if (result.status === 1) {
                     me.pagedata[page] = result.data;
+                    //将翻页的加载状态设置为已完成
+                    me.pageLoad = true;
                     //获取总共有多少页
                     me.totalPicPage = result.pageCount;
+                    checkShow(page);
                     addPage(me.pagedata[page]);
                 }
             }

@@ -259,6 +259,9 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
 
         //切换到的画心的序号，从0开始计数
         curIndex = picGroup.attr('data-picIndex');
+        if(typeof curIndex === 'undefined'){
+            curIndex = 0
+        }
         //显示切换到的那个画心
         optionalPic = list.find('img').eq(curIndex);
         newPrice = parseFloat( optionalPic.attr('data-price'));

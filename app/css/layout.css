@@ -10,14 +10,14 @@
     width: 14px;
     height: 25px;
     z-index: 2;
-    background: url(./../img/icon.png) no-repeat;
+    background: url(./../img/icon2.png) no-repeat;
 }
 .g-container .m-top .backBtn{
-     background-position: -215px 0;
+     background-position: -249px 0;
      left: 0;
  }
 .g-container .m-top .okBtn {
-    background-position: -16px 0;
+    background-position: -32px 0;
     width: 39px;
     right: 0;
 }
@@ -27,10 +27,37 @@
     *display: inline;
     zoom: 1;
     height: 25px;
-    width: 9px;
+    width: 10px;
     margin-left: 10px;
-    background: url(./../img/icon.png) no-repeat;
-    background-position: 0 0;
+    background: url(./../img/icon2.png) no-repeat;
+    background-position: -10px 0;
+}
+@media all and (min-width: 700px) {
+    .g-container .m-top{
+        height: 50px;
+    }
+
+    .g-container .m-top button{
+        width: 21px;
+        height: 37px;
+        background: url(./../img/iconPad.png) no-repeat;
+    }
+    .g-container .m-top .backBtn{
+        background-position: -373px 0;
+    }
+    .g-container .m-top .okBtn {
+        background-position: -48px 0;
+        width: 59px;
+    }
+    .g-container .m-top h1:after{
+
+        height: 38px;
+        width: 15px;
+        margin-left: 10px;
+        background: url(./../img/iconPad.png) no-repeat;
+        background-position: -15px 0;
+    }
+
 }
 .g-container .m-popUpInfo{
     position: absolute;
@@ -107,7 +134,17 @@
 
 }
 
-
+@media all and (min-width: 700px) {
+    .m-begin .word{
+        font-size: 30px;
+    }
+    .m-begin .link a{
+        width: 100px;
+        height: 33px;
+        line-height: 33px;
+        font-size: 14px;
+    }
+}
 
 .g-container .m-case{
     background-color: #e7e7e7;
@@ -141,13 +178,25 @@
     display: inline-block;
     width: 8px;
     height: 8px;
-    background: url(./../img/icon.png) no-repeat -9px 0;
+    background: url(./../img/icon2.png) no-repeat -22px 0;
 }
+
 .m-case .item .footer .detail span{
     font-size: 11px;
     transform:scale(0.8);
 }
-
+@media all and (min-width: 700px) {
+    .m-case .item .footer .detail:after{
+        content: "";
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: url(./../img/icon2.png) no-repeat -33px 0;
+    }
+    .m-case .item .footer .detail span{
+        font-size: 13px;
+    }
+}
 .g-container .m-scene{
     padding-bottom: 7px;
 }
@@ -180,7 +229,11 @@
     color: #535353;
     line-height: 1.7;
 }
-
+@media all and (min-width: 700px){
+    .m-scene .item .desc p{
+        font-size: 14px;
+    }
+}
 .g-container .m-drag,
 .g-container .m-show{
     position: relative;
@@ -192,31 +245,67 @@
     -o-background-size: 100% 100%;
 }
 .g-container .m-drag .backBtn{
-    background-position: -240px 0;
+    background-position: -280px 0;
 }
-/*小客厅*/
-.g-container .bg-livingRoomS{
-    background-image: url(./../img/xktbg.jpg);
+@media all and (min-width: 700px) {
+    .g-container .m-drag .backBtn{
+        background-position: -420px 0;
+    }
 }
-/*大客厅*/
-.g-container .bg-livingRoomB{
-    background-image: url(./../img/dkebg.jpg);
+.g-container .bg-1_2m-1m-test1{
+    background: url("./../img/1_2m-1m-test1.jpg") ;
+    background-size: 100%;
 }
-/*卧室*/
-.g-container .bg-bedRoom{
-    background-image: url(./../img/wsbg.jpg);
+.g-container .bg-1_2m-1m-test2{
+    background: url("./../img/1_2m-1m-test2.jpg") ;
+    background-size: 100%;
 }
-/*饭厅*/
-.g-container .bg-diningRoom{
-    background-image: url(./../img/cfbg.jpg);
+.g-container .bg-1_2m-1m-test3{
+    background: url("./../img/1_2m-1m-test3.jpg");
+    background-size: 100%;
 }
-/*过道*/
-.g-container .bg-aisle{
-    background-image: url(./../img/gdbg.jpg);
+.g-container .bg-1_5m-1m-test1{
+    background: url("./../img/1_5m-1m-test1.jpg");
+    background-size: 100%;
 }
-/*楼道*/
-.g-container .bg-corridor{
-    background-image: url(./../img/ldbg.jpg);
+
+
+.g-container .bg-1_5m-1m-test2{
+    background: url("./../img/1_5m-1m-test2.jpg");
+    background-size: 100%;
+}
+.g-container .bg-1_5m-1m-test3{
+    background: url("./../img/1_5m-1m-test3.jpg");
+    background-size: 100%;
+}
+.g-container .bg-1_5m-1m-test4{
+    background: url("./../img/1_5m-1m-test4.jpg");
+    background-size: 100%;
+}
+.g-container .bg-1_5m-1m-test5{
+    background: url("./../img/1_5m-1m-test5.jpg");
+    background-size: 100%;
+}
+
+.g-container .bg-1_5m-1m-test6{
+    background: url("./../img/1_5m-1m-test6.jpg");
+    background-size: 100%;
+}
+.g-container .bg-2_0m-1m-test1{
+    background: url("./../img/2_0m-1m-test1.jpg");
+    background-size: 100%;
+}
+.g-container .bg-2_0m-1m-test2{
+    background: url("./../img/2_0m-1m-test2.jpg");
+    background-size: 100%;
+}
+.g-container .bg-2_0m-1m-test3{
+    background: url("./../img/2_0m-1m-test3.jpg");
+    background-size: 100%;
+}
+.g-container .bg-2_0m-1m-test4{
+    background: url("./../img/2_0m-1m-test4.jpg");
+    background-size: 100%;
 }
 /*对拼图页面重新定义m-top*/
 .g-container .m-drag .m-top{
@@ -226,6 +315,7 @@
     right: 7px;
     height: 31px;
 }
+
 .m-drag .control
 {
     position: absolute;
@@ -235,6 +325,17 @@
     right: 7px;
     background-color: transparent;
     z-index: 80;
+}
+@media all and (min-width: 700px){
+    .g-container .m-drag .m-top{
+
+        height: 50px;
+    }
+    .m-drag .control{
+        top: 50px;
+        left: 10px;
+        right: 10px;
+    }
 }
 .m-drag .control .notice{
     position: absolute;
@@ -259,45 +360,82 @@
 .m-drag .fixed .magnify{
     width: 31px;
     height: 30px;
-
     float: right;
-    background: transparent url(./../img/icon.png) no-repeat;
+    background: transparent url(./../img/icon2.png) no-repeat;
 }
 .m-drag .fixed .delete{
     display: inline-block;
     width: 18px;
     height: 26px;
     vertical-align: middle;
-    background: transparent url(./../img/icon.png) no-repeat;
-    background-position: -169px 0;
+    background: transparent url(./../img/icon2.png) no-repeat;
+    background-position: -196px 0;
 }
-.m-drag .fixed .total{
-    display: block;
-    float: left;
-    height: 30px;
-    line-height: 30px;
-    font-size: 16px;
-    color: #ffffff;
-    font-weight: bold;
 
-}
+.m-drag .fixed .total{
+     display: block;
+     float: left;
+     height: 30px;
+     line-height: 30px;
+     font-size: 16px;
+     color: #ffffff;
+     font-weight: bold;
+    text-indent: 40px;
+    vertical-align: middle;
+ }
+
 .m-drag .fixed .total:before{
+    position: absolute;
+    left: 0;
+    bottom: 0;
     content: "";
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
     width: 31px;
     height: 30px;
-    background: url(./../img/icon.png) no-repeat;
-    background-position: -187px 0;
-    margin-right: 5px;
+    background: url(./../img/icon2.png) no-repeat;
+    background-position: -216px 0;
 
 }
 .m-drag .magnify.on{
-    background-position: -107px 0;
+    background-position: -130px 0;
 }
 .m-drag .magnify.off{
-    background-position: -138px 0;
+    background-position: -163px 0;
+}
+@media all and (min-width: 700px) {
+    .m-drag .fixed .magnify{
+        width: 46px;
+        height: 45px;
+        background: transparent url(./../img/iconPad.png) no-repeat;
+    }
+    .m-drag .fixed .delete{
+        display: inline-block;
+        width: 27px;
+        height: 39px;
+        vertical-align: middle;
+        background: transparent url(./../img/iconPad.png) no-repeat;
+        background-position: -294px 0;
+    }
+    .m-drag .fixed .total{
+        height: 45px;
+        line-height: 45px;
+        font-size: 18px;
+        color: #ffffff;
+        text-indent: 55px;
+    }
+    .m-drag .fixed .total:before{
+        width: 46px;
+        height: 45px;
+        background: url(./../img/iconPad.png) no-repeat;
+        background-position: -324px 0;
+
+    }
+    .m-drag .magnify.on{
+        background-position: -195px 0;
+    }
+    .m-drag .magnify.off{
+        background-position: -244px 0;
+    }
+
 }
 .m-drag .footer{
     position: fixed;
@@ -322,20 +460,42 @@
     margin: auto 0;
     width: 27px;
     height: 25px;
-    background: url(./../img/icon.png) no-repeat;
+    background: url(./../img/icon2.png) no-repeat;
 }
 .m-drag .footer .prev{
     left: 7px;
-    background-position: -54px 0;
+    background-position: -73px 0;
 }
 .m-drag .footer .next{
     right: 7px;
-    background-position: -81px 0;
+    background-position: -102px 0;
 }
 .m-drag .footer .dragList{
     margin-left: 32px;
     margin-right: 32px;
     font-size: 0;
+}
+@media all and (min-width: 700px){
+
+    .m-drag .footer .next,
+    .m-drag .footer .prev{
+
+        width: 40px;
+        height: 37px;
+        background: url(./../img/iconPad.png) no-repeat;
+    }
+    .m-drag .footer .prev{
+        left: 10px;
+        background-position: -109px 0;
+    }
+    .m-drag .footer .next{
+        right: 10px;
+        background-position: -153px 0;
+    }
+    .m-drag .footer .dragList{
+        margin-left: 48px;
+        margin-right: 48px;
+    }
 }
 .m-drag .footer .item{
     display: inline-block;
@@ -386,11 +546,11 @@
     height: 25px;
     top: 0;
     bottom: 0;
-    background: url(./../img/icon.png) no-repeat;
+    background: url(./../img/icon2.png) no-repeat;
 }
 .m-drag .control .footer{
     position: absolute;
-    bottom: 5px;
+    bottom: -5px;
     text-align: center;
     height: 30px;
 }
@@ -402,7 +562,22 @@
     color: #ffffff;
     font-size: 12px;
 }
-@media all and (min-width: 768px) {
+
+.m-drag .control .changePic.prev{
+    background-position: -249px 0;
+    left:7px
+}
+.m-drag .control .changePic.next{
+    background-position: -265px 0;
+    right: 7px;
+}
+@media all and (min-width: 700px) {
+    .m-drag .control .changePic{
+
+        width: 21px;
+        height: 37px;
+        background: url(./../img/iconPad.png) no-repeat;
+    }
     .m-drag .control .footer{
         height: 45px;
     }
@@ -412,14 +587,15 @@
         line-height: 45px;
         font-size: 14px;
     }
-}
-.m-drag .control .changePic.prev{
-    background-position: -215px 0;
-    left:7px
-}
-.m-drag .control .changePic.next{
-    background-position: -229px 0;
-    right: 7px;
+
+    .m-drag .control .changePic.prev{
+        background-position: -373px 0;
+        left:10px
+    }
+    .m-drag .control .changePic.next{
+        background-position: -397px 0;
+        right: 10px;
+    }
 }
 .m-drag .control .head{
     margin-top: 5px;

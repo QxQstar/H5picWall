@@ -271,7 +271,10 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         total = $('#fixed').find('.total');
         oldTotalPrice = parseFloat( total.html() );
         total.html( ( oldTotalPrice - oldPrice + newPrice ).toFixed(2));
-
+        //修改当相框拖入控制台，缓存的价格
+        picGroup.data({
+            'price':( parseFloat( frame.attr('data-price') ) - oldPrice + newPrice ).toFixed(2)
+        });
         head.remove();
         sureBtn.unbind('click');
         footer.remove();

@@ -189,7 +189,7 @@ Ajax.prototype.turnPage = function(page){
         $.each(data, function (dataIndex, item) {
             listStr += '<li class="item f-padding7">' +
                             '<div class="picGroup">' +
-                                '<img src="/pw' + item.pic_src + '" alt=" 相框 " data-code="' + item.id + '" data-type="' + item.type + '" data-twidth="' + item.t_width + '" data-theight="' + item.t_height + '" data-src="' + item.imgfile + '" data-piccode="'+ item.ma_id +'"/>' +
+                                '<img src="/pw' + item.pic_src + '" alt=" 相框 " data-code="' + item.id + '" data-type="' + item.type + '" data-twidth="' + item.t_width + '" data-theight="' + item.t_height + '" data-src="' + item.imgfile + '" data-piccode="'+ item.ma_id +'" data-price="'+ parseFloat( item.price ).toFixed(2) +'"/>' +
                                 '<img class="pic" src="/pw' + item.de_src + '" alt=" 画心 " data-code="' + item.ma_id + '" data-type="' + item.type + '" data-src="/pw' + item.de_src + '" data-price="'+ parseFloat( item.ma_price ).toFixed(2) +'"/>' +
                             '</div>' +
                             '<div class="info">' +

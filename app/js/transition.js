@@ -72,7 +72,12 @@ var transition = {
         //绑定事件
         picNext = picGroup.siblings('#picNext');
         picPrev = picGroup.siblings('#picPrev');
-
+        if(transition.index === 0){
+            picPrev.hide();
+        }
+        if(transition.index >= total - 1){
+            picNext.hide();
+        }
         picPrev
             .unbind('click')
             .on('click', change);
@@ -110,6 +115,15 @@ var transition = {
          showRate = function () {
             //当前却换到的画心的序号
              picGroup.attr('data-picIndex',transition.index);
+             if(transition.index >= total-1){
+                 $('#picNext').hide();
+             }else if(transition.index <= 0){
+                 $('#picPrev').hide();
+             }else if(transition.index > 0 && transition.index <total-1){
+                 $('#picPrev').show();
+                 $('#picNext').show();
+             }
+
             $('#rate').html(transition.index+1 + '/' + total);
 
              //本次切换完成

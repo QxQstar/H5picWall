@@ -259,11 +259,11 @@ var drag = {
                     }
                     //修改相框的尺寸,并将尺寸保存在属性，在放大和缩小控制台的时候需要使用
                     frame
-                        .height(( (frame.attr('data-theight') | 0) * scale) )
-                        .width(( (frame.attr('data-twidth') | 0) * scale ) )
+                        .height( ( (frame.attr('data-theight') | 0) * scale) | 0 )
+                        .width(( (frame.attr('data-twidth') | 0) * scale ) | 0)
                         .attr({
-                            originalWidth: ( (frame.attr('data-twidth') | 0) * scaleObj.transformRate ) ,
-                            originalHeight: ( (frame.attr('data-theight') | 0) * scaleObj.transformRate )
+                            originalWidth: ( (frame.attr('data-twidth') | 0) * scaleObj.transformRate ) | 0,
+                            originalHeight: ( (frame.attr('data-theight') | 0) * scaleObj.transformRate ) | 0
                         })
                         .css({
                             'max-width':'none'

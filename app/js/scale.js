@@ -93,8 +93,8 @@ Scale.prototype.controlScale = function(event,control){
                 //picGroup中表示相框的那个子元素,picGroup的大小是由frame的大小决定的
                 frame = $(picGroup).children('img').first();
                 frame
-                    .height(  ( ( frame.attr('originalHeight')  ) * me.controlRate  ) )
-                    .width( ( ( frame.attr('originalWidth')  ) * me.controlRate  )  );
+                    .height(  ( ( frame.attr('originalHeight')  ) * me.controlRate  ) |0 )
+                    .width( ( ( frame.attr('originalWidth')  ) * me.controlRate  ) | 0 );
             });
 
     }else{//缩小控制台

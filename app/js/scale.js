@@ -81,19 +81,20 @@ Scale.prototype.controlScale = function(event,control){
         controlPicGroups
             .each(function(index,picGroup){
                 $(picGroup)
+
                     .css({
-                        top:( ( parseInt( $(picGroup).css('top') ) * me.controlRate ) | 0 ) + 'px',
-                        left:( ( parseInt( $(picGroup).css('left') ) * me.controlRate ) | 0) + 'px'
+                        top:parseFloat( $(picGroup).css('top') ) * me.controlRate   + 'px',
+                        left: parseFloat( $(picGroup).css('left') ) * me.controlRate  + 'px'
                     })
                     .attr({
-                        coordX:( ( $(picGroup).attr('coordX') | 0 ) * me.controlRate ) | 0,
-                        coordY:( ( $(picGroup).attr('coordY') | 0 ) * me.controlRate ) | 0
+                        coordX: $(picGroup).attr('coordX')   * me.controlRate ,
+                        coordY: $(picGroup).attr('coordY')   * me.controlRate
                     });
                 //picGroup中表示相框的那个子元素,picGroup的大小是由frame的大小决定的
                 frame = $(picGroup).children('img').first();
                 frame
-                    .height(  ( ( frame.attr('originalHeight') | 0 ) * me.controlRate  ) | 0)
-                    .width( ( ( frame.attr('originalWidth') | 0 ) * me.controlRate  ) | 0 );
+                    .height(  ( ( frame.attr('originalHeight')  ) * me.controlRate  ) )
+                    .width( ( ( frame.attr('originalWidth')  ) * me.controlRate  )  );
             });
 
     }else{//缩小控制台
@@ -115,12 +116,12 @@ Scale.prototype.controlScale = function(event,control){
             .each(function(index,picGroup){
                 $(picGroup)
                     .css({
-                        top:( ( parseInt( $(picGroup).css('top') ) / me.controlRate ) | 0 ) + 'px',
-                        left:( ( parseInt( $(picGroup).css('left') ) / me.controlRate ) | 0 ) + 'px'
+                        top: parseFloat( $(picGroup).css('top') ) / me.controlRate  + 'px',
+                        left: parseFloat( $(picGroup).css('left') ) / me.controlRate  + 'px'
                     })
                     .attr({
-                        coordX:( ( $(picGroup).attr('coordX') | 0 ) / me.controlRate ) | 0,
-                        coordY:( ( $(picGroup).attr('coordY') | 0 ) / me.controlRate ) | 0
+                        coordX: $(picGroup).attr('coordX')   / me.controlRate ,
+                        coordY: $(picGroup).attr('coordY')   / me.controlRate
                     });
                 //picGroup中表示相框的那个子元素，picGroup的大小是由frame的大小决定的
                  frame = $(picGroup).children('img').first();

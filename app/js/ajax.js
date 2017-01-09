@@ -199,7 +199,7 @@ Ajax.prototype.turnPage = function(page){
                                     item.name +
                                 '</div>' +
                                 '<div class="price">' +
-                                    "￥" + ( parseFloat(item.price) + parseFloat(item.ma_price) ).toFixed(2) +
+                                    "￥" +  parseFloat(item.price) .toFixed(2) +
                                 '</div>' +
                             '<div>' +
                         '</li>';

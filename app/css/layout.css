@@ -319,10 +319,11 @@
 .m-drag .control
 {
     position: absolute;
-    top: 31px;
-    margin: 20px auto 0 auto;
+    top: 51px;
+    /*margin: 20px auto 0 auto;*/
     left: 7px;
     right: 7px;
+    margin: 0 auto;
     background-color: transparent;
     z-index: 80;
 }
@@ -332,7 +333,7 @@
         height: 50px;
     }
     .m-drag .control{
-        top: 50px;
+        top: 70px;
         left: 10px;
         right: 10px;
     }
@@ -504,6 +505,12 @@
     width: 25%;
     text-align: center;
 }
+@media all and (min-width: 700px) {
+    .m-drag .footer .item{
+
+        width: 16.66666%;
+    }
+}
 .m-drag .control .picGroup{
     overflow: hidden;
 }
@@ -525,6 +532,7 @@
     font-size: 11px;
     text-align: center;
     transform:scale(0.8);
+    white-space: nowrap;
 }
 .m-drag  .picGroup .pic{
     position: absolute;
@@ -631,7 +639,7 @@
 
 }
 .m-show .bottom{
-    position: fixed;
+    position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;

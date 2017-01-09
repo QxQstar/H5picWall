@@ -49,7 +49,7 @@ var drag = {
     },
     /**
      * 初始化drag模块，包括定位和绑定事件
-     * @param dragDOM drag模块的包裹节点，最外层的节点 i属性为#drag的节点
+     * @param dragDOM drag模块的包裹节点，最外层的节点 id属性为#drag的节点
      * @param ajaxObj 发送ajax的对象
      */
     init:function(dragDOM,ajaxObj){
@@ -148,8 +148,8 @@ var drag = {
 
         setTimeout(function(){
             var height;
-            if($(window).width() >= 768){
-                height = '190px';
+            if($(window).width() >= 700){
+                height = '177px';
             }else{
                 height =  '130px';
             }

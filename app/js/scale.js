@@ -2,7 +2,6 @@
  * Created by Administrator on 2016/11/23.
  */
 var $ = require('jquery');
-
 /**
  * 缩放类
  * @constructor
@@ -27,7 +26,7 @@ function Scale(){
  * @param control 要缩放的元素
  */
 Scale.prototype.controlScale = function(event,control){
-    var $target,drag,dragOriginalSize,controlPicGroups,me,frame,controlCvs;
+    var $target,drag,dragOriginalSize,controlPicGroups,me,frame,controlCvs,canvasMark;
     //阻止冒泡/捕获
     event.stopPropagation();
     me = this;
@@ -51,8 +50,10 @@ Scale.prototype.controlScale = function(event,control){
     };
 
      controlPicGroups = control.find('.picGroup');
-
+    //表示控制台的虚线宽
      controlCvs = $('#controlCvs');
+    //标识场景大小的canvas
+    canvasMark  = $('#canvasMark');
 
     //如果控制台没有处于放大状态，将控制台进行放大
     if( ! me.controlMagnify ){
@@ -97,6 +98,7 @@ Scale.prototype.controlScale = function(event,control){
                     .width( ( ( frame.attr('originalWidth')  ) * me.controlRate  ) | 0 );
             });
 
+
     }else{//缩小控制台
         //修改icon的状态
         $target
@@ -136,6 +138,9 @@ Scale.prototype.controlScale = function(event,control){
     controlCvs
         .height(control.height())
         .width(control.width());
+    canvasMark
+        .width(control.width());
+
     //修改控制台的状态
     this.controlMagnify = ! this.controlMagnify;
 };
@@ -145,18 +150,23 @@ Scale.prototype.controlScale = function(event,control){
  * @param ajaxObj ajax对象
  */
 Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
-    var control,frame,frameRate,controlRate,head,footer,sureBtn,prev,next,me,controlCvs,magnify;
+    var control,frame,frameRate,controlRate,head,footer,sureBtn,prev,next,me,controlCvs,magnify,canvasMark;
     me = this;
 
-    //如果操作台处于放大的状态和已经存在一个相框处于放大状态不能放大相框
+    //如果操作台处于放大的状态或者已经存在一个相框处于放大状态不能放大相框
     if(me.controlMagnify || me.frameMagnify){
-        return false;
+
+            return false;
     }
     //将画框设置为放大状态
     me.frameMagnify = true;
     //控制台的虚线
     controlCvs = $('#controlCvs');
+    //场景大小的标识
+    canvasMark = $('#canvasMark');
+
     controlCvs.hide();
+    canvasMark.hide();
     //放大/缩小的icon
     magnify = $('#magnify');
     magnify.css({
@@ -197,8 +207,8 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
       }else{
           picGroup
               .css({
-                  height:'70%',
-                  width:(frameRate * (control.height() * 0.7)) +'px'
+                  height:'95%',
+                  width:(frameRate * (control.height() *0.95)) +'px'
               })
       }
     //添加背景和修改位置
@@ -304,6 +314,7 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         frame.show();
         pic.show();
         controlCvs.show();
+        canvasMark.show();
         magnify.css({
             'opacity':1
         });

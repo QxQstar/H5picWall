@@ -99,7 +99,7 @@ var drag = {
             //控制台能够显示的最大尺寸
             controlMaxSize = {
                 W:$(window).width() - parseInt(control.css('left')) - parseInt(control.css('right')),
-                H:$(window).height() - 62 - (height + 20 + fixed.height())
+                H:$(window).height() - 72 - (height + 20 + fixed.height())
             };
             if($(window).width() > 700){
                 controlMaxSize.H = controlMaxSize.H - 20;
@@ -125,7 +125,7 @@ var drag = {
                 control.width(controlMaxSize.W).height(rateWall * controlMaxSize.W | 0)
             }
             //给控制台创建一个虚线框
-            controlCanvas = canvasObj.createCanvas(control,dragDOM,0);
+            controlCanvas = canvasObj.createCanvas(control,dragDOM,0,'#333');
 
             controlCanvas.css({
                 top:control.offset().top + 'px',
@@ -133,6 +133,8 @@ var drag = {
                 right:0,
                 display:'block'
             }).attr({id:'controlCvs'});
+            //在控制台顶部显示当前场景的大小
+            canvasObj.sizeMark(control,dragDOM.attr('data-width'),dragDOM.attr('data-height'),'#666');
             //将控制台放大前的尺寸保存起来
             scaleObj.controlOriginalSize = {
                 H:control.height(),

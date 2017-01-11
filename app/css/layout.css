@@ -86,7 +86,7 @@
     bottom: 0;
     right: 0;
     z-index: 1;
-    background-color: rgba(0,0,0,.2);
+    background-color: rgba(0,0,0,0.1);
 }
 .f-padding7{
     padding: 7px;
@@ -319,8 +319,7 @@
 .m-drag .control
 {
     position: absolute;
-    top: 51px;
-    /*margin: 20px auto 0 auto;*/
+    top: 61px;
     left: 7px;
     right: 7px;
     margin: 0 auto;
@@ -333,7 +332,7 @@
         height: 50px;
     }
     .m-drag .control{
-        top: 70px;
+        top: 80px;
         left: 10px;
         right: 10px;
     }
@@ -556,9 +555,16 @@
     bottom: 0;
     background: url(./../img/icon2.png) no-repeat;
 }
+.m-drag .control .title{
+    position: absolute;
+    top: -30px;
+    left: 0;
+    right: 0;
+    width: 100%;
+}
 .m-drag .control .footer{
     position: absolute;
-    bottom: -5px;
+    bottom: -30px;
     text-align: center;
     height: 30px;
 }

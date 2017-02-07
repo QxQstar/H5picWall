@@ -9,13 +9,15 @@ var webpack = require('webpack');
 var extractTextWebpack = require('extract-text-webpack-plugin');
 module.exports = {
     entry:{
-        'curIndex':'./app/js/curIndex.js',
-        'jquery':['jquery']
+        'index':'./app/js/index.js',
+        'jQuery':['jquery']
     },
     output:{
         path:'./build/',
         publicPath:'../',
-        filename:'js/[name].js'
+        filename:'js/[name].js',
+        library:'jQuery',
+        libraryTarget:'umd'
     },
     module:{
         loaders:[
@@ -34,7 +36,7 @@ module.exports = {
             allChunks:true
         }),
         new webpack.optimize.CommonsChunkPlugin({
-            name:'jquery',
+            name:'jQuery',
             filename:'js/jquery.js'
         }),
         new autoHtml({

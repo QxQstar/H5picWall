@@ -6,17 +6,23 @@
   "scripts": {
     "test": "webpack --config webpack.test.config.js",
     "drag": "webpack --config webpack.drag.config.js",
-    "server-drag": "webpack-dev-server --hot --inline --config webpack.drag.config.js --content-base ./build/"
+    "switch": "webpack --config webpack.switch.config.js",
+    "server-drag": "webpack-dev-server --hot --inline --config webpack.drag.config.js --content-base ./build/",
+    "server-switch": "webpack-dev-server --hot --inline --config webpack.switch.config.js --content-base ./build/"
   },
   "author": "qin",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^0.25.0",
     "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
     "html-webpack-plugin": "^2.22.0",
     "jquery": "^3.1.1",
+    "layer": "^0.1.0",
     "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "weixin-js-sdk": "^1.0.7"
   }
 }

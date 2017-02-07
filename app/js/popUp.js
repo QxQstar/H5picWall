@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var registerObj = require('./register.js')();
+var loginObj = require('./login.js')();
 var share = require('./nativeShare.js');
 /**
  * 弹窗类
@@ -219,7 +220,8 @@ PopUp.prototype.login = function(ancestor){
             .on('click',function(event){
                 event.stopPropagation();
                 event.preventDefault();
-                me.ajaxObj.login(login);
+//                me.ajaxObj.login(login);
+                loginObj.login(login,me);
             });
     register = login
                 .find('#register')

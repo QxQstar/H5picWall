@@ -1,4 +1,5 @@
 /**
+ * 执行ajax请求的文件
  * Created by Administrator on 2016/10/21.
  */
 
@@ -345,15 +346,15 @@ Ajax.prototype.confirm = function(control,scaleObj){
 
 };
 /**
- * 发送登录请假
- * @param login 登录模块的父元素 jquery对象
+ * 发送登录请求
+ * @param data 提交的数据
  */
-Ajax.prototype.login = function(login){
-    var data;
-     data = {
-        username:login.find('#message').val(),
-        password:login.find('#password').val()
-    };
+Ajax.prototype.login = function(data){
+//    var data;
+//     data = {
+//        username:data.username,
+//        password:data.password
+//    };
     $.ajax({
         type: "POST",
         data: data,

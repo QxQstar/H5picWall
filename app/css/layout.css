@@ -314,8 +314,16 @@
     left: 7px;
     right: 7px;
     height: 31px;
+    line-height: 31px;
+    text-align: center;
 }
+.m-drag .m-top .tips{
 
+    font-size: 11px;
+    transform: scale(.8);
+    color: #a01;
+
+}
 .m-drag .control
 {
     position: absolute;

@@ -15,18 +15,16 @@ var transition = {
      * @param drag drag模块中的对象
      */
     addPicList: function (picGroup, data,drag) {
-        var pic,list,index,total,ul,rate,picPrev,picNext;
+        var pic,list,total,ul,rate,picPrev,picNext;
         //将已经存在的img.pic元素隐藏
         pic = picGroup.find('.pic').hide();
         //生成列表
         list = "";
-
-//        index = 0;
         //总共的画心数量
         total = 0;
         $.each(data, function (index, item) {
             list += "<li class='picItem'>" +
-                "<img id='" + index + "' src='/pw" + item.ma_src + "' class='pic' data-code='"+ item.id +"' data-price='"+  item.price +"'/>" +
+                "<img id='" + index + "' src='/pw" + item.ma_src + "' class='pic' data-code='"+ item.id +"' data-price='"+  item.price +"' data-name='"+ item.name+"'/>" +
                 "</li>";
             total++;
         });
@@ -96,8 +94,9 @@ var transition = {
      * @param list 画心列表 jquery节点
      */
     changePic: function (event, list) {
-        var total, W,marginLeft,showRate,$target,picGroup;
+        var total, W,marginLeft,showRate,$target,picGroup,picName;
         picGroup = list.parent('.picGroup');
+        picName = $('#picName');
         //如果当前处于却换的动画中
         if(transition.status){
             return;
@@ -109,6 +108,7 @@ var transition = {
         }
         //总共可以却换的画心数量
          total = list.children('li').length;
+        //画心的宽度
          W = list.children('li').first().width();
         //当前marginLeft值
          marginLeft = parseFloat(list.css('marginLeft'));
@@ -123,7 +123,7 @@ var transition = {
                  $('#picPrev').show();
                  $('#picNext').show();
              }
-
+            picName.html(list.find('img').eq(transition.index).attr('data-name'));
             $('#rate').html(transition.index+1 + '/' + total);
 
              //本次切换完成

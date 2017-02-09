@@ -144,7 +144,7 @@ PopUp.prototype.resetInfo = function(ancestor){
 
 };
 /**
- * 生成重新拼的弹窗
+ * 重新拼的警告弹窗
  * @param ancestor
  */
 PopUp.prototype.createReset = function(ancestor){
@@ -199,7 +199,7 @@ PopUp.prototype.login = function(ancestor){
     login = $('<div class="m-login" id="login"></div>');
     content = '<form class="loginForm" id="loginForm">'+
                     '<button type="button" class="cancel" id="cancel"></button>'+
-                    '<div class="head">魅拓用户登录</div>'+
+                    '<div class="head">登录魅拓进行购买</div>'+
                      '<div class="tel">'+
                             '<input type="text" placeholder="手机号/邮箱" id="message">'+
                      '</div>'+
@@ -220,15 +220,16 @@ PopUp.prototype.login = function(ancestor){
             .on('click',function(event){
                 event.stopPropagation();
                 event.preventDefault();
-//                me.ajaxObj.login(login);
                 loginObj.login(login,me);
             });
+    //注册
     register = login
                 .find('#register')
                 .on('click',function(event){
                     event.stopPropagation();
                     event.preventDefault();
                     submit.unbind('click');
+                    //移除登录弹窗，生成注册弹窗
                     login.remove();
                     me.register(ancestor);
                 });

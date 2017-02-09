@@ -193,7 +193,7 @@ Ajax.prototype.turnPage = function(page){
             listStr += '<li class="item f-padding7">' +
                             '<div class="picGroup">' +
                                 '<img src="/pw' + item.pic_src + '" alt=" 相框 " data-code="' + item.id + '" data-type="' + item.type + '" data-twidth="' + item.t_width + '" data-theight="' + item.t_height + '" data-src="' + item.imgfile + '" data-piccode="'+ item.ma_id +'" data-price="'+ parseFloat( item.price ).toFixed(2) +'"/>' +
-                                '<img class="pic" src="/pw' + item.de_src + '" alt=" 画心 " data-code="' + item.ma_id + '" data-type="' + item.type + '" data-src="/pw' + item.de_src + '" data-price="'+ parseFloat( item.ma_price ).toFixed(2) +'"/>' +
+                                '<img class="pic" src="/pw' + item.de_src + '" alt=" 画心 " data-code="' + item.ma_id + '" data-type="' + item.type + '" data-src="/pw' + item.de_src + '" data-price="'+ parseFloat( item.ma_price ).toFixed(2) +'" data-name="'+ item.ma_name +'"/>' +
                             '</div>' +
                             '<div class="info">' +
                                 '<div class="name">' +
@@ -350,18 +350,20 @@ Ajax.prototype.confirm = function(control,scaleObj){
  * @param data 提交的数据
  */
 Ajax.prototype.login = function(data){
-//    var data;
-//     data = {
-//        username:data.username,
-//        password:data.password
-//    };
+    var me = this;
     $.ajax({
         type: "POST",
         data: data,
         url: "/pw/index.php/home/login/login",
         dataType: 'json',
         success:function(result){
-            popUp.info(result.msg);
+            if(result.status){
+                me.addCart($('#show'));
+            }else{
+                popUp.info(result.msg);
+            }
+
+
         }
     });
 

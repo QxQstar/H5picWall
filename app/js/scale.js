@@ -139,7 +139,11 @@ Scale.prototype.controlScale = function(event,control){
         .height(control.height())
         .width(control.width());
     canvasMark
-        .width(control.width());
+        .width(control.width())
+        .offset({
+            left:control.offset().left,
+            right:control.offset().right
+        });
 
     //修改控制台的状态
     this.controlMagnify = ! this.controlMagnify;
@@ -183,8 +187,10 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
     picGroup.siblings('.picGroup').each(function(index,cur){
         $(cur).hide();
     });
+
     //表示相框的那个img元素
     frame = picGroup.children('img').first();
+
     //将画框放大前的尺寸和位置缓存起来
     frame.data({
         originH:frame.height(),
@@ -193,6 +199,7 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         originL:parseInt(picGroup.css('left'))
     });
     frame.hide();
+
     //画框宽和高的比例
     frameRate = frame.data('originW') / frame.data('originH');
     //控制台宽和高的比例
@@ -211,7 +218,8 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
                   width:(frameRate * (control.height() *0.95)) +'px'
               })
       }
-    //添加背景和修改位置
+
+    //放大之后的状态
     picGroup
             .css({
                 backgroundImage: 'url(' + frame.attr('src') + ')',
@@ -225,10 +233,11 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
        //生成一些必要的元素
     (function() {
         var rate,title;
-        title = $('<p>更换画心</p>')
-            .css({
-                textAlign: 'center'
-            });
+        title = $('<p id="picName">'+picGroup.find('.pic').attr('data-name')+'</p>')
+                .css({
+                    textAlign: 'center'
+                });
+
         //显示可切换的画心总数量和当前切换到的画心序号
         rate = $('<p id="rate"></p>')
             .css({
@@ -256,12 +265,14 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
 
     //给确定按钮绑定事件
     sureBtn.on('click',function(event){
-        var list,pic, W,curIndex,frame,optionalPic,newPrice,oldPrice,total,oldTotalPrice;
+        var list,pic,curIndex,frame,optionalPic,newPrice,oldPrice,total,oldTotalPrice;
         //阻止冒泡/捕获和默认行为
         event.stopPropagation();
         event.preventDefault();
+
         //动态生成的画心列表的父元素
         list = picGroup.children('#picList');
+
         //picGroup中直接子元素，表示画心的那个img元素
         pic = picGroup.children('.pic');
         //picGroup中直接子元素，表示相框的那个img元素
@@ -274,17 +285,23 @@ Scale.prototype.magnifyFrame = function(picGroup,ajaxObj){
         }
         //显示切换到的那个画心
         optionalPic = list.find('img').eq(curIndex);
+        //新选择的画心的价格
         newPrice = parseFloat( optionalPic.attr('data-price'));
+        //之前的画心的价格
         oldPrice = parseFloat( pic.attr('data-price'));
         pic.attr({
             'src':optionalPic.attr('src'),
-            'data-price':newPrice.toFixed(2)
+            'data-price':newPrice.toFixed(2),
+            'data-name':optionalPic.attr('data-name')
         });
+
+        //修改相框当前的画心编号
         frame.attr('data-piccode',optionalPic.attr('data-code'));
         //修改总价
         total = $('#fixed').find('.total');
         oldTotalPrice = parseFloat( total.html() );
         total.html( ( oldTotalPrice - oldPrice + newPrice ).toFixed(2));
+
         //修改当相框拖入控制台，缓存的价格
         picGroup.data({
             'price':( parseFloat( frame.attr('data-price') ) - oldPrice + newPrice ).toFixed(2)

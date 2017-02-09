@@ -27,6 +27,7 @@ app文件夹下代码是实际编辑代码
 - loyout.css：布局
 ###1.1.3. index.html
 - index.html：浏览器加载的html文件
+
 ##1.2. build文件夹
 build文件夹中的文件是使用webpack打包生成的文件，项目运行的就是这个文件夹中的文件
 #2. 打包

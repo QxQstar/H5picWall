@@ -35,6 +35,11 @@ module.exports = {
         new extractTextWebpack('css/[name].css',{
             allChunks:true
         }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        }),
         new webpack.optimize.CommonsChunkPlugin({
             name:'jQuery',
             filename:'js/jquery.js'

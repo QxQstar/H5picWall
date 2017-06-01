@@ -34,7 +34,7 @@ build文件夹中的文件是使用webpack打包生成的文件，项目运行�
 整个项目使用webpack打包，实际运行的代码位于build文件夹中，app文件夹是编辑的代码，修改app文件夹中的代码后都要使用webpack重新打包，如果修改了app中css文件要将bulid中新的css文件重新上传到服务器，如果修改了app中的js文件要将bulid中新的js文件重新上传到服务器，如果改变了app中的index.html文件要将build中的index.html文件重新上传到服务器。
 # 3. app/js中js模块功能介绍
 ## 3.1. index.js
-index.js是项目的入口，在这个文件的头部引入了整个项目需要的全部css文件。这个项目要创建新的场景都是改变hash值去实现的，所有在这个文件中给window绑定了hashchange事件。用户访问的url地址可能不相同，只有当访问地址是[http://www.xiaoyu4.com/pw/html/index.html](http://www.xiaoyu4.com/pw/html/index.html) 时才会播放帧动画，播放帧动画结束后要改变hash值以至于用户能进一步操作，帧动画播放结束后运行的函数是animation.js中的dispose
+index.js是项目的入口，在这个文件的头部引入了整个项目需要的全部css文件。这个项目要创建新的场景都是改变hash值去实现的，所有在这个文件中给window绑定了hashchange事件。用户访问的url地址可能不相同，当从头开始访问时才会播放帧动画，播放帧动画结束后要改变hash值以至于用户能进一步操作，帧动画播放结束后运行的函数是animation.js中的dispose
 ## 3.2. imageloader.js
 执行帧动画所需要图片是通过imageloader.js模块提前加载的，所有imageloader.js模块执行的功能就是图片预加载，在图片预加载过程中页面会执行css动画，当所有需要预加载的图片加载完成后css动画被移除，并开始播放帧动画
 ## 3.3. timeline.js
@@ -67,3 +67,4 @@ Drag页面功能的模块，这个模块的init完成的功能是界面的初始
 配置分享到微信
 # 4. 项目思路
 每一个能够创建新的场景的a标签都有一个data-id属性，这个data-id的值与即将展示的新场景的页面hash值一一对应，当点击这些a标签后url中的hash值变成该a标签的data-id属性值，当hash值发生改变会触发window的hashchange事件，在hashchange的事件处理程序中检查当前页面中是否有一个dom节点的id属性值与hash值相同，如果没有就发送ajax请求重新渲染页面，如果有就不做任何操作
+

@@ -67,3 +67,4 @@ Drag页面功能的模块，这个模块的init完成的功能是界面的初始
 配置分享到微信
 # 4. 项目思路
 每一个能够创建新的场景的a标签都有一个data-id属性，这个data-id的值与即将展示的新场景的页面hash值一一对应，当点击这些a标签后url中的hash值变成该a标签的data-id属性值，当hash值发生改变会触发window的hashchange事件，在hashchange的事件处理程序中检查当前页面中是否有一个dom节点的id属性值与hash值相同，如果没有就发送ajax请求重新渲染页面，如果有就不做任何操作
+
